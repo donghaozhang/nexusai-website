@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusAI | Intelligent Agent Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+        
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+        }
+        
+        .card-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #020617 100%);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .terminal {
+            background-color: #111827;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .terminal-header {
+            background-color: #1e293b;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+        
+        .terminal-body {
+            min-height: 200px;
+        }
+        
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="grid-pattern">
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-white text-2xl font-bold orbitron gradient-text">NEXUS<span class="text-white">AI</span></span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
+                            <a href="#technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
+                            <a href="#about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
+                            <a href="#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300">
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
+                <a href="#technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
+                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                <div class="px-4 sm:px-0 lg:col-span-7">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight orbitron mb-6">
+                        <span class="gradient-text glow">Next-Gen</span> AI Agents
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 max-w-3xl">
+                        Revolutionizing industries with autonomous, intelligent agents that learn, adapt, and outperform. Our AI solutions are transforming how businesses operate in the digital age.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 pulse-animation">
+                            Request Demo <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button class="border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-12 lg:mt-0 lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
+                        <div class="relative bg-gray-900 rounded-xl overflow-hidden p-1">
+                            <div class="terminal">
+                                <div class="terminal-header px-4 py-2 flex items-center">
+                                    <div class="flex space-x-2">
+                                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 ml-4">nexus-agent-terminal</div>
+                                </div>
+                                <div class="terminal-body p-4">
+                                    <div class="text-green-400">$ nexus-agent --init</div>
+                                    <div class="text-gray-400 mt-2">Initializing NexusAI agent system...</div>
+                                    <div class="text-gray-400 mt-1">Loading neural networks <span class="text-blue-400">[=====>]</span> 100%</div>
+                                    <div class="text-gray-400 mt-1">Connecting to knowledge graph...</div>
+                                    <div class="text-green-400 mt-2">$ nexus-agent --status</div>
+                                    <div class="text-gray-400 mt-1">System: <span class="text-white">Operational</span></div>
+                                    <div class="text-gray-400 mt-1">Memory: <span class="text-white">16.8TB</span></div>
+                                    <div class="text-gray-400 mt-1">Processing: <span class="text-white">1.2 petaflops</span></div>
+                                    <div class="text-green-400 mt-2">$ nexus-agent --query "optimize supply chain"</div>
+                                    <div class="text-gray-400 mt-1">Analyzing supply chain data...</div>
+                                    <div class="text-white mt-1">Identified 3 bottlenecks (saving potential: $2.4M/yr)</div>
+                                    <div class="text-green-400 mt-2">$ <span class="blink">_</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="py-16 bg-black bg-opacity-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-center text-gray-400 text-sm uppercase tracking-wider mb-8 orbitron">Trusted by industry leaders</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
+                <div class="flex justify-center">
+                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">ACME Corp</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">NOVA</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">TECHNIX</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">QUANTUM</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4">
+                    <span class="gradient-text">AI Agent Solutions</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Custom-built intelligent agents designed to solve your most complex challenges.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Solution 1 -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-blue-500 transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg">
+                                <i class="fas fa-robot text-blue-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron">Autonomous Agents</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            Self-learning agents that operate independently, making real-time decisions to optimize your business processes without human intervention.
+                        </p>
+                        <div class="flex items-center text-blue-400">
+                            <span class="text-sm orbitron">Learn more</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solution 2 -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-purple-500 transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg">
+                                <i class="fas fa-brain text-purple-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron">Cognitive Assistants</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            AI-powered digital employees that understand natural language, context, and intent to provide human-like assistance at scale.
+                        </p>
+                        <div class="flex items-center text-purple-400">
+                            <span class="text-sm orbitron">Learn more</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solution 3 -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-pink-500 transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg">
+                                <i class="fas fa-chart-line text-pink-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron">Predictive Engines</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            Advanced forecasting systems that analyze patterns and predict outcomes with unprecedented accuracy, giving you a competitive edge.
+                        </p>
+                        <div class="flex items-center text-pink-400">
+                            <span class="text-sm orbitron">Learn more</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="py-20 bg-gray-900 bg-opacity-50 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
+                <div class="lg:col-span-6 mb-12 lg:mb-0">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
+                        <div class="relative bg-gray-900 rounded-xl overflow-hidden p-1">
+                            <div class="aspect-w-16 aspect-h-9">
+                                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
+                                    <div class="text-center p-8">
+                                        <i class="fas fa-cogs text-6xl text-blue-400 mb-4"></i>
+                                        <h3 class="text-xl font-bold text-white orbitron mb-2">NexusAI Platform</h3>
+                                        <p class="text-gray-400">Interactive demo available upon request</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-6">
+                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                        <span class="gradient-text">Our Technology</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-8">
+                        Built on cutting-edge research and proprietary algorithms, our platform delivers unmatched performance and scalability.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-blue-900 bg-opacity-50 text-blue-400">
+                                    <i class="fas fa-atom"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white orbitron">Neural Architecture</h4>
+                                <p class="text-gray-400 mt-1">
+                                    Multi-modal transformer networks with dynamic attention mechanisms.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-purple-900 bg-opacity-50 text-purple-400">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white orbitron">Knowledge Graph</h4>
+                                <p class="text-gray-400 mt-1">
+                                    Trillion-edge semantic network for contextual understanding.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-pink-900 bg-opacity-50 text-pink-400">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white orbitron">Security</h4>
+                                <p class="text-gray-400 mt-1">
+                                    End-to-end encrypted with zero-trust architecture and differential privacy.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-900 to-purple-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">24/7</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">Operational Uptime</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">99.9%</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">Accuracy Rate</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">10x</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">Faster Decisions</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4">
+                    <span class="gradient-text">About NexusAI</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Pioneering the future of autonomous intelligence since 2018.
+                </p>
+            </div>
+            
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
+                <div class="lg:col-span-7 mb-12 lg:mb-0">
+                    <h3 class="text-2xl font-bold text-white orbitron mb-6">Our Mission</h3>
+                    <p class="text-gray-400 mb-6">
+                        At NexusAI, we believe in creating intelligent systems that augment human capabilities rather than replace them. Our mission is to build AI agents that are not just tools, but collaborative partners in solving humanity's most pressing challenges.
+                    </p>
+                    <p class="text-gray-400 mb-8">
+                        Founded by a team of AI researchers from leading tech companies and academic institutions, we combine cutting-edge research with practical business applications to deliver real-world impact.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                            <div class="text-blue-400 text-3xl mb-3">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h4 class="text-lg font-medium text-white orbitron mb-2">Research-Driven</h4>
+                            <p class="text-gray-400 text-sm">
+                                15+ published papers in top AI conferences and journals.
+                            </p>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                            <div class="text-purple-400 text-3xl mb-3">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4 class="text-lg font-medium text-white orbitron mb-2">Team</h4>
+                            <p class="text-gray-400 text-sm">
+                                50+ world-class engineers, scientists, and designers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-5">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
+                        <div class="relative bg-gray-900 rounded-xl overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="NexusAI Team" class="w-full h-auto opacity-90">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-black bg-opacity-70 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                Ready to <span class="gradient-text">transform</span> your business with AI?
+            </h2>
+            <p class="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                Schedule a consultation with our AI experts to discover how NexusAI can drive innovation and efficiency in your organization.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                    Contact Sales <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button class="border border-gray-600 hover:border-white text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                    Join Our Team
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                <div class="lg:col-span-5 mb-12 lg:mb-0">
+                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                        <span class="gradient-text">Get in Touch</span>
+                    </h2>
+                    <p class="text-gray-400 mb-8">
+                        Have questions about our technology or want to explore partnership opportunities? Our team is ready to assist you.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-blue-900 bg-opacity-50 text-blue-400">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white orbitron">Headquarters</h4>
+                                <p class="text-gray-400 mt-1">
+                                    123 AI Boulevard<br>
+                                    San Francisco, CA 94107
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-purple-900 bg-opacity-50 text-purple-400">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white orbitron">Email</h4>
+                                <p class="text-gray-400 mt-1">
+                                    contact@nexusai.tech
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-pink-900 bg-opacity-50 text-pink-400">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white orbitron">Phone</h4>
+                                <p class="text-gray-400 mt-1">
+                                    +1 (555) 123-4567
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7">
+                    <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 p-6">
+                        <form>
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label for="first-name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
+                                    <input type="text" id="first-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="John">
+                                </div>
+                                <div>
+                                    <label for="last-name" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
+                                    <input type="text" id="last-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Doe">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                                    <input type="email" id="email" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="john@example.com">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label for="company" class="block text-sm font-medium text-gray-300 mb-1">Company</label>
+                                    <input type="text" id="company" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="ACME Corp">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                                    <textarea id="message" rows="4" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Tell us about your project..."></textarea>
+                                </div>
+                            </div>
+                            <div class="mt-8">
+                                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                                    Send Message <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-white text-lg font-medium orbitron mb-4">NexusAI</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white text-lg font-medium orbitron mb-4">Products</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Autonomous Agents</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Cognitive Assistants</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Predictive Engines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white text-lg font-medium orbitron mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Case Studies</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Whitepapers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Research</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white text-lg font-medium orbitron mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Privacy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Terms</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Security</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-6 mb-4 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    &copy; 2023 NexusAI Technologies. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Terminal typing effect
+        const terminalLines = [
+            "Analyzing customer behavior patterns...",
+            "Generating personalized recommendations...",
+            "Optimizing marketing campaign ROI...",
+            "Identifying new market opportunities...",
+            "Preparing executive summary..."
+        ];
+
+        const terminalElement = document.querySelector('.terminal-body');
+        let currentLine = 0;
+
+        function typeTerminalLine() {
+            if (currentLine < terminalLines.length) {
+                const line = terminalLines[currentLine];
+                const prompt = `<div class="text-green-400 mt-2">$ nexus-agent --analyze</div>`;
+                const output = `<div class="text-gray-400 mt-1">${line}</div>`;
+                const cursor = `<div class="text-green-400 mt-2">$ <span class="blink">_</span></div>`;
+                
+                terminalElement.innerHTML += prompt + output;
+                currentLine++;
+                
+                // Scroll to bottom
+                terminalElement.scrollTop = terminalElement.scrollHeight;
+                
+                // Schedule next line
+                if (currentLine < terminalLines.length) {
+                    setTimeout(typeTerminalLine, 1500);
+                } else {
+                    terminalElement.innerHTML += cursor;
+                }
+            }
+        }
+
+        // Start typing effect after a delay
+        setTimeout(typeTerminalLine, 3000);
+    </script>
+</body>
+</html>
