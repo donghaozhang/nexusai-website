@@ -42,9 +42,6 @@
 - ✅ Added Cursor rules for development guidance
 
 ## Current Tasks
-- 🔄 Review and optimize CSS for better performance
-- 🔄 Enhance accessibility features (ARIA attributes, keyboard navigation)
-- 🔄 Implement form validation for contact form
 
 ## Todo Tasks
 - 📝 Add actual form submission functionality
@@ -57,4 +54,7 @@
 - 📝 Optimize images and assets for faster loading
 - 📝 Add SEO metadata and Open Graph tags
 - 📝 Set up Google Analytics
-- 📝 Create documentation for custom components 
+- 📝 Create documentation for custom components
+- 📝 Review and optimize CSS for better performance
+- 📝 Enhance accessibility features (ARIA attributes, keyboard navigation)
+- 📝 Implement form validation for contact form 
