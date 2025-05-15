@@ -44,7 +44,7 @@
 ## Current Tasks
 
 ## Todo Tasks
-- 📝 Implement form submission using Formspree to send messages to zdhpeter@gmail.com
+- 📝 Implement form submission using Formspree endpoint (https://formspree.io/f/xovdyprn)
 - 📝 Implement form validation for contact form (Recommended before enabling submission)
 - 📝 Create additional pages (About, Solutions, Blog)
 - 📝 Implement dark/light mode toggle
