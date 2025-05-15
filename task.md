@@ -33,6 +33,8 @@
 
 ### Contact Information
 - ✅ Updated contact email to info@quriosity.com.au
+- ✅ Updated mobile number to +61 425406759
+- ✅ Updated address to Level 8, 1 Elizabeth Street, Melbourne 3000
 
 ### Repository
 - ✅ Created GitHub repository
