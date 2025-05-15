@@ -31,6 +31,9 @@
 - ✅ Animation observer for fade-in effects
 - ✅ Terminal typing effect simulation
 
+### Contact Information
+- ✅ Updated contact email to info@quriosity.com.au
+
 ### Repository
 - ✅ Created GitHub repository
 - ✅ Added README.md with project information
