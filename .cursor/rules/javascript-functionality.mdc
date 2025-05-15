@@ -1,0 +1,28 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# JavaScript Functionality
+
+The NexusAI website includes several JavaScript functions to enhance the user experience.
+
+## Key JavaScript Features
+
+### Navigation
+- Mobile menu toggle functionality
+- Smooth scrolling for anchor links
+
+### Animations
+- Intersection Observer for scroll-based animations
+- Terminal typing effect simulation
+- Animated display of terminal commands and responses
+
+### Implementation Details
+All JavaScript is included at the bottom of the [index.html](mdc:index.html) file in a `<script>` tag. The main functions include:
+
+1. Mobile menu toggle handler
+2. Smooth scrolling implementation for navigation links
+3. Animation observer for fade-in effects
+4. Terminal typing effect with simulated command execution
+

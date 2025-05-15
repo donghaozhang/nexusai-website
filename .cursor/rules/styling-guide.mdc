@@ -1,0 +1,33 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Styling Guide
+
+The NexusAI website uses Tailwind CSS for styling with custom CSS variables and classes.
+
+## Key Style Elements
+
+### Fonts
+- Primary font: 'Inter' for body text
+- Secondary font: 'Orbitron' for headings and emphasis (class: `orbitron`)
+
+### Colors
+- Background: Dark theme with black/dark gray backgrounds
+- Accent colors: Gradient from blue to purple to pink
+- Text: White and light gray for readability on dark backgrounds
+
+### Special Effects
+- Gradient text (class: `gradient-text`)
+- Glowing elements (class: `glow`)
+- Card glow effect (class: `card-glow`)
+- Hero gradient background (class: `hero-gradient`)
+- Pulse animation (class: `pulse-animation`)
+- Grid pattern background (class: `grid-pattern`)
+
+### Terminal Component
+- Terminal container (class: `terminal`)
+- Terminal header (class: `terminal-header`)
+- Terminal body (class: `terminal-body`)
+- Blinking cursor effect (class: `blink`)

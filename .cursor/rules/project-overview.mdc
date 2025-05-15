@@ -1,0 +1,26 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# NexusAI Website Overview
+
+The NexusAI website is a modern landing page for a fictional AI company. The site is built with HTML, CSS (Tailwind), and JavaScript.
+
+## Main Files
+- [index.html](mdc:index.html) - The main HTML file containing the entire website structure
+- [README.md](mdc:README.md) - Project documentation
+
+## Website Structure
+The website is organized into several key sections:
+1. Navigation bar
+2. Hero section with animated terminal
+3. Client logos section
+4. Solutions section showcasing AI agent products
+5. Technology section highlighting technical capabilities
+6. Stats section with key metrics
+7. About section with company information
+8. CTA (Call to Action) section
+9. Contact form section
+10. Footer with site links and copyright information
+
