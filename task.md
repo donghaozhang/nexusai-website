@@ -44,7 +44,8 @@
 ## Current Tasks
 
 ## Todo Tasks
-- 📝 Add actual form submission functionality
+- 📝 Implement form submission using Formspree to send messages to zdhpeter@gmail.com
+- 📝 Implement form validation for contact form (Recommended before enabling submission)
 - 📝 Create additional pages (About, Solutions, Blog)
 - 📝 Implement dark/light mode toggle
 - 📝 Add animations for section transitions
@@ -56,5 +57,4 @@
 - 📝 Set up Google Analytics
 - 📝 Create documentation for custom components
 - 📝 Review and optimize CSS for better performance
-- 📝 Enhance accessibility features (ARIA attributes, keyboard navigation)
-- 📝 Implement form validation for contact form 
+- 📝 Enhance accessibility features (ARIA attributes, keyboard navigation) 

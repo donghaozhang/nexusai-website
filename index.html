@@ -510,27 +510,27 @@
                 </div>
                 <div class="lg:col-span-7">
                     <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 p-6">
-                        <form>
+                        <form action="https://formspree.io/f/zdhpeter@gmail.com" method="POST">
                             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div>
                                     <label for="first-name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
-                                    <input type="text" id="first-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="John">
+                                    <input type="text" id="first-name" name="first-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="John" required>
                                 </div>
                                 <div>
                                     <label for="last-name" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
-                                    <input type="text" id="last-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Doe">
+                                    <input type="text" id="last-name" name="last-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Doe" required>
                                 </div>
                                 <div class="sm:col-span-2">
                                     <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                                    <input type="email" id="email" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="john@example.com">
+                                    <input type="email" id="email" name="email" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="john@example.com" required>
                                 </div>
                                 <div class="sm:col-span-2">
                                     <label for="company" class="block text-sm font-medium text-gray-300 mb-1">Company</label>
-                                    <input type="text" id="company" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="ACME Corp">
+                                    <input type="text" id="company" name="company" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="ACME Corp">
                                 </div>
                                 <div class="sm:col-span-2">
                                     <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
-                                    <textarea id="message" rows="4" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Tell us about your project..."></textarea>
+                                    <textarea id="message" name="message" rows="4" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Tell us about your project..." required></textarea>
                                 </div>
                             </div>
                             <div class="mt-8">
