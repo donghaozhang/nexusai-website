@@ -47,9 +47,7 @@
 ## Current Tasks
 
 ## Todo Tasks
-- 📝 Implement form submission using Formspree endpoint (https://formspree.io/f/xovdyprn)
 - 📝 Implement form validation for contact form (Recommended before enabling submission)
-- 📝 Implement dark/light mode toggle
 - 📝 Create image gallery for case studies
 - 📝 Implement language selector for internationalization
 - 📝 Add cookie consent banner
