@@ -30,6 +30,7 @@
 - ✅ Smooth scrolling implementation
 - ✅ Animation observer for fade-in effects
 - ✅ Terminal typing effect simulation
+- ✅ Animations for section transitions
 
 ### Contact Information
 - ✅ Updated contact email to info@quriosity.com.au
@@ -48,7 +49,6 @@
 - 📝 Implement form validation for contact form (Recommended before enabling submission)
 - 📝 Create additional pages (About, Solutions, Blog)
 - 📝 Implement dark/light mode toggle
-- 📝 Add animations for section transitions
 - 📝 Create image gallery for case studies
 - 📝 Implement language selector for internationalization
 - 📝 Add cookie consent banner
