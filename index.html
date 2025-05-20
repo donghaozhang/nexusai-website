@@ -618,17 +618,17 @@
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
+
+                if (targetId && targetId !== '#' && targetElement) {
+                    e.preventDefault();
+
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
+
                     // Close mobile menu if open
                     const mobileMenu = document.getElementById('mobile-menu');
                     if (!mobileMenu.classList.contains('hidden')) {
