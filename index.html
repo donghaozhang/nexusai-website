@@ -81,6 +81,14 @@
             from, to { opacity: 1; }
             50% { opacity: 0; }
         }
+    html.light {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    html.light img {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
     </style>
 </head>
 <body class="grid-pattern">
@@ -106,6 +114,9 @@
                         <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300">
                             Get Started
                         </button>
+                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl">
+                            <i class="fas fa-sun"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
@@ -127,6 +138,7 @@
                 <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">
                     Get Started
                 </button>
+                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Toggle Theme</button>
             </div>
         </div>
     </nav>
@@ -609,6 +621,29 @@
     </footer>
 
     <script>
+        // Theme toggle
+        const themeButtons = document.querySelectorAll(".theme-toggle");
+        const rootElement = document.documentElement;
+
+        function updateThemeIcon() {
+            themeButtons.forEach(btn => {
+                btn.innerHTML = rootElement.classList.contains("light") ? "<i class=\"fas fa-moon\"></i>" : "<i class=\"fas fa-sun\"></i>";
+            });
+        }
+
+        function toggleTheme() {
+            rootElement.classList.toggle("light");
+            localStorage.setItem("theme", rootElement.classList.contains("light") ? "light" : "dark");
+            updateThemeIcon();
+        }
+
+        themeButtons.forEach(btn => btn.addEventListener("click", toggleTheme));
+
+        if (localStorage.getItem("theme") === "light") {
+            rootElement.classList.add("light");
+        }
+        updateThemeIcon();
+
         // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
