@@ -23,6 +23,7 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - Visually appealing statistics section highlighting key performance indicators.
 - Multiple contact points: address, email, phone, and a comprehensive contact form.
 - Prominent call-to-action buttons for demo requests, learning more, and contacting sales.
+- Cookie consent banner for privacy compliance.
 
 ## Technologies Used
 

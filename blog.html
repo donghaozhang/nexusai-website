@@ -113,6 +113,13 @@
             </div>
         </div>
     </footer>
+
+    <!-- Cookie consent banner -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 text-gray-100 p-4 text-sm flex flex-col sm:flex-row items-center justify-between hidden z-50">
+        <span>We use cookies to improve your experience on our site.</span>
+        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Accept</button>
+    </div>
+
     <script>
         const themeButtons = document.querySelectorAll('.theme-toggle');
         const rootElement = document.documentElement;
@@ -122,6 +129,19 @@
         if(localStorage.getItem('theme')==='light'){rootElement.classList.add('light');}
         updateThemeIcon();
         document.getElementById('mobile-menu-button').addEventListener('click',()=>{document.getElementById('mobile-menu').classList.toggle('hidden');});
+
+        // Cookie consent banner
+        const cookieBanner = document.getElementById('cookie-banner');
+        const acceptCookiesBtn = document.getElementById('accept-cookies');
+
+        if(!localStorage.getItem('cookiesAccepted')){
+            cookieBanner.classList.remove('hidden');
+        }
+
+        acceptCookiesBtn.addEventListener('click',()=>{
+            localStorage.setItem('cookiesAccepted','true');
+            cookieBanner.classList.add('hidden');
+        });
     </script>
 </body>
 </html>
