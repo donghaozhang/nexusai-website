@@ -60,6 +60,9 @@
 ### Documentation
 - ✅ Create documentation for custom components
 
+### Showcase
+- ✅ Refine 'Showcase' section to highlight AI-generated art (Black Myth Wukong style)
+
 ## Current Tasks
 
 ## Todo Tasks
