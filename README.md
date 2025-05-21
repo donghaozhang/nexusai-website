@@ -15,6 +15,7 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - Fully responsive design using Tailwind CSS.
 - Interactive elements, animations, and smooth scrolling navigation.
 - Modern UI with gradient effects and a theme toggle (light/dark mode).
+- Internationalization with an English/Chinese language selector.
 - Mobile-friendly navigation.
 - Hero section with an animated terminal showcasing AI agent capabilities.
 - Detailed showcase of AI agent solutions: Autonomous Agents, Cognitive Assistants, and Predictive Engines.
@@ -25,6 +26,8 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - Multiple contact points: address, email, phone, and a comprehensive contact form.
 - Prominent call-to-action buttons for demo requests, learning more, and contacting sales.
 - Image gallery showcasing real-world case studies.
+- Cookie consent banner for privacy compliance.
+- Google Analytics integration for traffic insights.
 
 ## Technologies Used
 
@@ -33,6 +36,7 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - JavaScript
 - Font Awesome icons
 - Google Fonts (Orbitron and Inter)
+- Google Analytics (gtag.js)
 
 ## Preview
 
