@@ -37,6 +37,7 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - Font Awesome icons
 - Google Fonts (Orbitron and Inter)
 - Google Analytics (gtag.js)
+- Showcase section featuring interactive components like card animations.
 
 ## Preview
 

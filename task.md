@@ -25,6 +25,7 @@
 - ✅ CTA section for conversion
 - ✅ Contact form section
 - ✅ Footer with site links
+- ✅ Added Showcase section with card animation link
 
 ### JavaScript
 - ✅ Mobile menu toggle
@@ -53,8 +54,12 @@
 - ✅ Optimized images and assets for faster loading
 - ✅ Created smooth card animation with 3D perspective effects
 
+### Accessibility
+- ✅ Enhance accessibility features (ARIA attributes, keyboard navigation)
+
+### Documentation
+- ✅ Create documentation for custom components
+
 ## Current Tasks
 
 ## Todo Tasks
-- ✅ Create documentation for custom components
-- ✅ Enhance accessibility features (ARIA attributes, keyboard navigation)

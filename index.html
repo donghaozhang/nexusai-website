@@ -42,6 +42,7 @@
                             <a href="#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
                             <a href="#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
                             <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
+                            <a href="#showcase" data-i18n="nav_showcase" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Showcase</a>
                             <a href="case-studies.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Case Studies</a>
                             <a href="#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
                         </div>
@@ -55,7 +56,7 @@
                         <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl" aria-label="Toggle theme">
                             <i class="fas fa-sun"></i>
                         </button>
-                        <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none">
+                        <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none" aria-label="Language selector">
                             <option value="en">EN</option>
                             <option value="zh">中文</option>
                         </select>
@@ -76,13 +77,14 @@
                 <a href="#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
                 <a href="#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
                 <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#showcase" data-i18n="nav_showcase" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Showcase</a>
                 <a href="case-studies.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Case Studies</a>
                 <a href="#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
                 <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">
                     Get Started
                 </button>
                 <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" aria-label="Toggle theme">Toggle Theme</button>
-                <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none">
+                <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none" aria-label="Language selector">
                     <option value="en">EN</option>
                     <option value="zh">中文</option>
                 </select>
@@ -391,6 +393,41 @@
         </div>
     </section>
 
+    <!-- Showcase Section -->
+    <section id="showcase" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="showcase_title">
+                    <span class="gradient-text">Interactive Showcase</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto" data-i18n="showcase_subtitle">
+                    Experience our dynamic visual components.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+                <!-- Card Animation Showcase -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-teal-500 transition-all duration-300 transform hover:scale-105">
+                    <a href="card-animation.html" target="_blank" class="block p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-teal-900 bg-opacity-50 p-3 rounded-lg">
+                                <i class="fas fa-clone text-teal-400 text-2xl"></i> <!-- Using 'fa-clone' for cards -->
+                            </div>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_card_animation_title">Card Animation</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6" data-i18n="showcase_card_animation_desc">
+                            Watch our mesmerizing poker card animation effect, showcasing dynamic movement and 3D perspective.
+                        </p>
+                        <div class="flex items-center text-teal-400">
+                            <span class="text-sm orbitron">View Animation</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="py-20 bg-black bg-opacity-70 px-4 sm:px-6 lg:px-8 fade-in">
         <div class="max-w-4xl mx-auto text-center">
@@ -601,7 +638,12 @@
                 about_title: '<span class="gradient-text">关于 NexusAI</span>',
                 cta_question: '准备好 <span class="gradient-text">变革</span> 您的业务吗？',
                 contact_sales: '联系销售 <i class="fas fa-arrow-right ml-2"></i>',
-                contact_heading: '<span class="gradient-text">联系我们</span>'
+                contact_heading: '<span class="gradient-text">联系我们</span>',
+                nav_showcase: '展示',
+                showcase_title: '<span class="gradient-text">互动展示</span>',
+                showcase_subtitle: '体验我们动态的视觉组件。',
+                showcase_card_animation_title: '卡片动画',
+                showcase_card_animation_desc: '观看我们令人着迷的扑克牌动画效果，展示动态的移动和3D视角。'
             }
         };
 
