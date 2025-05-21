@@ -564,7 +564,8 @@
                 </div>
                 <div class="lg:col-span-7">
                     <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 p-6">
-                        <form action="https://formspree.io/f/xovdyprn" method="POST">
+                        <form id="contact-form" action="https://formspree.io/f/xovdyprn" method="POST" novalidate>
+                            <div id="form-errors" class="text-red-500 mb-4 hidden"></div>
                             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div>
                                     <label for="first-name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
@@ -832,6 +833,32 @@
         acceptCookiesBtn.addEventListener('click', () => {
             localStorage.setItem('cookiesAccepted', 'true');
             cookieBanner.classList.add('hidden');
+        });
+
+        // Contact form validation
+        const contactForm = document.getElementById('contact-form');
+        const formErrors = document.getElementById('form-errors');
+
+        contactForm.addEventListener('submit', e => {
+            formErrors.innerHTML = '';
+            formErrors.classList.add('hidden');
+
+            const firstName = document.getElementById('first-name').value.trim();
+            const lastName = document.getElementById('last-name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            const errors = [];
+            if (!firstName) errors.push('First name is required.');
+            if (!lastName) errors.push('Last name is required.');
+            if (!/^\S+@\S+\.\S+$/.test(email)) errors.push('A valid email is required.');
+            if (!message) errors.push('Message is required.');
+
+            if (errors.length > 0) {
+                e.preventDefault();
+                formErrors.innerHTML = errors.map(err => `<p>${err}</p>`).join('');
+                formErrors.classList.remove('hidden');
+            }
         });
     </script>
 </body>
