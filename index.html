@@ -134,21 +134,25 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
-                            <a href="#technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
-                            <a href="#about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
-                            <a href="#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
+                            <a href="#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
+                            <a href="#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
+                            <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
+                            <a href="#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
                         </div>
                     </div>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
-                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300">
+                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300" data-i18n="nav_get_started">
                             Get Started
                         </button>
                         <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl">
                             <i class="fas fa-sun"></i>
                         </button>
+                        <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none">
+                            <option value="en">EN</option>
+                            <option value="zh">中文</option>
+                        </select>
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
@@ -163,14 +167,18 @@
         <!-- Mobile menu -->
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
-                <a href="#technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
-                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="#contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
-                <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">
+                <a href="#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
+                <a href="#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
+                <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2" data-i18n="nav_get_started">
                     Get Started
                 </button>
                 <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Toggle Theme</button>
+                <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none">
+                    <option value="en">EN</option>
+                    <option value="zh">中文</option>
+                </select>
             </div>
         </div>
     </nav>
@@ -180,17 +188,17 @@
         <div class="max-w-7xl mx-auto">
             <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                 <div class="px-4 sm:px-0 lg:col-span-7">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight orbitron mb-6">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight orbitron mb-6" data-i18n="hero_title">
                         <span class="gradient-text glow">Next-Gen</span> AI Agents
                     </h1>
-                    <p class="text-xl text-gray-300 mb-8 max-w-3xl">
+                    <p class="text-xl text-gray-300 mb-8 max-w-3xl" data-i18n="hero_tagline">
                         Revolutionizing industries with autonomous, intelligent agents that learn, adapt, and outperform. Our AI solutions are transforming how businesses operate in the digital age.
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 pulse-animation">
+                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 pulse-animation" data-i18n="hero_request_demo">
                             Request Demo <i class="fas fa-arrow-right ml-2"></i>
                         </button>
-                        <button class="border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                        <button class="border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300" data-i18n="hero_learn_more">
                             Learn More
                         </button>
                     </div>
@@ -255,10 +263,10 @@
     <section id="solutions" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4">
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="solutions_title">
                     <span class="gradient-text">AI Agent Solutions</span>
                 </h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto" data-i18n="solutions_subtitle">
                     Custom-built intelligent agents designed to solve your most complex challenges.
                 </p>
             </div>
@@ -271,9 +279,9 @@
                             <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg">
                                 <i class="fas fa-robot text-blue-400 text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron">Autonomous Agents</h3>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="solution1_title">Autonomous Agents</h3>
                         </div>
-                        <p class="text-gray-400 mb-6">
+                        <p class="text-gray-400 mb-6" data-i18n="solution1_desc">
                             Self-learning agents that operate independently, making real-time decisions to optimize your business processes without human intervention.
                         </p>
                         <div class="flex items-center text-blue-400">
@@ -290,9 +298,9 @@
                             <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg">
                                 <i class="fas fa-brain text-purple-400 text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron">Cognitive Assistants</h3>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="solution2_title">Cognitive Assistants</h3>
                         </div>
-                        <p class="text-gray-400 mb-6">
+                        <p class="text-gray-400 mb-6" data-i18n="solution2_desc">
                             AI-powered digital employees that understand natural language, context, and intent to provide human-like assistance at scale.
                         </p>
                         <div class="flex items-center text-purple-400">
@@ -309,9 +317,9 @@
                             <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg">
                                 <i class="fas fa-chart-line text-pink-400 text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron">Predictive Engines</h3>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="solution3_title">Predictive Engines</h3>
                         </div>
-                        <p class="text-gray-400 mb-6">
+                        <p class="text-gray-400 mb-6" data-i18n="solution3_desc">
                             Advanced forecasting systems that analyze patterns and predict outcomes with unprecedented accuracy, giving you a competitive edge.
                         </p>
                         <div class="flex items-center text-pink-400">
@@ -345,7 +353,7 @@
                     </div>
                 </div>
                 <div class="lg:col-span-6">
-                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6" data-i18n="technology_title">
                         <span class="gradient-text">Our Technology</span>
                     </h2>
                     <p class="text-gray-400 text-lg mb-8">
@@ -424,7 +432,7 @@
     <section id="about" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4">
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="about_title">
                     <span class="gradient-text">About NexusAI</span>
                 </h2>
                 <p class="text-xl text-gray-400 max-w-3xl mx-auto">
@@ -478,14 +486,14 @@
     <!-- CTA Section -->
     <section class="py-20 bg-black bg-opacity-70 px-4 sm:px-6 lg:px-8 fade-in">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6" data-i18n="cta_question">
                 Ready to <span class="gradient-text">transform</span> your business with AI?
             </h2>
             <p class="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
                 Schedule a consultation with our AI experts to discover how NexusAI can drive innovation and efficiency in your organization.
             </p>
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300" data-i18n="contact_sales">
                     Contact Sales <i class="fas fa-arrow-right ml-2"></i>
                 </button>
                 <button class="border border-gray-600 hover:border-white text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
@@ -500,7 +508,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                 <div class="lg:col-span-5 mb-12 lg:mb-0">
-                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6" data-i18n="contact_heading">
                         <span class="gradient-text">Get in Touch</span>
                     </h2>
                     <p class="text-gray-400 mb-8">
@@ -659,6 +667,52 @@
     </div>
 
     <script>
+        // Language selector
+        const translations = {
+            zh: {
+                nav_solutions: '解决方案',
+                nav_technology: '技术',
+                nav_about: '关于',
+                nav_contact: '联系',
+                nav_get_started: '开始使用',
+                hero_title: '<span class="gradient-text glow">新一代</span> AI 代理',
+                hero_tagline: '通过自主智能代理革新各行各业。我们的 AI 解决方案正在改变企业在数字时代的运营方式。',
+                hero_request_demo: '申请演示 <i class="fas fa-arrow-right ml-2"></i>',
+                hero_learn_more: '了解更多',
+                solutions_title: '<span class="gradient-text">AI 代理解决方案</span>',
+                solutions_subtitle: '定制智能代理，解决您最复杂的挑战。',
+                solution1_title: '自主代理',
+                solution1_desc: '自学习代理可独立运行，实时决策，优化业务流程，无需人工干预。',
+                solution2_title: '认知助手',
+                solution2_desc: '由 AI 驱动的数字员工，理解自然语言和上下文，大规模提供类人协助。',
+                solution3_title: '预测引擎',
+                solution3_desc: '先进的预测系统，分析模式并准确预测结果，助您保持竞争优势。',
+                technology_title: '<span class="gradient-text">我们的技术</span>',
+                about_title: '<span class="gradient-text">关于 NexusAI</span>',
+                cta_question: '准备好 <span class="gradient-text">变革</span> 您的业务吗？',
+                contact_sales: '联系销售 <i class="fas fa-arrow-right ml-2"></i>',
+                contact_heading: '<span class="gradient-text">联系我们</span>'
+            }
+        };
+
+        const langSelectors = document.querySelectorAll('.lang-select');
+        const i18nElements = document.querySelectorAll('[data-i18n]');
+        i18nElements.forEach(el => { el.dataset.en = el.innerHTML; });
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('lang', lang);
+            langSelectors.forEach(sel => { sel.value = lang; });
+            i18nElements.forEach(el => {
+                const key = el.dataset.i18n;
+                el.innerHTML = (lang === 'zh' && translations.zh[key]) ? translations.zh[key] : el.dataset.en;
+            });
+        }
+
+        langSelectors.forEach(sel => sel.addEventListener('change', e => applyLanguage(e.target.value)));
+
+        applyLanguage(localStorage.getItem('lang') || 'en');
+
         // Theme toggle
         const themeButtons = document.querySelectorAll(".theme-toggle");
         const rootElement = document.documentElement;

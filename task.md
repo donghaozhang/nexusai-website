@@ -32,6 +32,7 @@
 - ✅ Animation observer for fade-in effects
 - ✅ Terminal typing effect simulation
 - ✅ Animations for section transitions
+- ✅ Added language selector for English and Chinese
 
 ### Contact Information
 - ✅ Updated contact email to info@quriosity.com.au
@@ -50,7 +51,6 @@
 ## Todo Tasks
 - 📝 Implement form validation for contact form (Recommended before enabling submission)
 - 📝 Create image gallery for case studies
-- 📝 Implement language selector for internationalization
 - 📝 Add cookie consent banner
 - 📝 Optimize images and assets for faster loading
 - 📝 Create documentation for custom components
