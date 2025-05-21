@@ -50,9 +50,6 @@
 
 ## Todo Tasks
 - 📝 Implement form validation for contact form (Recommended before enabling submission)
-- 📝 Implement language selector for internationalization
-- 📝 Create image gallery for case studies
-- 📝 Add cookie consent banner
 - 📝 Optimize images and assets for faster loading
 - 📝 Create documentation for custom components
 - 📝 Review and optimize CSS for better performance
