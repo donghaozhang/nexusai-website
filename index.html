@@ -26,8 +26,9 @@
     </script>
 </head>
 <body class="grid-pattern">
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <!-- Navigation -->
-    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800" role="navigation" aria-label="Main">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
@@ -49,7 +50,7 @@
                         <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300" data-i18n="nav_get_started">
                             Get Started
                         </button>
-                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl">
+                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl" aria-label="Toggle theme">
                             <i class="fas fa-sun"></i>
                         </button>
                         <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none">
@@ -59,7 +60,7 @@
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
-                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <i class="fas fa-bars"></i>
                     </button>
@@ -78,7 +79,7 @@
                 <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">
                     Get Started
                 </button>
-                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Toggle Theme</button>
+                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" aria-label="Toggle theme">Toggle Theme</button>
                 <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none">
                     <option value="en">EN</option>
                     <option value="zh">中文</option>
@@ -87,6 +88,7 @@
         </div>
     </nav>
 
+    <main id="main-content">
     <!-- Hero Section -->
     <section class="hero-gradient fade-in pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
@@ -467,7 +469,7 @@
                 <div class="lg:col-span-7">
                     <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 p-6">
                         <form id="contact-form" action="https://formspree.io/f/xovdyprn" method="POST" novalidate>
-                            <div id="form-errors" class="text-red-500 mb-4 hidden"></div>
+                            <div id="form-errors" class="text-red-500 mb-4 hidden" aria-live="polite"></div>
                             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div>
                                     <label for="first-name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
@@ -502,6 +504,7 @@
         </div>
     </section>
 
+    </main>
     <!-- Footer -->
     <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
@@ -545,16 +548,16 @@
             </div>
             <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-6 mb-4 md:mb-0">
-                    <a href="#" class="text-gray-400 hover:text-white">
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="Twitter">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="LinkedIn">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="GitHub">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="YouTube">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
@@ -568,7 +571,7 @@
     <!-- Cookie consent banner -->
     <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 text-gray-100 p-4 text-sm flex flex-col sm:flex-row items-center justify-between hidden z-50">
         <span>We use cookies to improve your experience on our site.</span>
-        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Accept</button>
+        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded" aria-label="Accept cookies">Accept</button>
     </div>
 
     <script>
@@ -642,9 +645,18 @@
         updateThemeIcon();
 
         // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            const expanded = !mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.setAttribute('aria-expanded', expanded);
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                mobileMenuButton.focus();
+            }
         });
 
         // Smooth scrolling for anchor links

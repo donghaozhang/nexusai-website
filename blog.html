@@ -18,7 +18,8 @@
     </script>
 </head>
 <body class="grid-pattern">
-    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800" role="navigation" aria-label="Main">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
@@ -38,7 +39,7 @@
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
                         <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300" data-i18n="nav_get_started">Get Started</button>
-                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl"><i class="fas fa-sun"></i></button>
+                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl" aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
                         <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none">
                             <option value="en">EN</option>
                             <option value="zh">中文</option>
@@ -46,7 +47,7 @@
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
-                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"><span class="sr-only">Open main menu</span><i class="fas fa-bars"></i></button>
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false"><span class="sr-only">Open main menu</span><i class="fas fa-bars"></i></button>
                 </div>
             </div>
         </div>
@@ -61,7 +62,7 @@
                 <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">Get Started</button>
                 <a href="index.html#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
                 <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2" data-i18n="nav_get_started">Get Started</button>
-                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Toggle Theme</button>
+                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" aria-label="Toggle theme">Toggle Theme</button>
                 <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none">
                     <option value="en">EN</option>
                     <option value="zh">中文</option>
@@ -69,7 +70,7 @@
             </div>
         </div>
     </nav>
-    <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+    <main id="main-content" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto text-center">
             <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6" data-i18n="blog_page_title">Blog</h1>
             <p class="text-gray-300 text-lg max-w-3xl mx-auto">Insights and updates on artificial intelligence and automation.</p>
@@ -116,10 +117,10 @@
             </div>
             <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-6 mb-4 md:mb-0">
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
                 <div class="text-gray-500 text-sm">&copy; 2023 NexusAI Technologies. All rights reserved.</div>
             </div>
@@ -129,7 +130,7 @@
     <!-- Cookie consent banner -->
     <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 text-gray-100 p-4 text-sm flex flex-col sm:flex-row items-center justify-between hidden z-50">
         <span>We use cookies to improve your experience on our site.</span>
-        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Accept</button>
+        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded" aria-label="Accept cookies">Accept</button>
     </div>
 
     <script>
@@ -170,7 +171,19 @@
         themeButtons.forEach(btn=>btn.addEventListener('click',toggleTheme));
         if(localStorage.getItem('theme')==='light'){rootElement.classList.add('light');}
         updateThemeIcon();
-        document.getElementById('mobile-menu-button').addEventListener('click',()=>{document.getElementById('mobile-menu').classList.toggle('hidden');});
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click',()=>{
+            const expanded = !mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.setAttribute('aria-expanded', expanded);
+        });
+        document.addEventListener('keydown',e=>{
+            if(e.key==='Escape' && !mobileMenu.classList.contains('hidden')){
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.setAttribute('aria-expanded','false');
+                mobileMenuButton.focus();
+            }
+        });
 
         // Cookie consent banner
         const cookieBanner = document.getElementById('cookie-banner');
