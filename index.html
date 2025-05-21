@@ -652,6 +652,12 @@
         </div>
     </footer>
 
+    <!-- Cookie consent banner -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 text-gray-100 p-4 text-sm flex flex-col sm:flex-row items-center justify-between hidden z-50">
+        <span>We use cookies to improve your experience on our site.</span>
+        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Accept</button>
+    </div>
+
     <script>
         // Theme toggle
         const themeButtons = document.querySelectorAll(".theme-toggle");
@@ -758,6 +764,19 @@
 
         // Start typing effect after a delay
         setTimeout(typeTerminalLine, 3000);
+
+        // Cookie consent banner
+        const cookieBanner = document.getElementById('cookie-banner');
+        const acceptCookiesBtn = document.getElementById('accept-cookies');
+
+        if (!localStorage.getItem('cookiesAccepted')) {
+            cookieBanner.classList.remove('hidden');
+        }
+
+        acceptCookiesBtn.addEventListener('click', () => {
+            localStorage.setItem('cookiesAccepted', 'true');
+            cookieBanner.classList.add('hidden');
+        });
     </script>
 </body>
 </html>
