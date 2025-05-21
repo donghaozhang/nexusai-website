@@ -95,3 +95,19 @@ html.light img {
   filter: invert(1) hue-rotate(180deg);
 }
 
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  left: 0;
+  top: -40px;
+  background: #1e293b;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(40px);
+}
+
