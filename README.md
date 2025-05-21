@@ -8,6 +8,7 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - **about.html:** Provides information about NexusAI. Main heading: "About NexusAI". Title: "About | NexusAI".
 - **solutions.html:** Describes the solutions offered by NexusAI. Main heading: "Our Solutions". Title: "Solutions | NexusAI".
 - **blog.html:** Contains blog posts and articles. Main heading: "Blog". Title: "Blog | NexusAI".
+- **case-studies.html:** Showcases successful projects in an interactive image gallery. Main heading: "Case Studies". Title: "Case Studies | NexusAI".
 
 ## Features
 
@@ -24,6 +25,7 @@ A modern, responsive website for NexusAI, a fictional company specializing in in
 - Visually appealing statistics section highlighting key performance indicators.
 - Multiple contact points: address, email, phone, and a comprehensive contact form.
 - Prominent call-to-action buttons for demo requests, learning more, and contacting sales.
+- Image gallery showcasing real-world case studies.
 - Cookie consent banner for privacy compliance.
 - Google Analytics integration for traffic insights.
 
