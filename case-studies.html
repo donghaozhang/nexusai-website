@@ -25,19 +25,23 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="index.html#solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
-                            <a href="index.html#technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
-                            <a href="about.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
+                            <a href="index.html#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
+                            <a href="index.html#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
+                            <a href="about.html" data-i18n="nav_about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
                             <a href="blog.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Blog</a>
                             <a href="case-studies.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Case Studies</a>
-                            <a href="index.html#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
+                            <a href="index.html#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
                         </div>
                     </div>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
-                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300">Get Started</button>
+                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300" data-i18n="nav_get_started">Get Started</button>
                         <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl"><i class="fas fa-sun"></i></button>
+                        <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none">
+                            <option value="en">EN</option>
+                            <option value="zh">中文</option>
+                        </select>
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
@@ -47,21 +51,25 @@
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="index.html#solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
-                <a href="index.html#technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
-                <a href="about.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="index.html#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
+                <a href="index.html#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
+                <a href="about.html" data-i18n="nav_about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
                 <a href="blog.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Blog</a>
                 <a href="case-studies.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Case Studies</a>
-                <a href="index.html#contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <a href="index.html#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
                 <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">Get Started</button>
                 <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Toggle Theme</button>
+                <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none">
+                    <option value="en">EN</option>
+                    <option value="zh">中文</option>
+                </select>
             </div>
         </div>
     </nav>
     <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto text-center">
-            <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6">Case Studies</h1>
-            <p class="text-gray-300 text-lg max-w-3xl mx-auto">Discover how NexusAI solutions drive results across industries.</p>
+            <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6" data-i18n="case_studies_page_title">Case Studies</h1>
+            <p class="text-gray-300 text-lg max-w-3xl mx-auto" data-i18n="case_studies_tagline">Discover how NexusAI solutions drive results across industries.</p>
         </div>
         <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <a href="https://placehold.co/1200x800?text=Case+1" target="_blank"><img src="https://placehold.co/600x400?text=Case+1" alt="Case Study 1" class="rounded-lg shadow-lg"></a>
@@ -124,6 +132,37 @@
         </div>
     </footer>
     <script>
+        // Language selector
+        const translations = {
+            zh: {
+                nav_solutions: '解决方案',
+                nav_technology: '技术',
+                nav_about: '关于',
+                nav_contact: '联系',
+                nav_get_started: '开始使用',
+                case_studies_page_title: '案例研究',
+                case_studies_tagline: '了解 NexusAI 解决方案如何在各行业取得成果。'
+            }
+        };
+
+        const langSelectors = document.querySelectorAll('.lang-select');
+        const i18nElements = document.querySelectorAll('[data-i18n]');
+        i18nElements.forEach(el => { el.dataset.en = el.innerHTML; });
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('lang', lang);
+            langSelectors.forEach(sel => { sel.value = lang; });
+            i18nElements.forEach(el => {
+                const key = el.dataset.i18n;
+                el.innerHTML = (lang === 'zh' && translations.zh[key]) ? translations.zh[key] : el.dataset.en;
+            });
+        }
+
+        langSelectors.forEach(sel => sel.addEventListener('change', e => applyLanguage(e.target.value)));
+
+        applyLanguage(localStorage.getItem('lang') || 'en');
+
         const themeButtons = document.querySelectorAll('.theme-toggle');
         const rootElement = document.documentElement;
         function updateThemeIcon(){themeButtons.forEach(btn=>{btn.innerHTML=rootElement.classList.contains('light')?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';});}
