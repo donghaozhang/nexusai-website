@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Myth Wukong Cards Animation</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a1a;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .cards-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .card {
+            position: absolute;
+            width: 200px;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            transform-style: preserve-3d;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(120vh) translateZ(-100px) rotateX(30deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(70vh) translateZ(0) rotateX(0deg);
+            }
+            80% {
+                opacity: 1;
+                transform: translateY(30vh) translateZ(0) rotateX(0deg);
+            }
+            100% {
+                transform: translateY(-20vh) translateZ(-50px) rotateX(-20deg);
+                opacity: 0;
+            }
+        }
+
+        .card:nth-child(1) { animation-delay: 0s; left: 15%; }
+        .card:nth-child(2) { animation-delay: 1.6s; left: 35%; }
+        .card:nth-child(3) { animation-delay: 3.2s; left: 55%; }
+        .card:nth-child(4) { animation-delay: 4.8s; left: 75%; }
+        .card:nth-child(5) { animation-delay: 6.4s; left: 85%; }
+    </style>
+</head>
+<body>
+    <div class="cards-container">
+        <div class="card" style="background-image: url('assets/blacksmith/1747795258898-RedHeartAceCardFeaturingNiumowangFromBlackMythWukong@1024x1536.png')"></div>
+        <div class="card" style="background-image: url('assets/blacksmith/1747795250692-Image_generation_of_playing_card_spade_ace_featuring_Erlang_Shen_from_black_myth_wukong@1024x1536.png')"></div>
+        <div class="card" style="background-image: url('assets/blacksmith/1747795244978-Club_queen_image_inspired_by_black_myth_wukong@1024x1536.png')"></div>
+        <div class="card" style="background-image: url('assets/blacksmith/1747795255136-Image_generation_instructions_for_poker_card_diamond_10_inspired_by_black_mythology_wukong@1024x1536.png')"></div>
+        <div class="card" style="background-image: url('assets/blacksmith/1747795270937-Blackmythwukongheixiongjingspadefaceimage@1024x1536.png')"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            
+            // Reset animation when it ends
+            cards.forEach(card => {
+                card.addEventListener('animationend', () => {
+                    card.style.animation = 'none';
+                    card.offsetHeight; // Trigger reflow
+                    card.style.animation = null;
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
