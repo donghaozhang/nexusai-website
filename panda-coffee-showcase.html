@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Art Gallery | Panda Coffee Designs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f3f4f6; /* Light gray - Tailwind gray-100, for a gallery wall feel */
+            color: #1f2937; /* Darker text for contrast - Tailwind gray-800 */
+        }
+        .gallery-hall-container {
+            display: flex;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            padding: 4rem 2rem; /* Ample padding to create space */
+            align-items: center; /* Vertically align items if they have different heights */
+            min-height: 80vh; /* Ensure it takes up significant screen height */
+        }
+        .gallery-artwork {
+            flex-shrink: 0; /* Prevent items from shrinking */
+            width: auto;
+            max-height: 65vh; /* Control max height of artwork */
+            margin-right: 2.5rem; /* Space between artworks */
+            border-radius: 0.25rem; /* Subtle rounding */
+            background-color: #ffffff; /* White background for the image itself if it has transparency */
+            padding: 0.75rem; /* Padding acts as a mat/border */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Softer, more elevated shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-artwork img {
+            display: block;
+            height: calc(65vh - 1.5rem); /* Explicitly set height to max allowed */
+            width: auto;                 /* Width will adjust to maintain aspect ratio */
+            max-width: 100%;             /* Ensures image doesn't overflow if its aspect ratio makes it wider than its container (though container width is auto here) */
+            object-fit: contain;         /* Ensures the image is scaled down to fit, maintaining aspect ratio, if constrained by width/height */
+            border-radius: 0.125rem; /* Slight rounding for the image if it's smaller than padding */
+        }
+        .gallery-artwork:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.15), 0 15px 20px -10px rgba(0, 0, 0, 0.15);
+        }
+        .gallery-artwork:last-child {
+            margin-right: 0; /* No margin for the last item */
+        }
+        .page-header {
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            border-bottom: 1px solid #d1d5db; /* Tailwind gray-300 */
+        }
+        .page-header h1 {
+             color: #111827; /* Tailwind gray-900 */
+        }
+        .page-header p {
+            color: #4b5563; /* Tailwind gray-600 */
+        }
+        .back-link {
+            display: inline-block;
+            margin: 1.5rem 2rem;
+            padding: 0.6rem 1.2rem;
+            background-color: #4b5563; /* Tailwind gray-600 */
+            color: white;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .back-link:hover {
+            background-color: #374151; /* Tailwind gray-700 */
+        }
+        /* Custom scrollbar for webkit browsers */
+        .gallery-hall-container::-webkit-scrollbar {
+            height: 12px;
+        }
+        .gallery-hall-container::-webkit-scrollbar-track {
+            background: #e5e7eb; /* Tailwind gray-200 */
+            border-radius: 10px;
+        }
+        .gallery-hall-container::-webkit-scrollbar-thumb {
+            background-color: #9ca3af; /* Tailwind gray-400 */
+            border-radius: 10px;
+            border: 3px solid #e5e7eb; /* Tailwind gray-200 - creates padding around thumb */
+        }
+        .gallery-hall-container::-webkit-scrollbar-thumb:hover {
+            background-color: #6b7280; /* Tailwind gray-500 */
+        }
+    </style>
+</head>
+<body class="orbitron">
+    <header class="page-header py-6 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold">Panda Coffee AI Art Gallery</h1>
+        <p class="text-lg text-gray-400 mt-2">A curated collection of AI-generated designs for Panda Coffee.</p>
+        <a href="index.html#ai-art-showcase" class="back-link"><i class="fas fa-arrow-left mr-2"></i>Return to Main Showcase</a>
+    </header>
+
+    <main>
+        <div class="gallery-hall-container">
+            <!-- Images from PandaCoffee2 folder -->
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Box Design 1.png" alt="AI Generated Panda Coffee Box Design 1">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Shop Street Corner View.png" alt="AI Generated Panda Coffee Shop Street Corner View">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Shop Night View.png" alt="AI Generated Panda Coffee Shop Night View">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Marketing Materials with Logo.png" alt="AI Generated Panda Coffee Marketing Materials with Logo">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Shop Exterior with Logo.png" alt="AI Generated Panda Coffee Shop Exterior with Logo">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Shop Interior with Logo.png" alt="AI Generated Panda Coffee Shop Interior with Logo">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Cafe Interior.png" alt="AI Generated Panda Coffee Cafe Interior">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Staff Apron Mockup.png" alt="AI Generated Panda Coffee Staff Apron Mockup">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee T-shirt Mockup.png" alt="AI Generated Panda Coffee T-shirt Mockup">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Cups Mockup.png" alt="AI Generated Panda Coffee Cups Mockup">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Bag Mockup.png" alt="AI Generated Panda Coffee Bag Mockup">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Minimalist Panda Coffee Design 3.png" alt="AI Generated Minimalist Panda Coffee Design 3">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Minimalist Panda Coffee Design 1.png" alt="AI Generated Minimalist Panda Coffee Design 1">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Bag Design 2.png" alt="AI Generated Panda Coffee Bag Design 2">
+            </div>
+            <div class="gallery-artwork">
+                <img src="assets/PandaCoffee2/Panda Coffee Bag Design 1.png" alt="AI Generated Panda Coffee Bag Design 1">
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-6 text-gray-600 text-xs bg-gray-200">
+        &copy; 2023 NexusAI Technologies. Images generated by AI.
+    </footer>
+</body>
+</html> 

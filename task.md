@@ -63,6 +63,8 @@
 ### Showcase
 - ✅ Refine 'Showcase' section to highlight AI-generated art (Black Myth Wukong style)
 - ✅ Utilize card images from all three asset subfolders (blacksmith, blacksmith_seocnd, blacksmith3) in card-animation.html
+- ✅ Create Panda Coffee AI Art Showcase (new page, link from index.html)
+- ✅ Consolidate Panda Coffee showcase to use only images from PandaCoffee2 folder
 
 ## Current Tasks
 
