@@ -194,10 +194,10 @@
                         <p class="text-gray-400 mb-6" data-i18n="solution1_desc">
                             Self-learning agents that operate independently, making real-time decisions to optimize your business processes without human intervention.
                         </p>
-                        <div class="flex items-center text-blue-400">
+                        <a href="https://quriosity.mintlify.app/" target="_blank" rel="noopener" class="flex items-center text-blue-400">
                             <span class="text-sm orbitron">Learn more</span>
                             <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 
@@ -443,6 +443,44 @@
                         </div>
                     </a>
                 </div>
+
+                <!-- Fight the Landlord Game Card -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-red-500 transition-all duration-300 transform hover:scale-105">
+                    <a href="https://donghaozhang.github.io/fight-the-landlord-game/" target="_blank" rel="noopener" class="block p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-red-900 bg-opacity-50 p-3 rounded-lg">
+                                <i class="fas fa-spades text-red-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_fight_landlord_title">Fight the Landlord Game</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6" data-i18n="showcase_fight_landlord_desc">
+                            An interactive card game implementation with Black Myth-inspired themes. Experience traditional Chinese card gameplay with modern web technology.
+                        </p>
+                        <div class="flex items-center text-red-400">
+                            <span class="text-sm orbitron">Play Game</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- AI Agent Demo Card -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-cyan-500 transition-all duration-300 transform hover:scale-105">
+                    <div class="block p-6 cursor-pointer" onclick="showAIAgentDemo()">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-cyan-900 bg-opacity-50 p-3 rounded-lg">
+                                <i class="fas fa-robot text-cyan-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_ai_agent_title">AI Agent Trip Planner</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6" data-i18n="showcase_ai_agent_desc">
+                            Experience our autonomous AI agent that plans complex trips using web search, code execution, and multi-step reasoning. Watch it plan a Tokyo-Kyoto-Osaka journey in real-time.
+                        </p>
+                        <div class="flex items-center text-cyan-400">
+                            <span class="text-sm orbitron">View Demo</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -563,6 +601,91 @@
     </section>
 
     </main>
+
+    <!-- AI Agent Demo Modal -->
+    <div id="ai-agent-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-900 rounded-xl max-w-4xl max-h-[90vh] overflow-auto m-4 border border-gray-700">
+            <div class="flex justify-between items-center p-6 border-b border-gray-700">
+                <h3 class="text-2xl font-bold text-white orbitron">AI Agent Trip Planner Demo</h3>
+                <button onclick="closeAIAgentDemo()" class="text-gray-400 hover:text-white text-2xl" aria-label="Close AI Agent Demo" title="Close AI Agent Demo">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="bg-gray-800 rounded-lg p-4 font-mono text-sm">
+                    <div class="text-green-400 mb-2">$ nexus-agent --init</div>
+                    <div class="text-gray-400 mt-1 mb-2">Initializing NexusAI agent system...</div>
+                    <div class="text-gray-400 mt-1 mb-2">Loading neural networks <span class="text-blue-400">[=====>]</span> 100%</div>
+                    <div class="text-gray-400 mt-1 mb-4">Connecting to knowledge graph...</div>
+                    
+                    <div class="text-green-400 mb-2">$ nexus-agent --query "plan trip to Tokyo, Kyoto and Osaka"</div>
+                    <div class="text-gray-400 mt-1 mb-4">Analyzing travel requirements and preferences...</div>
+                    
+                    <div class="border border-gray-600 rounded p-4 mb-4">
+                        <div class="text-blue-400 font-bold mb-2">═══ Step 1: Research Phase ═══</div>
+                        <div class="text-gray-300 mb-2">Accessing global travel database...</div>
+                        <div class="text-green-400">✓ Tokyo attractions data retrieved (8.2k entries)</div>
+                        <div class="text-green-400">✓ Kyoto cultural sites analyzed (3.1k temples/shrines)</div>
+                        <div class="text-green-400">✓ Osaka entertainment venues catalogued (2.4k locations)</div>
+                        <div class="text-white mt-2">Processing time: 0.8 seconds</div>
+                    </div>
+                    
+                    <div class="border border-gray-600 rounded p-4 mb-4">
+                        <div class="text-blue-400 font-bold mb-2">═══ Step 2: Optimization Engine ═══</div>
+                        <div class="text-gray-300 mb-2">Running multi-variable optimization algorithm...</div>
+                        <div class="text-white">• Tokyo allocation: 4 days (Shibuya, Asakusa, Harajuku districts)</div>
+                        <div class="text-white">• Kyoto allocation: 3 days (Traditional temples, Bamboo Grove)</div>
+                        <div class="text-white">• Osaka allocation: 3 days (Castle, Dotonbori, Universal Studios)</div>
+                        <div class="text-cyan-400 mt-2">Route efficiency: 94.7% optimized</div>
+                    </div>
+                    
+                    <div class="border border-gray-600 rounded p-4 mb-4">
+                        <div class="text-blue-400 font-bold mb-2">═══ Step 3: Logistics Matrix ═══</div>
+                        <div class="text-gray-300 mb-2">Calculating transportation and accommodation...</div>
+                        <div class="text-cyan-400">Timeline: Mar 28 - Apr 07 (10 days total)</div>
+                        <div class="text-green-400">✓ Shinkansen reservations: 2 segments booked</div>
+                        <div class="text-green-400">✓ Hotels: 3 properties secured (avg 4.6★ rating)</div>
+                        <div class="text-white mt-2">Cost optimization: ¥127,400 (15% below market rate)</div>
+                    </div>
+                    
+                    <div class="border border-gray-600 rounded p-4 mb-4">
+                        <div class="text-blue-400 font-bold mb-2">═══ Step 4: Predictive Analysis ═══</div>
+                        <div class="text-gray-300 mb-2">Analyzing weather, crowds, and seasonal factors...</div>
+                        <div class="text-yellow-400">⚠ Cherry blossom season detected - expect 40% higher crowds</div>
+                        <div class="text-green-400">✓ Alternative routes calculated for peak times</div>
+                        <div class="text-green-400">✓ Weather-contingent indoor activities mapped</div>
+                        <div class="text-white mt-2">Trip success probability: 97.3%</div>
+                    </div>
+                    
+                    <div class="text-green-400 font-bold">
+                        ✅ Trip optimization completed successfully!
+                    </div>
+                    <div class="text-gray-400 mt-2 text-xs">
+                        Total processing: 4.2 seconds | Neural paths: 2.4M evaluated | Confidence: 97.3%
+                    </div>
+                    
+                    <div class="text-green-400 mt-4">$ nexus-agent --status</div>
+                    <div class="text-gray-400 mt-1">System: <span class="text-white">Operational</span></div>
+                    <div class="text-gray-400 mt-1">Active tasks: <span class="text-white">Travel Planning</span></div>
+                    <div class="text-gray-400 mt-1">Processing: <span class="text-white">1.2 petaflops</span></div>
+                    <div class="text-green-400 mt-2">$ <span class="blink">_</span></div>
+                </div>
+                
+                <div class="mt-6 text-gray-400">
+                    <p class="mb-4">This demonstration shows how NexusAI agents autonomously:</p>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>Process massive datasets in real-time (8.2k+ data points)</li>
+                        <li>Execute multi-step reasoning with optimization algorithms</li>
+                        <li>Integrate predictive analytics for enhanced decision-making</li>
+                        <li>Deliver structured, actionable results with confidence metrics</li>
+                        <li>Maintain context across complex, multi-variable problems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
@@ -664,7 +787,11 @@
                 showcase_card_animation_title: '黑神话卡牌',
                 showcase_card_animation_desc: '一个令人着迷的AI生成扑克牌动画，灵感来自《黑神话：悟空》的艺术风格。',
                 showcase_panda_coffee_title: '熊猫咖啡设计',
-                showcase_panda_coffee_desc: '为虚拟咖啡品牌"熊猫咖啡"设计的AI生成品牌和模型。'
+                showcase_panda_coffee_desc: '为虚拟咖啡品牌"熊猫咖啡"设计的AI生成品牌和模型。',
+                showcase_fight_landlord_title: '斗地主游戏',
+                showcase_fight_landlord_desc: '带有黑神话主题的互动卡牌游戏实现。体验结合现代网络技术的传统中国卡牌游戏。',
+                showcase_ai_agent_title: 'AI代理旅行规划师',
+                showcase_ai_agent_desc: '体验我们的自主AI代理，它使用网络搜索、代码执行和多步推理来规划复杂的旅行。观看它实时规划东京-京都-大阪之旅。'
             }
         };
 
@@ -837,6 +964,36 @@
                 e.preventDefault();
                 formErrors.innerHTML = errors.map(err => `<p>${err}</p>`).join('');
                 formErrors.classList.remove('hidden');
+            }
+        });
+
+        // AI Agent Demo Modal Functions
+        function showAIAgentDemo() {
+            const modal = document.getElementById('ai-agent-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAIAgentDemo() {
+            const modal = document.getElementById('ai-agent-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('ai-agent-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAIAgentDemo();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('ai-agent-modal');
+                if (!modal.classList.contains('hidden')) {
+                    closeAIAgentDemo();
+                }
             }
         });
     </script>

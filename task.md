@@ -66,6 +66,14 @@
 - ✅ Create Panda Coffee AI Art Showcase (new page, link from index.html)
 - ✅ Consolidate Panda Coffee showcase to use only images from PandaCoffee2 folder
 
+### Links
+- ✅ Updated the "Learn more" link in the Autonomous Agents card to direct users to https://quriosity.mintlify.app/
+
+### AI Agent Showcase
+- ✅ Added AI Agent Trip Planner showcase card with interactive demo modal
+- ✅ Created terminal-style demo showing smolagents multi-step planning process
+- ✅ Implemented modal with step-by-step AI agent execution visualization
+
 ## Current Tasks
 
 ## Todo Tasks
