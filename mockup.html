@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCut Editor Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #1a1a1a;
+            padding: 20px;
+        }
+        .editor-window {
+            background: #0d0d0d;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .window-header {
+            background: #1a1a1a;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .window-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ff5f57; }
+        .dot-yellow { background: #febc2e; }
+        .dot-green { background: #28c840; }
+        .window-title {
+            color: #888;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+        .editor-content {
+            display: grid;
+            grid-template-columns: 240px 1fr 280px;
+            height: 500px;
+        }
+        /* Left Sidebar - Assets */
+        .sidebar-left {
+            background: #141414;
+            border-right: 1px solid #2a2a2a;
+            padding: 16px;
+        }
+        .sidebar-title {
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .asset-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .asset-item:hover {
+            background: #1f1f1f;
+        }
+        .asset-item.active {
+            background: #2563eb20;
+        }
+        .asset-thumb {
+            width: 40px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+        .asset-thumb.img { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .asset-thumb.audio { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .asset-name {
+            color: #ccc;
+            font-size: 12px;
+        }
+        .asset-duration {
+            color: #666;
+            font-size: 10px;
+        }
+        /* Main Preview */
+        .main-area {
+            display: flex;
+            flex-direction: column;
+        }
+        .preview-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a0a;
+            position: relative;
+        }
+        .preview-video {
+            width: 480px;
+            height: 270px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-video::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+            border-radius: 50%;
+            opacity: 0.6;
+            filter: blur(40px);
+        }
+        .preview-video::after {
+            content: '🐉';
+            font-size: 80px;
+            position: relative;
+            z-index: 1;
+        }
+        .preview-text {
+            position: absolute;
+            bottom: 30px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .preview-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 12px;
+            background: #141414;
+            border-top: 1px solid #2a2a2a;
+        }
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #2a2a2a;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .control-btn.play {
+            background: #fff;
+            color: #000;
+            width: 44px;
+            height: 44px;
+        }
+        .timecode {
+            color: #888;
+            font-size: 12px;
+            font-family: 'SF Mono', monospace;
+        }
+        /* Right Sidebar - AI Tools */
+        .sidebar-right {
+            background: #141414;
+            border-left: 1px solid #2a2a2a;
+            padding: 16px;
+        }
+        .ai-panel {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .ai-panel-title {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .ai-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .model-select {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .model-tag {
+            padding: 4px 8px;
+            background: #2a2a2a;
+            border-radius: 4px;
+            color: #888;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .model-tag.active {
+            background: #2563eb;
+            color: #fff;
+        }
+        /* Timeline */
+        .timeline {
+            background: #141414;
+            border-top: 1px solid #2a2a2a;
+            padding: 12px 16px;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .track-btn {
+            padding: 6px 12px;
+            background: #2a2a2a;
+            border: none;
+            border-radius: 4px;
+            color: #888;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .track-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+        .timeline-ruler {
+            display: flex;
+            gap: 60px;
+            padding: 0 60px;
+            margin-bottom: 8px;
+        }
+        .ruler-mark {
+            color: #555;
+            font-size: 10px;
+            font-family: 'SF Mono', monospace;
+        }
+        .timeline-tracks {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .track {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .track-label {
+            width: 50px;
+            color: #666;
+            font-size: 10px;
+        }
+        .track-content {
+            flex: 1;
+            height: 36px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .clip {
+            position: absolute;
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 10px;
+            color: #fff;
+        }
+        .clip-video {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            left: 0;
+            width: 65%;
+        }
+        .clip-audio {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            left: 0;
+            width: 65%;
+        }
+        .clip-text {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            left: 30%;
+            width: 25%;
+        }
+        .playhead {
+            position: absolute;
+            left: 45%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ff4757;
+        }
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -5px;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #ff4757;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-window">
+        <div class="window-header">
+            <div class="window-dot dot-red"></div>
+            <div class="window-dot dot-yellow"></div>
+            <div class="window-dot dot-green"></div>
+            <span class="window-title">QCut — dragon_epic.qcut</span>
+        </div>
+        <div class="editor-content">
+            <div class="sidebar-left">
+                <div class="sidebar-title">Media Assets</div>
+                <div class="asset-item active">
+                    <div class="asset-thumb"></div>
+                    <div>
+                        <div class="asset-name">dragon_fly.mp4</div>
+                        <div class="asset-duration">0:12</div>
+                    </div>
+                </div>
+                <div class="asset-item">
+                    <div class="asset-thumb img"></div>
+                    <div>
+                        <div class="asset-name">mountains.png</div>
+                        <div class="asset-duration">FLUX.1</div>
+                    </div>
+                </div>
+                <div class="asset-item">
+                    <div class="asset-thumb audio"></div>
+                    <div>
+                        <div class="asset-name">voiceover.mp3</div>
+                        <div class="asset-duration">0:08</div>
+                    </div>
+                </div>
+                <div style="margin-top: 24px">
+                    <div class="sidebar-title">AI Generated</div>
+                    <div class="asset-item">
+                        <div class="asset-thumb"></div>
+                        <div>
+                            <div class="asset-name">sora_output.mp4</div>
+                            <div class="asset-duration">Sora 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-area">
+                <div class="preview-area">
+                    <div class="preview-video">
+                        <span class="preview-text">Epic Dragon Over Mountains</span>
+                    </div>
+                </div>
+                <div class="preview-controls">
+                    <span class="timecode">00:04:12</span>
+                    <button class="control-btn">⏮</button>
+                    <button class="control-btn play">▶</button>
+                    <button class="control-btn">⏭</button>
+                    <span class="timecode">00:12:00</span>
+                </div>
+            </div>
+            <div class="sidebar-right">
+                <div class="ai-panel">
+                    <div class="ai-panel-title">✨ AI Text-to-Video</div>
+                    <input class="ai-input" value="Epic dragon flying over mountains at sunset" readonly>
+                    <div class="model-select">
+                        <span class="model-tag active">Sora 2</span>
+                        <span class="model-tag">Veo 3</span>
+                        <span class="model-tag">Kling</span>
+                    </div>
+                    <button class="ai-btn" style="margin-top: 10px">Generate Video →</button>
+                </div>
+                <div class="ai-panel">
+                    <div class="ai-panel-title">🎙 AI Voiceover</div>
+                    <input class="ai-input" value="Narrator - Professional" readonly>
+                    <div class="model-select">
+                        <span class="model-tag active">ElevenLabs</span>
+                        <span class="model-tag">Kokoro</span>
+                    </div>
+                </div>
+                <div class="ai-panel">
+                    <div class="ai-panel-title">🖼 AI Image</div>
+                    <div class="model-select">
+                        <span class="model-tag active">FLUX.1</span>
+                        <span class="model-tag">Imagen 4</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="timeline">
+            <div class="timeline-header">
+                <button class="track-btn">+ Video</button>
+                <button class="track-btn">+ Audio</button>
+                <button class="track-btn">+ Text</button>
+            </div>
+            <div class="timeline-ruler">
+                <span class="ruler-mark">0:00</span>
+                <span class="ruler-mark">0:03</span>
+                <span class="ruler-mark">0:06</span>
+                <span class="ruler-mark">0:09</span>
+                <span class="ruler-mark">0:12</span>
+            </div>
+            <div class="timeline-tracks">
+                <div class="track">
+                    <span class="track-label">Video</span>
+                    <div class="track-content">
+                        <div class="clip clip-video">dragon_fly.mp4</div>
+                        <div class="playhead"></div>
+                    </div>
+                </div>
+                <div class="track">
+                    <span class="track-label">Audio</span>
+                    <div class="track-content">
+                        <div class="clip clip-audio">voiceover.mp3</div>
+                    </div>
+                </div>
+                <div class="track">
+                    <span class="track-label">Text</span>
+                    <div class="track-content">
+                        <div class="clip clip-text">Title</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
