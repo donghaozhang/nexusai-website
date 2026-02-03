@@ -3,236 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation | QCut - Free Video Editor</title>
+    <title>Documentation - QCut</title>
     <meta name="description" content="QCut documentation - getting started, tutorials, and API guides." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #000; color: #fff; }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-blur { backdrop-filter: blur(20px); }
+        .card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .code-block {
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+        }
+    </style>
 </head>
-<body class="grid-pattern">
+<body class="antialiased">
     <!-- Navigation -->
-    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="fixed top-0 w-full z-50 nav-blur bg-black/80 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="index.html" class="flex-shrink-0 flex items-center">
-                        <img src="assets/qcut-logo.png" alt="QCut Logo" class="h-10 w-10 mr-3">
-                        <span class="text-white text-2xl font-bold orbitron gradient-text">QCut</span>
+                <div class="flex items-center space-x-8">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8">
+                        <span class="text-xl font-semibold">QCut</span>
                     </a>
-                    <div class="hidden md:block ml-10">
-                        <div class="flex items-baseline space-x-4">
-                            <a href="solutions.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Features</a>
-                            <a href="index.html#ai-models" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">AI Models</a>
-                            <a href="about.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-                            <a href="blog.html" class="text-white px-3 py-2 rounded-md text-sm font-medium">Docs</a>
-                        </div>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="solutions.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+                        <a href="index.html#ai" class="text-sm text-gray-400 hover:text-white transition-colors">AI Models</a>
+                        <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+                        <a href="blog.html" class="text-sm text-white">Docs</a>
                     </div>
                 </div>
-                <div class="hidden md:block">
-                    <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron">
-                        <i class="fas fa-download mr-2"></i> Download
-                    </a>
-                </div>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Download</a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-24">
-        <!-- Hero -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-7xl mx-auto text-center">
-                <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6">
+    <main class="pt-32 pb-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4">
                     <span class="gradient-text">Documentation</span>
                 </h1>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-                    Guides, tutorials, and API references to help you get the most out of QCut.
-                </p>
+                <p class="text-xl text-gray-400">Guides and tutorials to get you started.</p>
             </div>
-        </section>
 
-        <!-- Quick Start -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900 bg-opacity-50">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-6 text-white">
-                    <i class="fas fa-rocket text-purple-400 mr-3"></i> Quick Start
-                </h2>
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <h3 class="text-lg font-bold text-white mb-4">1. Download & Install</h3>
-                    <div class="bg-gray-800 rounded-lg p-4 mb-6 font-mono text-sm">
-                        <p class="text-gray-400"># Download from GitHub Releases</p>
-                        <p class="text-green-400">https://github.com/donghaozhang/qcut/releases</p>
+            <!-- Quick Start -->
+            <div class="mb-16">
+                <h2 class="text-sm text-purple-400 font-medium mb-6 uppercase tracking-wider">Quick Start</h2>
+                <div class="card rounded-xl p-6">
+                    <h3 class="font-semibold mb-4">1. Download & Install</h3>
+                    <div class="code-block rounded-lg p-4 mb-6 font-mono text-sm">
+                        <span class="text-gray-500"># Download from GitHub Releases</span><br>
+                        <span class="text-purple-400">https://github.com/donghaozhang/qcut/releases</span>
                     </div>
                     
-                    <h3 class="text-lg font-bold text-white mb-4">2. Or Build from Source</h3>
-                    <div class="bg-gray-800 rounded-lg p-4 mb-6 font-mono text-sm overflow-x-auto">
-                        <p class="text-gray-400"># Clone the repository</p>
-                        <p class="text-white">git clone https://github.com/donghaozhang/qcut.git</p>
-                        <p class="text-white">cd qcut</p>
-                        <p class="text-white"></p>
-                        <p class="text-gray-400"># Install dependencies</p>
-                        <p class="text-white">bun install</p>
-                        <p class="text-white"></p>
-                        <p class="text-gray-400"># Build and run</p>
-                        <p class="text-white">cd qcut/apps/web && bun run build</p>
-                        <p class="text-white">cd ../.. && bun run electron</p>
+                    <h3 class="font-semibold mb-4">2. Or Build from Source</h3>
+                    <div class="code-block rounded-lg p-4 font-mono text-sm text-gray-300">
+                        <span class="text-gray-500"># Clone repository</span><br>
+                        git clone https://github.com/donghaozhang/qcut.git<br>
+                        cd qcut<br><br>
+                        <span class="text-gray-500"># Install dependencies</span><br>
+                        bun install<br><br>
+                        <span class="text-gray-500"># Build and run</span><br>
+                        cd qcut/apps/web && bun run build<br>
+                        cd ../.. && bun run electron
                     </div>
-                    
-                    <h3 class="text-lg font-bold text-white mb-4">3. Start Editing!</h3>
-                    <p class="text-gray-400">Import your media, drag to timeline, and start creating.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- AI Setup -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-6 text-white">
-                    <i class="fas fa-magic text-pink-400 mr-3"></i> AI Features Setup
-                </h2>
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <p class="text-gray-400 mb-6">
-                        To use AI content generation features, you'll need to configure API keys for the services you want to use.
-                    </p>
+            <!-- API Keys -->
+            <div class="mb-16">
+                <h2 class="text-sm text-pink-400 font-medium mb-6 uppercase tracking-wider">AI Features Setup</h2>
+                <div class="card rounded-xl p-6">
+                    <p class="text-gray-400 mb-6">Configure API keys for AI content generation.</p>
                     
-                    <h3 class="text-lg font-bold text-white mb-4">Required API Keys</h3>
                     <div class="space-y-4">
-                        <div class="bg-gray-800 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-white font-semibold">FAL AI</span>
-                                <span class="text-xs bg-green-900 text-green-400 px-2 py-1 rounded">Most Models</span>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <span class="font-medium">FAL AI</span>
+                                <span class="ml-2 text-xs bg-green-900/50 text-green-400 px-2 py-0.5 rounded">Required</span>
+                                <p class="text-gray-500 text-sm mt-1">Image/video generation (Veo, Sora, Kling, FLUX)</p>
                             </div>
-                            <p class="text-gray-400 text-sm mb-2">Required for image/video generation (Veo, Sora, Kling, FLUX, etc.)</p>
-                            <a href="https://fal.ai/dashboard" target="_blank" class="text-purple-400 text-sm hover:underline">
-                                Get API Key → fal.ai/dashboard
-                            </a>
+                            <a href="https://fal.ai/dashboard" target="_blank" class="text-purple-400 text-sm hover:underline">Get key →</a>
                         </div>
                         
-                        <div class="bg-gray-800 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-white font-semibold">ElevenLabs</span>
-                                <span class="text-xs bg-blue-900 text-blue-400 px-2 py-1 rounded">TTS</span>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <span class="font-medium">ElevenLabs</span>
+                                <span class="ml-2 text-xs bg-blue-900/50 text-blue-400 px-2 py-0.5 rounded">TTS</span>
+                                <p class="text-gray-500 text-sm mt-1">Text-to-speech and voice features</p>
                             </div>
-                            <p class="text-gray-400 text-sm mb-2">Required for text-to-speech and voice features</p>
-                            <a href="https://elevenlabs.io/app/settings" target="_blank" class="text-purple-400 text-sm hover:underline">
-                                Get API Key → elevenlabs.io/app/settings
-                            </a>
+                            <a href="https://elevenlabs.io/app/settings" target="_blank" class="text-purple-400 text-sm hover:underline">Get key →</a>
                         </div>
                         
-                        <div class="bg-gray-800 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-white font-semibold">Freesound</span>
-                                <span class="text-xs bg-yellow-900 text-yellow-400 px-2 py-1 rounded">Optional</span>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <span class="font-medium">Freesound</span>
+                                <span class="ml-2 text-xs bg-gray-700 text-gray-400 px-2 py-0.5 rounded">Optional</span>
+                                <p class="text-gray-500 text-sm mt-1">Sound effects library</p>
                             </div>
-                            <p class="text-gray-400 text-sm mb-2">Required for sound effects library search</p>
-                            <a href="https://freesound.org/apiv2/apply" target="_blank" class="text-purple-400 text-sm hover:underline">
-                                Get API Key → freesound.org/apiv2/apply
-                            </a>
+                            <a href="https://freesound.org/apiv2/apply" target="_blank" class="text-purple-400 text-sm hover:underline">Get key →</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Guides -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900 bg-opacity-50">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-8 text-white">
-                    <i class="fas fa-book text-yellow-400 mr-3"></i> Guides
-                </h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <a href="https://github.com/donghaozhang/qcut#getting-started" target="_blank" class="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-purple-500 transition-colors">
-                        <div class="text-purple-400 text-2xl mb-3"><i class="fas fa-play-circle"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2">Getting Started</h3>
-                        <p class="text-gray-400 text-sm">Installation, first project, basic editing</p>
+            <!-- Guides -->
+            <div class="mb-16">
+                <h2 class="text-sm text-gray-400 font-medium mb-6 uppercase tracking-wider">Guides</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <a href="https://github.com/donghaozhang/qcut#getting-started" target="_blank" class="card rounded-xl p-6 group">
+                        <div class="text-purple-400 text-xl mb-3">🚀</div>
+                        <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">Getting Started</h3>
+                        <p class="text-gray-500 text-sm">Installation and first project</p>
                     </a>
-                    
-                    <a href="https://github.com/donghaozhang/qcut#architecture" target="_blank" class="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-pink-500 transition-colors">
-                        <div class="text-pink-400 text-2xl mb-3"><i class="fas fa-layer-group"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2">Architecture</h3>
-                        <p class="text-gray-400 text-sm">How QCut is built, project structure</p>
+                    <a href="https://github.com/donghaozhang/qcut#architecture" target="_blank" class="card rounded-xl p-6 group">
+                        <div class="text-pink-400 text-xl mb-3">🏗️</div>
+                        <h3 class="font-semibold mb-1 group-hover:text-pink-400 transition-colors">Architecture</h3>
+                        <p class="text-gray-500 text-sm">How QCut is built</p>
                     </a>
-                    
-                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-blue-500 transition-colors">
-                        <div class="text-blue-400 text-2xl mb-3"><i class="fas fa-robot"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2">AI Pipeline</h3>
-                        <p class="text-gray-400 text-sm">Using video-agent-skill for AI generation</p>
+                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="card rounded-xl p-6 group">
+                        <div class="text-blue-400 text-xl mb-3">🤖</div>
+                        <h3 class="font-semibold mb-1 group-hover:text-blue-400 transition-colors">AI Pipeline</h3>
+                        <p class="text-gray-500 text-sm">Using video-agent-skill</p>
                     </a>
-                    
-                    <a href="https://github.com/donghaozhang/qcut#development-setup" target="_blank" class="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-green-500 transition-colors">
-                        <div class="text-green-400 text-2xl mb-3"><i class="fas fa-code"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2">Development</h3>
-                        <p class="text-gray-400 text-sm">Setting up dev environment, contributing</p>
-                    </a>
-                    
-                    <a href="https://github.com/donghaozhang/qcut#troubleshooting" target="_blank" class="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-orange-500 transition-colors">
-                        <div class="text-orange-400 text-2xl mb-3"><i class="fas fa-wrench"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2">Troubleshooting</h3>
-                        <p class="text-gray-400 text-sm">Common issues and solutions</p>
-                    </a>
-                    
-                    <a href="https://github.com/donghaozhang/video-agent-skill/blob/main/docs/reference/models.md" target="_blank" class="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-cyan-500 transition-colors">
-                        <div class="text-cyan-400 text-2xl mb-3"><i class="fas fa-list"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2">AI Models Reference</h3>
-                        <p class="text-gray-400 text-sm">Complete list of 40+ AI models</p>
+                    <a href="https://github.com/donghaozhang/qcut#troubleshooting" target="_blank" class="card rounded-xl p-6 group">
+                        <div class="text-orange-400 text-xl mb-3">🔧</div>
+                        <h3 class="font-semibold mb-1 group-hover:text-orange-400 transition-colors">Troubleshooting</h3>
+                        <p class="text-gray-500 text-sm">Common issues and solutions</p>
                     </a>
                 </div>
             </div>
-        </section>
 
-        <!-- CLI Reference -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-6 text-white">
-                    <i class="fas fa-terminal text-green-400 mr-3"></i> CLI Reference
-                </h2>
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <p class="text-gray-400 mb-6">
-                        The AI content pipeline can also be used standalone via CLI:
-                    </p>
-                    <div class="bg-gray-800 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-                        <p class="text-gray-400"># Install the AI pipeline</p>
-                        <p class="text-white mb-2">pip install video-ai-studio</p>
-                        <p class="text-white"></p>
-                        <p class="text-gray-400"># List available models</p>
-                        <p class="text-white mb-2">ai-content-pipeline list-models</p>
-                        <p class="text-white"></p>
-                        <p class="text-gray-400"># Generate an image</p>
-                        <p class="text-white mb-2">ai-content-pipeline generate-image --text "epic sunset" --model flux_dev</p>
-                        <p class="text-white"></p>
-                        <p class="text-gray-400"># Create a video</p>
-                        <p class="text-white mb-2">ai-content-pipeline create-video --text "dragon flying over mountains"</p>
-                        <p class="text-white"></p>
-                        <p class="text-gray-400"># Run custom pipeline</p>
-                        <p class="text-white">ai-content-pipeline run-chain --config pipeline.yaml</p>
+            <!-- CLI Reference -->
+            <div>
+                <h2 class="text-sm text-green-400 font-medium mb-6 uppercase tracking-wider">CLI Reference</h2>
+                <div class="card rounded-xl p-6">
+                    <p class="text-gray-400 mb-4">The AI pipeline can be used standalone:</p>
+                    <div class="code-block rounded-lg p-4 font-mono text-sm text-gray-300 overflow-x-auto">
+                        <span class="text-gray-500"># Install</span><br>
+                        pip install video-ai-studio<br><br>
+                        <span class="text-gray-500"># List models</span><br>
+                        ai-content-pipeline list-models<br><br>
+                        <span class="text-gray-500"># Generate image</span><br>
+                        ai-content-pipeline generate-image --text "sunset" --model flux_dev<br><br>
+                        <span class="text-gray-500"># Create video</span><br>
+                        ai-content-pipeline create-video --text "dragon flying"
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Links -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900 to-pink-900">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-2xl font-bold orbitron mb-6 text-white">More Resources</h2>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white px-6 py-3 rounded-md font-medium">
-                        <i class="fab fa-github mr-2"></i> QCut GitHub
-                    </a>
-                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white px-6 py-3 rounded-md font-medium">
-                        <i class="fas fa-robot mr-2"></i> AI Pipeline GitHub
-                    </a>
-                    <a href="https://github.com/donghaozhang/qcut/issues" target="_blank" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white px-6 py-3 rounded-md font-medium">
-                        <i class="fas fa-bug mr-2"></i> Report Issue
-                    </a>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-8 px-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <p class="text-gray-500 text-sm">&copy; 2026 QCut. Open Source under MIT License.</p>
+    <footer class="border-t border-white/5 py-8 px-6">
+        <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
+            © 2026 QCut. Open source under MIT License.
         </div>
     </footer>
 </body>

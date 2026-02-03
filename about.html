@@ -3,171 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | QCut - Free Video Editor</title>
-    <meta name="description" content="Learn about QCut - the free, open-source video editor with AI superpowers." />
+    <title>About - QCut</title>
+    <meta name="description" content="About QCut - the free, open-source video editor." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #000; color: #fff; }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-blur { backdrop-filter: blur(20px); }
+        .card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    </style>
 </head>
-<body class="grid-pattern">
+<body class="antialiased">
     <!-- Navigation -->
-    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="fixed top-0 w-full z-50 nav-blur bg-black/80 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="index.html" class="flex-shrink-0 flex items-center">
-                        <img src="assets/qcut-logo.png" alt="QCut Logo" class="h-10 w-10 mr-3">
-                        <span class="text-white text-2xl font-bold orbitron gradient-text">QCut</span>
+                <div class="flex items-center space-x-8">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8">
+                        <span class="text-xl font-semibold">QCut</span>
                     </a>
-                    <div class="hidden md:block ml-10">
-                        <div class="flex items-baseline space-x-4">
-                            <a href="solutions.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Features</a>
-                            <a href="index.html#ai-models" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">AI Models</a>
-                            <a href="about.html" class="text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-                            <a href="blog.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Docs</a>
-                        </div>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="solutions.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+                        <a href="index.html#ai" class="text-sm text-gray-400 hover:text-white transition-colors">AI Models</a>
+                        <a href="about.html" class="text-sm text-white">About</a>
+                        <a href="blog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Docs</a>
                     </div>
                 </div>
-                <div class="hidden md:block">
-                    <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron">
-                        <i class="fas fa-download mr-2"></i> Download
-                    </a>
-                </div>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Download</a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-24">
-        <!-- Hero -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-4xl mx-auto text-center">
-                <img src="assets/qcut-logo.png" alt="QCut Logo" class="w-24 h-24 mx-auto mb-6">
-                <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6">
+    <main class="pt-32 pb-20 px-6">
+        <div class="max-w-3xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <img src="assets/qcut-logo.png" alt="QCut" class="w-20 h-20 mx-auto mb-6">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4">
                     <span class="gradient-text">About QCut</span>
                 </h1>
-                <p class="text-xl text-gray-400">
-                    Free, open-source video editor with AI superpowers.
-                </p>
+                <p class="text-xl text-gray-400">Free, open-source video editor with AI superpowers.</p>
             </div>
-        </section>
 
-        <!-- Story -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900 bg-opacity-50">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-6 text-white">Why We Built QCut</h2>
-                <div class="prose prose-invert max-w-none">
-                    <p class="text-gray-400 mb-4 text-lg">
-                        <span class="text-white font-semibold">CapCut's basic features are increasingly behind paywalls.</span> What started as a free editing tool has evolved into yet another subscription service. We believe video editing should be accessible to everyone.
+            <!-- Story -->
+            <div class="mb-16">
+                <h2 class="text-lg font-semibold mb-4">Why we built QCut</h2>
+                <div class="text-gray-400 space-y-4 leading-relaxed">
+                    <p>
+                        <span class="text-white">CapCut's basic features are now paywalled.</span> What started as a free editing tool has evolved into yet another subscription service.
                     </p>
-                    <p class="text-gray-400 mb-4">
-                        QCut is our answer: a completely free, open-source video editor that respects your privacy and gives you professional tools without the price tag. Every feature that CapCut locks behind a subscription, we offer for free.
+                    <p>
+                        QCut is our answer: a completely free, open-source video editor that respects your privacy. Every feature CapCut locks behind a subscription, we offer for free.
                     </p>
-                    <p class="text-gray-400 mb-4">
-                        But we didn't stop there. By integrating with <span class="text-purple-400">video-agent-skill</span>, we've added access to 40+ cutting-edge AI models for content generation. Text-to-video, image generation, AI voiceovers — all available at transparent API costs, no hidden subscription fees.
+                    <p>
+                        By integrating with <span class="text-purple-400">video-agent-skill</span>, we've added access to 40+ cutting-edge AI models — text-to-video, image generation, AI voiceovers — all at transparent API costs.
                     </p>
                 </div>
             </div>
-        </section>
 
-        <!-- Core Values -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-8 text-white text-center">Our Principles</h2>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="text-center">
-                        <div class="bg-purple-900 bg-opacity-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-gift text-purple-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2 orbitron">100% Free</h3>
-                        <p class="text-gray-400">No subscriptions, no watermarks, no hidden fees. Free forever.</p>
+            <!-- Principles -->
+            <div class="mb-16">
+                <h2 class="text-lg font-semibold mb-6">Our principles</h2>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="card rounded-xl p-6 text-center">
+                        <div class="text-3xl mb-3">🎁</div>
+                        <h3 class="font-semibold mb-2">100% Free</h3>
+                        <p class="text-gray-500 text-sm">No subscriptions, no watermarks, no hidden fees.</p>
                     </div>
-                    <div class="text-center">
-                        <div class="bg-pink-900 bg-opacity-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-lock text-pink-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2 orbitron">Privacy First</h3>
-                        <p class="text-gray-400">Your videos stay on your device. We never see your content.</p>
+                    <div class="card rounded-xl p-6 text-center">
+                        <div class="text-3xl mb-3">🔒</div>
+                        <h3 class="font-semibold mb-2">Privacy First</h3>
+                        <p class="text-gray-500 text-sm">Your videos stay on your device.</p>
                     </div>
-                    <div class="text-center">
-                        <div class="bg-blue-900 bg-opacity-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fab fa-github text-blue-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2 orbitron">Open Source</h3>
-                        <p class="text-gray-400">MIT licensed. Fork it, modify it, contribute to it.</p>
+                    <div class="card rounded-xl p-6 text-center">
+                        <div class="text-3xl mb-3">📖</div>
+                        <h3 class="font-semibold mb-2">Open Source</h3>
+                        <p class="text-gray-500 text-sm">MIT licensed. Fork, modify, contribute.</p>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Tech Stack -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900 bg-opacity-50">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-2xl font-bold orbitron mb-8 text-white">Tech Stack</h2>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-4">
-                            <i class="fas fa-desktop text-purple-400 mr-2"></i> QCut Desktop
-                        </h3>
-                        <ul class="text-gray-400 space-y-2">
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> Electron + TypeScript</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> React 18 + Vite 7</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> Tailwind CSS 4</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> Zustand State Management</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> FFmpeg WebAssembly</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> TanStack Router</li>
+            <!-- Tech Stack -->
+            <div class="mb-16">
+                <h2 class="text-lg font-semibold mb-6">Tech stack</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card rounded-xl p-6">
+                        <h3 class="text-sm text-purple-400 font-medium mb-4">QCut Desktop</h3>
+                        <ul class="text-gray-400 text-sm space-y-2">
+                            <li>• Electron + TypeScript</li>
+                            <li>• React 18 + Vite 7</li>
+                            <li>• Tailwind CSS 4</li>
+                            <li>• FFmpeg WebAssembly</li>
                         </ul>
                     </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-4">
-                            <i class="fas fa-robot text-pink-400 mr-2"></i> video-agent-skill
-                        </h3>
-                        <ul class="text-gray-400 space-y-2">
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> Python 3.10+</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> 40+ AI Models</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> FAL AI Integration</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> ElevenLabs TTS</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> Google Vertex AI</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i> YAML Pipeline Config</li>
+                    <div class="card rounded-xl p-6">
+                        <h3 class="text-sm text-pink-400 font-medium mb-4">video-agent-skill</h3>
+                        <ul class="text-gray-400 text-sm space-y-2">
+                            <li>• Python 3.10+</li>
+                            <li>• 40+ AI Models</li>
+                            <li>• FAL AI + ElevenLabs</li>
+                            <li>• YAML Pipeline Config</li>
                         </ul>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Open Source -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-2xl font-bold orbitron mb-6 text-white">Contribute</h2>
-                <p class="text-gray-400 mb-8">
-                    QCut is open source and we welcome contributions! Whether it's bug fixes, new features, or documentation improvements, we'd love your help.
-                </p>
+            <!-- CTA -->
+            <div class="text-center">
+                <h2 class="text-lg font-semibold mb-6">Contribute</h2>
+                <p class="text-gray-400 mb-6">QCut is open source. We welcome contributions!</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium">
-                        <i class="fab fa-github mr-2"></i> QCut Repository
+                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium">
+                        QCut Repository
                     </a>
-                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium">
-                        <i class="fas fa-robot mr-2"></i> AI Pipeline Repository
+                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="btn-secondary px-6 py-3 rounded-xl text-sm font-medium">
+                        AI Pipeline Repository
                     </a>
                 </div>
             </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900 to-pink-900">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-3xl font-bold orbitron mb-6 text-white">Ready to start creating?</h2>
-                <a href="https://github.com/donghaozhang/qcut/releases" class="inline-block bg-white text-purple-900 hover:bg-gray-100 px-8 py-4 rounded-md text-lg font-medium orbitron">
-                    <i class="fas fa-download mr-2"></i> Download QCut
-                </a>
-            </div>
-        </section>
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-8 px-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <p class="text-gray-500 text-sm">&copy; 2026 QCut. Open Source under MIT License.</p>
+    <footer class="border-t border-white/5 py-8 px-6">
+        <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
+            © 2026 QCut. Open source under MIT License.
         </div>
     </footer>
 </body>
