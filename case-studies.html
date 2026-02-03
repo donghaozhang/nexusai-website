@@ -4,189 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery - QCut</title>
-    <meta name="description" content="QCut gallery - examples of AI-generated content." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #000; color: #fff; }
-        .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .nav-blur { backdrop-filter: blur(20px); }
-        .card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(168, 85, 247, 0.3);
-            transform: translateY(-2px);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-        }
-        .btn-secondary {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+        body { background: #faf9f7; color: #1a1a1a; }
+        .bg-cream { background: #faf9f7; }
+        .btn-dark { background: #1a1a1a; color: #fff; }
+        .btn-outline { border: 1px solid #d1d1d1; }
+        .btn-outline:hover { border-color: #1a1a1a; }
+        .card { background: #fff; border: 1px solid #e5e5e5; transition: all 0.2s; }
+        .card:hover { border-color: #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .text-muted { color: #666; }
+        .nav-border { border-bottom: 1px solid #e5e5e5; }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 nav-blur bg-black/80 border-b border-white/5">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex items-center justify-between h-16">
+    <nav class="fixed top-0 w-full z-50 bg-cream nav-border">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
                 <div class="flex items-center space-x-8">
                     <a href="index.html" class="flex items-center space-x-2">
-                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8">
-                        <span class="text-xl font-semibold">QCut</span>
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="solutions.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
-                        <a href="index.html#ai" class="text-sm text-gray-400 hover:text-white transition-colors">AI Models</a>
-                        <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
-                        <a href="blog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Docs</a>
+                        <a href="solutions.html" class="text-sm text-muted hover:text-black">Features</a>
+                        <a href="index.html#ai" class="text-sm text-muted hover:text-black">AI Models</a>
+                        <a href="about.html" class="text-sm text-muted hover:text-black">About</a>
+                        <a href="blog.html" class="text-sm text-muted hover:text-black">Docs</a>
                     </div>
                 </div>
-                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Download</a>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-32 pb-20 px-6">
-        <div class="max-w-6xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-16">
-                <h1 class="text-4xl sm:text-5xl font-bold mb-4">
-                    <span class="gradient-text">Gallery</span>
-                </h1>
-                <p class="text-xl text-gray-400">Examples of what you can create with QCut.</p>
-            </div>
+    <main class="pt-28 pb-20 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl font-semibold mb-4">Gallery</h1>
+            <p class="text-muted mb-16">Examples of what you can create with QCut.</p>
 
-            <!-- AI Generated Examples -->
-            <div class="mb-20">
-                <h2 class="text-sm text-purple-400 font-medium mb-6 uppercase tracking-wider">AI Generated Content</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- AI Examples -->
+            <div class="mb-16">
+                <h2 class="text-xs text-muted uppercase tracking-wider mb-6">AI Generated Content</h2>
+                <div class="grid md:grid-cols-3 gap-4">
                     <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center">
-                            <span class="text-4xl opacity-50">🎬</span>
+                        <div class="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                            <span class="text-3xl">🎬</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-xs text-purple-400 mb-1">Text-to-Video • Sora 2</div>
-                            <p class="text-sm text-gray-300">"Epic dragon over mountains"</p>
+                            <div class="text-xs text-purple-600 mb-1">Text-to-Video • Sora 2</div>
+                            <p class="text-sm">"Epic dragon over mountains"</p>
                         </div>
                     </div>
                     
                     <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-blue-900/50 to-cyan-900/50 flex items-center justify-center">
-                            <span class="text-4xl opacity-50">🖼️</span>
+                        <div class="aspect-video bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
+                            <span class="text-3xl">🖼️</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-xs text-blue-400 mb-1">Text-to-Image • FLUX.1</div>
-                            <p class="text-sm text-gray-300">"Cyberpunk city at night"</p>
+                            <div class="text-xs text-blue-600 mb-1">Text-to-Image • FLUX.1</div>
+                            <p class="text-sm">"Cyberpunk city at night"</p>
                         </div>
                     </div>
                     
                     <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-green-900/50 to-teal-900/50 flex items-center justify-center">
-                            <span class="text-4xl opacity-50">👤</span>
+                        <div class="aspect-video bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center">
+                            <span class="text-3xl">👤</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-xs text-green-400 mb-1">AI Avatar • OmniHuman</div>
-                            <p class="text-sm text-gray-300">Talking head video</p>
+                            <div class="text-xs text-green-600 mb-1">AI Avatar • OmniHuman</div>
+                            <p class="text-sm">Talking head video</p>
                         </div>
                     </div>
                     
                     <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-orange-900/50 to-red-900/50 flex items-center justify-center">
-                            <span class="text-4xl opacity-50">🎞️</span>
+                        <div class="aspect-video bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
+                            <span class="text-3xl">🎞️</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-xs text-orange-400 mb-1">Image-to-Video • Kling Pro</div>
-                            <p class="text-sm text-gray-300">Photo animation</p>
+                            <div class="text-xs text-orange-600 mb-1">Image-to-Video • Kling Pro</div>
+                            <p class="text-sm">Photo animation</p>
                         </div>
                     </div>
                     
                     <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-pink-900/50 to-rose-900/50 flex items-center justify-center">
-                            <span class="text-4xl opacity-50">🎙️</span>
+                        <div class="aspect-video bg-gradient-to-br from-pink-100 to-rose-100 flex items-center justify-center">
+                            <span class="text-3xl">🎙️</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-xs text-pink-400 mb-1">Text-to-Speech • ElevenLabs</div>
-                            <p class="text-sm text-gray-300">Professional voiceover</p>
+                            <div class="text-xs text-pink-600 mb-1">Text-to-Speech • ElevenLabs</div>
+                            <p class="text-sm">Professional voiceover</p>
                         </div>
                     </div>
                     
                     <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-indigo-900/50 to-violet-900/50 flex items-center justify-center">
-                            <span class="text-4xl opacity-50">✨</span>
+                        <div class="aspect-video bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center">
+                            <span class="text-3xl">✨</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-xs text-indigo-400 mb-1">Pipeline • YAML Config</div>
-                            <p class="text-sm text-gray-300">Text → Image → Video</p>
+                            <div class="text-xs text-indigo-600 mb-1">Pipeline • YAML</div>
+                            <p class="text-sm">Text → Image → Video</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Community -->
-            <div class="mb-20">
-                <h2 class="text-sm text-pink-400 font-medium mb-6 uppercase tracking-wider">Community Creations</h2>
+            <div class="mb-16">
+                <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Community</h2>
                 <div class="card rounded-xl p-8 text-center">
-                    <div class="text-5xl mb-4">🎬</div>
-                    <h3 class="text-xl font-semibold mb-3">Share Your Work</h3>
-                    <p class="text-gray-400 mb-6 max-w-md mx-auto">
-                        Created something with QCut? Share it on GitHub Discussions!
-                    </p>
-                    <a href="https://github.com/donghaozhang/qcut/discussions" target="_blank" class="btn-secondary inline-block px-6 py-3 rounded-xl text-sm font-medium">
+                    <div class="text-4xl mb-4">🎬</div>
+                    <h3 class="font-semibold mb-2">Share Your Work</h3>
+                    <p class="text-muted mb-6">Created something with QCut? Share it on GitHub!</p>
+                    <a href="https://github.com/donghaozhang/qcut/discussions" target="_blank" class="btn-outline inline-block px-5 py-2.5 rounded-full text-sm">
                         Share on GitHub
                     </a>
                 </div>
             </div>
 
-            <!-- Best Models -->
+            <!-- Recommendations -->
             <div>
-                <h2 class="text-sm text-gray-400 font-medium mb-6 uppercase tracking-wider">Model Recommendations</h2>
+                <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Model Recommendations</h2>
                 <div class="grid md:grid-cols-2 gap-4">
-                    <div class="card rounded-xl p-6">
-                        <h3 class="font-semibold mb-4">Best for Quality</h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Text-to-Image</span>
-                                <span>FLUX.1 Dev, Imagen 4</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Text-to-Video</span>
-                                <span>Sora 2, Veo 3</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Avatar</span>
-                                <span>OmniHuman v1.5</span>
-                            </div>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-3">Best for Quality</h3>
+                        <div class="space-y-2 text-sm text-muted">
+                            <div class="flex justify-between"><span>Text-to-Image</span><span class="text-black">FLUX.1, Imagen 4</span></div>
+                            <div class="flex justify-between"><span>Text-to-Video</span><span class="text-black">Sora 2, Veo 3</span></div>
+                            <div class="flex justify-between"><span>Avatar</span><span class="text-black">OmniHuman v1.5</span></div>
                         </div>
                     </div>
-                    <div class="card rounded-xl p-6">
-                        <h3 class="font-semibold mb-4">Best for Speed/Cost</h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Text-to-Image</span>
-                                <span>FLUX Schnell, Nano Banana</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Text-to-Video</span>
-                                <span>Hailuo, Kling Standard</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Avatar</span>
-                                <span>VEED Fabric Fast</span>
-                            </div>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-3">Best for Speed/Cost</h3>
+                        <div class="space-y-2 text-sm text-muted">
+                            <div class="flex justify-between"><span>Text-to-Image</span><span class="text-black">FLUX Schnell</span></div>
+                            <div class="flex justify-between"><span>Text-to-Video</span><span class="text-black">Hailuo</span></div>
+                            <div class="flex justify-between"><span>Avatar</span><span class="text-black">VEED Fast</span></div>
                         </div>
                     </div>
                 </div>
@@ -194,9 +150,8 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 py-8 px-6">
-        <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
+    <footer class="py-8 px-6 border-t border-gray-200">
+        <div class="max-w-5xl mx-auto text-center text-sm text-muted">
             © 2026 QCut. Open source under MIT License.
         </div>
     </footer>

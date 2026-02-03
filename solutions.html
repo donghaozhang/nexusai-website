@@ -4,168 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Features - QCut</title>
-    <meta name="description" content="QCut features - timeline editing, AI content generation, and more." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #000; color: #fff; }
-        .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .nav-blur { backdrop-filter: blur(20px); }
-        .feature-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(168, 85, 247, 0.3);
-            transform: translateY(-2px);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-        }
+        body { background: #faf9f7; color: #1a1a1a; }
+        .bg-cream { background: #faf9f7; }
+        .bg-cream-dark { background: #f0eeeb; }
+        .btn-dark { background: #1a1a1a; color: #fff; }
+        .btn-dark:hover { background: #333; }
+        .card { background: #fff; border: 1px solid #e5e5e5; transition: all 0.2s ease; }
+        .card:hover { border-color: #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .text-muted { color: #666; }
+        .nav-border { border-bottom: 1px solid #e5e5e5; }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 nav-blur bg-black/80 border-b border-white/5">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex items-center justify-between h-16">
+    <nav class="fixed top-0 w-full z-50 bg-cream nav-border">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
                 <div class="flex items-center space-x-8">
                     <a href="index.html" class="flex items-center space-x-2">
-                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8">
-                        <span class="text-xl font-semibold">QCut</span>
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="solutions.html" class="text-sm text-white">Features</a>
-                        <a href="index.html#ai" class="text-sm text-gray-400 hover:text-white transition-colors">AI Models</a>
-                        <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
-                        <a href="blog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Docs</a>
+                        <a href="solutions.html" class="text-sm text-black">Features</a>
+                        <a href="index.html#ai" class="text-sm text-muted hover:text-black">AI Models</a>
+                        <a href="about.html" class="text-sm text-muted hover:text-black">About</a>
+                        <a href="blog.html" class="text-sm text-muted hover:text-black">Docs</a>
                     </div>
                 </div>
-                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Download</a>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-32 pb-20 px-6">
-        <div class="max-w-6xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-20">
-                <h1 class="text-4xl sm:text-5xl font-bold mb-4">
-                    <span class="gradient-text">All Features</span>
-                </h1>
-                <p class="text-xl text-gray-400">Everything you need to create professional videos.</p>
-            </div>
+    <main class="pt-28 pb-20 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl font-semibold mb-4">Features</h1>
+            <p class="text-muted mb-16">Everything you need to create professional videos.</p>
 
             <!-- Video Editing -->
-            <div class="mb-20">
-                <h2 class="text-sm text-purple-400 font-medium mb-6 uppercase tracking-wider">Video Editing</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="feature-card rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-2">Timeline Editor</h3>
-                        <p class="text-gray-400 text-sm">Multi-track timeline with drag-and-drop, precise trimming, and snap-to-grid.</p>
+            <div class="mb-16">
+                <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Video Editing</h2>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-2">Timeline Editor</h3>
+                        <p class="text-sm text-muted">Multi-track with drag-and-drop and snap-to-grid.</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-2">Multi-track Audio</h3>
-                        <p class="text-gray-400 text-sm">Layer multiple audio tracks with individual volume control.</p>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-2">Multi-track Audio</h3>
+                        <p class="text-sm text-muted">Layer audio tracks with individual volume control.</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-2">Real-time Preview</h3>
-                        <p class="text-gray-400 text-sm">Instant preview with smooth playback and accurate seeking.</p>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-2">Real-time Preview</h3>
+                        <p class="text-sm text-muted">Instant preview with smooth playback.</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-2">Text Overlays</h3>
-                        <p class="text-gray-400 text-sm">Customizable text with fonts, colors, and animations.</p>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-2">Text Overlays</h3>
+                        <p class="text-sm text-muted">Customizable text with fonts and animations.</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-2">Transitions</h3>
-                        <p class="text-gray-400 text-sm">Smooth transitions including fades, wipes, and custom effects.</p>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-2">Transitions</h3>
+                        <p class="text-sm text-muted">Fades, wipes, and custom effects.</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-2">Export Options</h3>
-                        <p class="text-gray-400 text-sm">Export in multiple formats up to 4K with FFmpeg.</p>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-medium mb-2">Export</h3>
+                        <p class="text-sm text-muted">Multiple formats up to 4K with FFmpeg.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- AI Content Generation -->
-            <div class="mb-20">
-                <h2 class="text-sm text-pink-400 font-medium mb-6 uppercase tracking-wider">AI Content Generation</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="feature-card rounded-xl p-6 border-l-2 border-l-blue-500">
-                        <h3 class="text-lg font-semibold mb-2">Text-to-Image</h3>
-                        <p class="text-gray-400 text-sm mb-3">Generate images from text prompts.</p>
-                        <p class="text-xs text-gray-600">FLUX.1 • Imagen 4 • Nano Banana</p>
+            <!-- AI Generation -->
+            <div class="mb-16">
+                <h2 class="text-xs text-muted uppercase tracking-wider mb-6">AI Content Generation</h2>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="card rounded-xl p-5 border-l-4 border-l-blue-400">
+                        <h3 class="font-medium mb-2">Text-to-Image</h3>
+                        <p class="text-sm text-muted mb-2">Generate images from text prompts.</p>
+                        <p class="text-xs text-gray-400">FLUX • Imagen 4 • Nano Banana</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6 border-l-2 border-l-purple-500">
-                        <h3 class="text-lg font-semibold mb-2">Image-to-Video</h3>
-                        <p class="text-gray-400 text-sm mb-3">Bring still images to life.</p>
-                        <p class="text-xs text-gray-600">Veo 3 • Sora 2 • Kling Pro</p>
+                    <div class="card rounded-xl p-5 border-l-4 border-l-purple-400">
+                        <h3 class="font-medium mb-2">Text-to-Video</h3>
+                        <p class="text-sm text-muted mb-2">Create videos from descriptions.</p>
+                        <p class="text-xs text-gray-400">Sora 2 • Veo 3 • Kling Pro</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6 border-l-2 border-l-pink-500">
-                        <h3 class="text-lg font-semibold mb-2">Text-to-Video</h3>
-                        <p class="text-gray-400 text-sm mb-3">Create videos from text descriptions.</p>
-                        <p class="text-xs text-gray-600">Sora 2 • Veo 3 • Hailuo Pro</p>
+                    <div class="card rounded-xl p-5 border-l-4 border-l-green-400">
+                        <h3 class="font-medium mb-2">AI Voiceover</h3>
+                        <p class="text-sm text-muted mb-2">Professional TTS in multiple languages.</p>
+                        <p class="text-xs text-gray-400">ElevenLabs • 20+ Voices</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6 border-l-2 border-l-cyan-500">
-                        <h3 class="text-lg font-semibold mb-2">AI Avatar</h3>
-                        <p class="text-gray-400 text-sm mb-3">Talking head videos with lip-sync.</p>
-                        <p class="text-xs text-gray-600">OmniHuman • VEED Fabric</p>
+                    <div class="card rounded-xl p-5 border-l-4 border-l-cyan-400">
+                        <h3 class="font-medium mb-2">AI Avatar</h3>
+                        <p class="text-sm text-muted mb-2">Talking head videos with lip-sync.</p>
+                        <p class="text-xs text-gray-400">OmniHuman • VEED Fabric</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6 border-l-2 border-l-green-500">
-                        <h3 class="text-lg font-semibold mb-2">Text-to-Speech</h3>
-                        <p class="text-gray-400 text-sm mb-3">Professional voiceover in multiple languages.</p>
-                        <p class="text-xs text-gray-600">ElevenLabs • 20+ Voices</p>
+                    <div class="card rounded-xl p-5 border-l-4 border-l-orange-400">
+                        <h3 class="font-medium mb-2">Image-to-Video</h3>
+                        <p class="text-sm text-muted mb-2">Animate still images.</p>
+                        <p class="text-xs text-gray-400">Veo 3 • Kling • Hailuo</p>
                     </div>
-                    <div class="feature-card rounded-xl p-6 border-l-2 border-l-orange-500">
-                        <h3 class="text-lg font-semibold mb-2">AI Transcription</h3>
-                        <p class="text-gray-400 text-sm mb-3">Automatic speech-to-text for subtitles.</p>
-                        <p class="text-xs text-gray-600">Scribe v2 • Multi-language</p>
+                    <div class="card rounded-xl p-5 border-l-4 border-l-pink-400">
+                        <h3 class="font-medium mb-2">Transcription</h3>
+                        <p class="text-sm text-muted mb-2">Automatic subtitles from audio.</p>
+                        <p class="text-xs text-gray-400">Scribe v2 • Multi-language</p>
                     </div>
                 </div>
             </div>
 
             <!-- Technical -->
             <div>
-                <h2 class="text-sm text-gray-400 font-medium mb-6 uppercase tracking-wider">Technical</h2>
+                <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Technical</h2>
                 <div class="grid md:grid-cols-4 gap-4">
-                    <div class="feature-card rounded-xl p-6 text-center">
-                        <div class="text-3xl mb-3">🔒</div>
-                        <h3 class="font-semibold mb-1">Privacy First</h3>
-                        <p class="text-gray-500 text-xs">Local processing</p>
+                    <div class="card rounded-xl p-5 text-center">
+                        <div class="text-2xl mb-2">🔒</div>
+                        <h3 class="font-medium text-sm">Privacy First</h3>
                     </div>
-                    <div class="feature-card rounded-xl p-6 text-center">
-                        <div class="text-3xl mb-3">⚡</div>
-                        <h3 class="font-semibold mb-1">FFmpeg</h3>
-                        <p class="text-gray-500 text-xs">WebAssembly</p>
+                    <div class="card rounded-xl p-5 text-center">
+                        <div class="text-2xl mb-2">⚡</div>
+                        <h3 class="font-medium text-sm">FFmpeg WebASM</h3>
                     </div>
-                    <div class="feature-card rounded-xl p-6 text-center">
-                        <div class="text-3xl mb-3">🖥️</div>
-                        <h3 class="font-semibold mb-1">Electron</h3>
-                        <p class="text-gray-500 text-xs">Native Windows</p>
+                    <div class="card rounded-xl p-5 text-center">
+                        <div class="text-2xl mb-2">🖥️</div>
+                        <h3 class="font-medium text-sm">Electron</h3>
                     </div>
-                    <div class="feature-card rounded-xl p-6 text-center">
-                        <div class="text-3xl mb-3">📖</div>
-                        <h3 class="font-semibold mb-1">Open Source</h3>
-                        <p class="text-gray-500 text-xs">MIT License</p>
+                    <div class="card rounded-xl p-5 text-center">
+                        <div class="text-2xl mb-2">📖</div>
+                        <h3 class="font-medium text-sm">Open Source</h3>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 py-8 px-6">
-        <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
+    <footer class="py-8 px-6 border-t border-gray-200">
+        <div class="max-w-5xl mx-auto text-center text-sm text-muted">
             © 2026 QCut. Open source under MIT License.
         </div>
     </footer>
