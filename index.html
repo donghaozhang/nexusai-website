@@ -3,630 +3,439 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QCut | Free Video Editor with AI Superpowers</title>
-    <meta name="description" content="QCut is a free, open-source video editor for Windows with AI-powered features. No watermarks, no subscriptions, privacy-first." />
-    <meta name="keywords" content="QCut, video editor, free video editor, AI video, open source, Windows" />
-    <meta property="og:title" content="QCut | Free Video Editor with AI Superpowers" />
-    <meta property="og:description" content="Free, open-source video editor with 40+ AI models for content generation." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://donghaozhang.github.io/nexusai-website/" />
-    <meta property="og:image" content="assets/qcut-logo.png" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <title>QCut - The AI Video Editor</title>
+    <meta name="description" content="QCut is a free, open-source video editor with AI superpowers. Create professional videos with 40+ AI models." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #000; color: #fff; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-border {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.3));
+            border-radius: 16px;
+            padding: 1px;
+        }
+        
+        .gradient-border-inner {
+            background: #0a0a0a;
+            border-radius: 15px;
+        }
+        
+        .glow {
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.15);
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .testimonial-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .demo-container {
+            background: linear-gradient(180deg, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+        }
+        
+        .code-block {
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+    </style>
 </head>
-<body class="grid-pattern">
-    <a href="#main-content" class="skip-link">Skip to content</a>
+<body class="antialiased">
     
     <!-- Navigation -->
-    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800" role="navigation" aria-label="Main">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="fixed top-0 w-full z-50 nav-blur bg-black/80 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <img src="assets/qcut-logo.png" alt="QCut Logo" class="h-10 w-10 mr-3">
-                        <span class="text-white text-2xl font-bold orbitron gradient-text">QCut</span>
-                    </div>
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#features" data-i18n="nav_features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Features</a>
-                            <a href="#ai-models" data-i18n="nav_ai_models" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">AI Models</a>
-                            <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
-                            <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
-                                <i class="fab fa-github mr-1"></i> GitHub
-                            </a>
-                        </div>
+                <div class="flex items-center space-x-8">
+                    <a href="/" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8">
+                        <span class="text-xl font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="#features" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+                        <a href="#ai" class="text-sm text-gray-400 hover:text-white transition-colors">AI Models</a>
+                        <a href="blog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Docs</a>
+                        <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors">GitHub</a>
                     </div>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-4 flex items-center md:ml-6">
-                        <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300">
-                            <i class="fas fa-download mr-2"></i> Download
-                        </a>
-                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl" aria-label="Toggle theme">
-                            <i class="fas fa-sun"></i>
-                        </button>
-                        <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none" aria-label="Language selector">
-                            <option value="en">EN</option>
-                            <option value="zh">中文</option>
-                        </select>
-                    </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">
+                        Download
+                    </a>
                 </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="sr-only">Open main menu</span>
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Mobile menu -->
-        <div class="hidden md:hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#features" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Features</a>
-                <a href="#ai-models" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">AI Models</a>
-                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                    <i class="fab fa-github mr-1"></i> GitHub
-                </a>
-                <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2 block text-center">
-                    <i class="fas fa-download mr-2"></i> Download
-                </a>
             </div>
         </div>
     </nav>
 
-    <main id="main-content">
-    
-    <!-- Hero Section -->
-    <section class="hero-gradient fade-in pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
-                <div class="px-4 sm:px-0 lg:col-span-7">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight orbitron mb-6" data-i18n="hero_title">
-                        <span class="gradient-text glow">Free</span> Video Editor
-                        <br><span class="text-white text-3xl sm:text-4xl">with AI Superpowers</span>
-                    </h1>
-                    <p class="text-xl text-gray-300 mb-8 max-w-3xl" data-i18n="hero_tagline">
-                        Open-source video editing for Windows. Timeline editing, AI content generation, and professional tools — completely free, no watermarks, privacy-first.
-                    </p>
-                    
-                    <!-- Feature badges -->
-                    <div class="flex flex-wrap gap-3 mb-8">
-                        <span class="bg-green-900 bg-opacity-50 text-green-400 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-check mr-1"></i> 100% Free
-                        </span>
-                        <span class="bg-blue-900 bg-opacity-50 text-blue-400 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-check mr-1"></i> No Watermark
-                        </span>
-                        <span class="bg-purple-900 bg-opacity-50 text-purple-400 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-check mr-1"></i> Open Source
-                        </span>
-                        <span class="bg-pink-900 bg-opacity-50 text-pink-400 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-check mr-1"></i> 40+ AI Models
-                        </span>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 pulse-animation text-center">
-                            <i class="fas fa-download mr-2"></i> Download for Windows
-                        </a>
-                        <a href="https://github.com/donghaozhang/qcut" target="_blank" class="border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 text-center">
-                            <i class="fab fa-github mr-2"></i> Star on GitHub
-                        </a>
-                    </div>
+    <main>
+        <!-- Hero Section -->
+        <section class="pt-32 pb-20 px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <!-- Badge -->
+                <div class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
+                    <span class="text-xs text-purple-400">✨ 100% Free & Open Source</span>
                 </div>
-                <div class="mt-12 lg:mt-0 lg:col-span-5 flex justify-center">
-                    <div class="relative w-full max-w-md">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl opacity-20 blur-lg"></div>
-                        <div class="relative bg-gray-900 rounded-xl overflow-hidden p-1">
-                            <div class="terminal">
-                                <div class="terminal-header px-4 py-2 flex items-center">
-                                    <div class="flex space-x-2">
-                                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                                    </div>
-                                    <div class="text-xs text-gray-400 ml-4">qcut-ai-terminal</div>
-                                </div>
-                                <div class="terminal-body p-4">
-                                    <div class="text-green-400">$ ai-content-pipeline list-models</div>
-                                    <div class="text-gray-400 mt-2">📦 Available AI Models:</div>
-                                    <div class="text-gray-400 mt-1">├── Text-to-Image: <span class="text-blue-400">8 models</span></div>
-                                    <div class="text-gray-400 mt-1">├── Image-to-Video: <span class="text-purple-400">12 models</span></div>
-                                    <div class="text-gray-400 mt-1">├── Text-to-Video: <span class="text-pink-400">6 models</span></div>
-                                    <div class="text-gray-400 mt-1">├── Avatar: <span class="text-cyan-400">9 models</span></div>
-                                    <div class="text-gray-400 mt-1">└── TTS: <span class="text-green-400">20+ voices</span></div>
-                                    <div class="text-green-400 mt-3">$ ai-content-pipeline create-video</div>
-                                    <div class="text-gray-400 mt-1">--text "epic dragon battle"</div>
-                                    <div class="text-gray-400 mt-1">⏳ Generating image... <span class="text-white">Done!</span></div>
-                                    <div class="text-gray-400 mt-1">⏳ Creating video... <span class="text-white">Done!</span></div>
-                                    <div class="text-white mt-1">✅ Output: dragon_battle.mp4</div>
-                                    <div class="text-green-400 mt-2">$ <span class="blink">_</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="py-16 bg-gradient-to-r from-purple-900 to-pink-900 fade-in">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">40+</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">AI Models</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">100%</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">Free Forever</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">0</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">Watermarks</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">∞</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">Projects</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="features_title">
-                    <span class="gradient-text">Powerful Features</span>
-                </h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto" data-i18n="features_subtitle">
-                    Everything you need to create professional videos, powered by AI.
+                
+                <!-- Main Heading -->
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+                    <span class="gradient-text">The AI Video Editor</span>
+                </h1>
+                
+                <!-- Subheading -->
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Edit videos with AI superpowers. Text-to-video, AI voiceovers, and 40+ models — completely free, no watermarks.
                 </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Feature 1: Timeline Editing -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-purple-500 transition-all duration-300 p-6">
-                    <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-film text-purple-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature1_title">Timeline Editing</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature1_desc">
-                        Multi-track audio and video editing with drag-and-drop, precise cuts, and real-time preview.
-                    </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-8 py-3.5 rounded-xl text-base font-medium flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Download for Windows</span>
+                    </a>
+                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="btn-secondary px-8 py-3.5 rounded-xl text-base font-medium flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <span>Star on GitHub</span>
+                    </a>
                 </div>
                 
-                <!-- Feature 2: AI Text-to-Video -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-pink-500 transition-all duration-300 p-6">
-                    <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-magic text-pink-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature2_title">AI Text-to-Video</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature2_desc">
-                        Generate videos from text prompts using Sora 2, Veo 3, Kling Pro, and more.
-                    </p>
-                </div>
-                
-                <!-- Feature 3: AI Image Generation -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-blue-500 transition-all duration-300 p-6">
-                    <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-image text-blue-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature3_title">AI Image Generation</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature3_desc">
-                        Create stunning images with FLUX, Imagen 4, and Nano Banana Pro models.
-                    </p>
-                </div>
-                
-                <!-- Feature 4: AI Voiceover -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-green-500 transition-all duration-300 p-6">
-                    <div class="bg-green-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-microphone text-green-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature4_title">AI Voiceover</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature4_desc">
-                        Professional text-to-speech with 20+ ElevenLabs voices in multiple languages.
-                    </p>
-                </div>
-                
-                <!-- Feature 5: AI Avatar -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-cyan-500 transition-all duration-300 p-6">
-                    <div class="bg-cyan-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-user-circle text-cyan-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature5_title">AI Avatar</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature5_desc">
-                        Create talking head videos with OmniHuman, VEED Fabric, and more.
-                    </p>
-                </div>
-                
-                <!-- Feature 6: Sound Library -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-yellow-500 transition-all duration-300 p-6">
-                    <div class="bg-yellow-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-music text-yellow-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature6_title">Sound Library</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature6_desc">
-                        Integrated Freesound library with search and commercial-use filtering.
-                    </p>
-                </div>
-                
-                <!-- Feature 7: Stickers & Graphics -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-orange-500 transition-all duration-300 p-6">
-                    <div class="bg-orange-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-icons text-orange-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature7_title">Stickers & Graphics</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature7_desc">
-                        Rich icon library with Iconify integration for text overlays and graphics.
-                    </p>
-                </div>
-                
-                <!-- Feature 8: Privacy First -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-red-500 transition-all duration-300 p-6">
-                    <div class="bg-red-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
-                        <i class="fas fa-shield-alt text-red-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature8_title">Privacy First</h3>
-                    <p class="text-gray-400 text-sm" data-i18n="feature8_desc">
-                        All processing happens locally. Your videos never leave your device.
-                    </p>
+                <!-- Trust badges -->
+                <div class="flex items-center justify-center gap-8 text-sm text-gray-500">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        No watermarks
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Privacy-first
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Open source
+                    </span>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- AI Models Section -->
-    <section id="ai-models" class="fade-in py-20 bg-gray-900 bg-opacity-50 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4">
-                    <span class="gradient-text">40+ AI Models</span>
-                </h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-                    Powered by video-agent-skill — access the best AI models for content creation.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Text-to-Image -->
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg">
-                            <i class="fas fa-image text-blue-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Text-to-Image</h3>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-2">
-                        <li class="flex justify-between"><span>FLUX.1 Dev</span><span class="text-green-400">$0.003</span></li>
-                        <li class="flex justify-between"><span>Imagen 4</span><span class="text-green-400">$0.002</span></li>
-                        <li class="flex justify-between"><span>Nano Banana Pro</span><span class="text-green-400">$0.002</span></li>
-                        <li class="flex justify-between"><span>GPT Image 1.5</span><span class="text-green-400">$0.003</span></li>
-                    </ul>
-                </div>
-                
-                <!-- Image-to-Video -->
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg">
-                            <i class="fas fa-video text-purple-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Image-to-Video</h3>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-2">
-                        <li class="flex justify-between"><span>Veo 3</span><span class="text-yellow-400">$2.50-6.00</span></li>
-                        <li class="flex justify-between"><span>Sora 2</span><span class="text-yellow-400">$0.40-1.20</span></li>
-                        <li class="flex justify-between"><span>Kling 2.6 Pro</span><span class="text-yellow-400">$0.50-1.00</span></li>
-                        <li class="flex justify-between"><span>Hailuo</span><span class="text-green-400">$0.08</span></li>
-                    </ul>
-                </div>
-                
-                <!-- Text-to-Video -->
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg">
-                            <i class="fas fa-film text-pink-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Text-to-Video</h3>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-2">
-                        <li class="flex justify-between"><span>Sora 2</span><span class="text-yellow-400">$0.40-1.20</span></li>
-                        <li class="flex justify-between"><span>Kling 2.6 Pro</span><span class="text-yellow-400">$0.35-1.40</span></li>
-                        <li class="flex justify-between"><span>Hailuo Pro</span><span class="text-green-400">$0.10</span></li>
-                        <li class="flex justify-between"><span>Veo 3</span><span class="text-yellow-400">$2.50-6.00</span></li>
-                    </ul>
-                </div>
-                
-                <!-- Avatar Generation -->
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-cyan-900 bg-opacity-50 p-3 rounded-lg">
-                            <i class="fas fa-user text-cyan-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Avatar Generation</h3>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-2">
-                        <li class="flex justify-between"><span>OmniHuman v1.5</span><span class="text-green-400">$0.15</span></li>
-                        <li class="flex justify-between"><span>VEED Fabric 1.0</span><span class="text-green-400">$0.08</span></li>
-                        <li class="flex justify-between"><span>VEED Fabric Fast</span><span class="text-green-400">$0.05</span></li>
-                        <li class="flex justify-between"><span>Kling Motion</span><span class="text-green-400">$0.12</span></li>
-                    </ul>
-                </div>
-                
-                <!-- Text-to-Speech -->
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-green-900 bg-opacity-50 p-3 rounded-lg">
-                            <i class="fas fa-microphone-alt text-green-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Text-to-Speech</h3>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-2">
-                        <li class="flex justify-between"><span>ElevenLabs</span><span class="text-blue-400">20+ voices</span></li>
-                        <li class="flex justify-between"><span>Multiple Languages</span><span class="text-blue-400">Supported</span></li>
-                        <li class="flex justify-between"><span>Voice Cloning</span><span class="text-blue-400">Available</span></li>
-                        <li class="flex justify-between"><span>Scribe v2 STT</span><span class="text-blue-400">Transcription</span></li>
-                    </ul>
-                </div>
-                
-                <!-- Video Processing -->
-                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-orange-900 bg-opacity-50 p-3 rounded-lg">
-                            <i class="fas fa-cogs text-orange-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Video Processing</h3>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-2">
-                        <li class="flex justify-between"><span>ThinksSound</span><span class="text-blue-400">Audio Gen</span></li>
-                        <li class="flex justify-between"><span>Topaz Upscale</span><span class="text-blue-400">4K/8K</span></li>
-                        <li class="flex justify-between"><span>Gemini Analysis</span><span class="text-blue-400">Video AI</span></li>
-                        <li class="flex justify-between"><span>FFmpeg WebASM</span><span class="text-blue-400">Local</span></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12">
-                <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-purple-400 hover:text-purple-300 orbitron">
-                    View all models on GitHub <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
-                <div class="lg:col-span-7 mb-12 lg:mb-0">
-                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
-                        <span class="gradient-text">Why QCut?</span>
-                    </h2>
-                    <p class="text-gray-400 mb-6 text-lg">
-                        CapCut's basic features are increasingly behind paywalls. We believe video editing should be accessible to everyone.
-                    </p>
-                    <p class="text-gray-400 mb-8">
-                        QCut is built by creators, for creators. It's 100% open-source, runs completely offline, and respects your privacy. Combined with video-agent-skill's 40+ AI models, you get professional-grade content creation tools without the subscription fees.
-                    </p>
-                    
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
-                            <div class="text-purple-400 text-3xl mb-3">
-                                <i class="fab fa-github"></i>
+        <!-- Demo Section -->
+        <section class="py-20 px-6 demo-container">
+            <div class="max-w-5xl mx-auto">
+                <div class="gradient-border glow">
+                    <div class="gradient-border-inner p-6 sm:p-8">
+                        <!-- Terminal Demo -->
+                        <div class="code-block rounded-xl overflow-hidden">
+                            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+                                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                                <span class="ml-4 text-xs text-gray-500">qcut-ai-pipeline</span>
                             </div>
-                            <h4 class="text-lg font-medium text-white orbitron mb-2">Open Source</h4>
-                            <p class="text-gray-400 text-sm">
-                                MIT licensed. Fork it, modify it, contribute to it.
-                            </p>
-                        </div>
-                        <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
-                            <div class="text-pink-400 text-3xl mb-3">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <h4 class="text-lg font-medium text-white orbitron mb-2">Privacy First</h4>
-                            <p class="text-gray-400 text-sm">
-                                Your videos stay on your device. No cloud uploads required.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:col-span-5">
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl opacity-20 blur-lg"></div>
-                        <div class="relative bg-gray-900 rounded-xl overflow-hidden p-8 border border-gray-800">
-                            <div class="text-center">
-                                <img src="assets/qcut-logo.png" alt="QCut Logo" class="w-32 h-32 mx-auto mb-6">
-                                <h3 class="text-2xl font-bold text-white orbitron mb-2">QCut</h3>
-                                <p class="text-gray-400 mb-6">Free Video Editor with AI Superpowers</p>
-                                <div class="flex justify-center space-x-4">
-                                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-400 hover:text-white text-2xl">
-                                        <i class="fab fa-github"></i>
-                                    </a>
-                                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-gray-400 hover:text-white text-2xl">
-                                        <i class="fas fa-robot"></i>
-                                    </a>
+                            <div class="p-6 font-mono text-sm">
+                                <div class="text-green-400">$ ai-content-pipeline create-video \</div>
+                                <div class="text-gray-500 ml-4">--text "epic dragon flying over mountains" \</div>
+                                <div class="text-gray-500 ml-4">--model sora_2</div>
+                                <div class="mt-4 text-gray-400">
+                                    <span class="text-blue-400">⠋</span> Generating image with FLUX.1...
                                 </div>
+                                <div class="text-gray-400">
+                                    <span class="text-green-400">✓</span> Image generated <span class="text-gray-600">(2.3s)</span>
+                                </div>
+                                <div class="text-gray-400">
+                                    <span class="text-blue-400">⠋</span> Creating video with Sora 2...
+                                </div>
+                                <div class="text-gray-400">
+                                    <span class="text-green-400">✓</span> Video created <span class="text-gray-600">(18.7s)</span>
+                                </div>
+                                <div class="mt-4 text-white">
+                                    <span class="text-green-400">✓</span> Output: <span class="text-purple-400">dragon_flight.mp4</span>
+                                </div>
+                                <div class="text-gray-600 text-xs mt-2">Cost: $0.45 | Duration: 8s | Resolution: 1080p</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-purple-900 to-pink-900 px-4 sm:px-6 lg:px-8 fade-in">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
-                Ready to <span class="text-white">create</span>?
-            </h2>
-            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-                Download QCut now and start creating professional videos with AI — completely free.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="https://github.com/donghaozhang/qcut/releases" class="bg-white text-purple-900 hover:bg-gray-100 px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
-                    <i class="fas fa-download mr-2"></i> Download for Windows
-                </a>
-                <a href="https://github.com/donghaozhang/qcut" target="_blank" class="border-2 border-white text-white hover:bg-white hover:text-purple-900 px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
-                    <i class="fab fa-github mr-2"></i> View Source
-                </a>
+        <!-- Features Section -->
+        <section id="features" class="py-24 px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">Everything you need to create</h2>
+                    <p class="text-gray-400 text-lg">Professional video editing meets AI-powered content generation.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2m0 2v2m0-2h10m0 0V2m0 2v2m0-2H7m10 10v6m0 0H7m10 0a2 2 0 002-2v-4a2 2 0 00-2-2H7a2 2 0 00-2 2v4a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Timeline Editing</h3>
+                        <p class="text-gray-400 text-sm">Multi-track timeline with drag-and-drop, precise cuts, and real-time preview.</p>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">AI Text-to-Video</h3>
+                        <p class="text-gray-400 text-sm">Generate videos from text prompts with Sora 2, Veo 3, and Kling Pro.</p>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">AI Image Generation</h3>
+                        <p class="text-gray-400 text-sm">Create stunning images with FLUX, Imagen 4, and Nano Banana Pro.</p>
+                    </div>
+                    
+                    <!-- Feature 4 -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">AI Voiceover</h3>
+                        <p class="text-gray-400 text-sm">Professional text-to-speech with 20+ ElevenLabs voices.</p>
+                    </div>
+                    
+                    <!-- Feature 5 -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">AI Avatar</h3>
+                        <p class="text-gray-400 text-sm">Create talking head videos with OmniHuman and VEED Fabric.</p>
+                    </div>
+                    
+                    <!-- Feature 6 -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Privacy First</h3>
+                        <p class="text-gray-400 text-sm">All processing happens locally. Your videos never leave your device.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <!-- AI Models Section -->
+        <section id="ai" class="py-24 px-6 bg-gradient-to-b from-transparent via-purple-950/10 to-transparent">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">40+ AI models at your fingertips</h2>
+                    <p class="text-gray-400 text-lg">Powered by video-agent-skill — the best AI models for content creation.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Text-to-Image -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="text-sm text-purple-400 font-medium mb-3">Text-to-Image</div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">FLUX.1 Dev</span>
+                                <span class="text-gray-500">$0.003</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Imagen 4</span>
+                                <span class="text-gray-500">$0.002</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Nano Banana Pro</span>
+                                <span class="text-gray-500">$0.002</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Text-to-Video -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="text-sm text-pink-400 font-medium mb-3">Text-to-Video</div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Sora 2</span>
+                                <span class="text-gray-500">$0.40-1.20</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Veo 3</span>
+                                <span class="text-gray-500">$2.50-6.00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Kling 2.6 Pro</span>
+                                <span class="text-gray-500">$0.35-1.40</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Avatar -->
+                    <div class="feature-card rounded-2xl p-6">
+                        <div class="text-sm text-cyan-400 font-medium mb-3">AI Avatar</div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">OmniHuman v1.5</span>
+                                <span class="text-gray-500">$0.15</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">VEED Fabric</span>
+                                <span class="text-gray-500">$0.08</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-300">Kling Motion</span>
+                                <span class="text-gray-500">$0.12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-10">
+                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors">
+                        View all 40+ models →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials / Why Section -->
+        <section class="py-24 px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">Why QCut?</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="testimonial-card rounded-2xl p-6">
+                        <p class="text-gray-300 mb-4 leading-relaxed">
+                            "CapCut's basic features are now paywalled. QCut gives you everything for free — timeline editing, AI generation, no watermarks."
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-sm">💡</div>
+                            <div class="text-sm text-gray-500">The Problem</div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card rounded-2xl p-6">
+                        <p class="text-gray-300 mb-4 leading-relaxed">
+                            "Privacy-first: all processing happens locally. Your videos never leave your device. Open source under MIT license."
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-sm">🔒</div>
+                            <div class="text-sm text-gray-500">Our Promise</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-24 px-6">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6">Start creating today</h2>
+                <p class="text-gray-400 text-lg mb-10">
+                    Download QCut and experience the future of video editing.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-primary px-8 py-4 rounded-xl text-base font-medium">
+                        Download for Windows
+                    </a>
+                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="btn-secondary px-8 py-4 rounded-xl text-base font-medium">
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center mb-4">
-                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8 mr-2">
-                        <span class="text-white text-lg font-medium orbitron">QCut</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        Free, open-source video editor with AI superpowers.
-                    </p>
+    <footer class="border-t border-white/5 py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center space-x-2">
+                    <img src="assets/qcut-logo.png" alt="QCut" class="h-6 w-6">
+                    <span class="text-sm text-gray-400">QCut — Free, open-source video editor</span>
                 </div>
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Product</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors duration-300">Features</a></li>
-                        <li><a href="#ai-models" class="text-gray-400 hover:text-white transition-colors duration-300">AI Models</a></li>
-                        <li><a href="https://github.com/donghaozhang/qcut/releases" class="text-gray-400 hover:text-white transition-colors duration-300">Download</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Resources</h3>
-                    <ul class="space-y-2">
-                        <li><a href="https://github.com/donghaozhang/qcut" class="text-gray-400 hover:text-white transition-colors duration-300">Documentation</a></li>
-                        <li><a href="https://github.com/donghaozhang/video-agent-skill" class="text-gray-400 hover:text-white transition-colors duration-300">AI Pipeline</a></li>
-                        <li><a href="https://github.com/donghaozhang/qcut/issues" class="text-gray-400 hover:text-white transition-colors duration-300">Report Bug</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Community</h3>
-                    <ul class="space-y-2">
-                        <li><a href="https://github.com/donghaozhang/qcut" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-discord mr-2"></i>Discord</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-twitter mr-2"></i>Twitter</a></li>
-                    </ul>
+                <div class="flex items-center space-x-6">
+                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </a>
                 </div>
             </div>
-            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-6 mb-4 md:mb-0">
-                    <a href="https://github.com/donghaozhang/qcut" class="text-gray-400 hover:text-white" aria-label="GitHub">
-                        <i class="fab fa-github text-xl"></i>
-                    </a>
-                    <a href="https://github.com/donghaozhang/video-agent-skill" class="text-gray-400 hover:text-white" aria-label="AI Pipeline">
-                        <i class="fas fa-robot text-xl"></i>
-                    </a>
-                </div>
-                <div class="text-gray-500 text-sm">
-                    &copy; 2026 QCut. Open Source under MIT License.
-                </div>
+            <div class="mt-8 pt-8 border-t border-white/5 text-center text-sm text-gray-500">
+                © 2026 QCut. Open source under MIT License.
             </div>
         </div>
     </footer>
-
-    <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-
-        // Theme toggle
-        const themeToggle = document.querySelectorAll('.theme-toggle');
-        themeToggle.forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.body.classList.toggle('light-mode');
-                const icon = btn.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-sun');
-                    icon.classList.toggle('fa-moon');
-                }
-            });
-        });
-
-        // Language selector
-        const translations = {
-            zh: {
-                nav_features: '功能',
-                nav_ai_models: 'AI 模型',
-                nav_about: '关于',
-                hero_title: '<span class="gradient-text glow">免费</span> 视频编辑器<br><span class="text-white text-3xl sm:text-4xl">AI 超能力加持</span>',
-                hero_tagline: '开源 Windows 视频编辑软件。时间轴编辑、AI 内容生成、专业工具 — 完全免费，无水印，隐私优先。',
-                features_title: '<span class="gradient-text">强大功能</span>',
-                features_subtitle: '创作专业视频所需的一切，由 AI 驱动。',
-                feature1_title: '时间轴编辑',
-                feature1_desc: '多轨道音视频编辑，支持拖放、精确剪辑和实时预览。',
-                feature2_title: 'AI 文生视频',
-                feature2_desc: '使用 Sora 2、Veo 3、Kling Pro 等从文字生成视频。',
-                feature3_title: 'AI 图像生成',
-                feature3_desc: '使用 FLUX、Imagen 4、Nano Banana Pro 创建精美图像。',
-                feature4_title: 'AI 配音',
-                feature4_desc: '专业文字转语音，支持 20+ ElevenLabs 语音和多种语言。',
-                feature5_title: 'AI 数字人',
-                feature5_desc: '使用 OmniHuman、VEED Fabric 等创建口播视频。',
-                feature6_title: '音效库',
-                feature6_desc: '集成 Freesound 库，支持搜索和商用过滤。',
-                feature7_title: '贴纸图形',
-                feature7_desc: '丰富的 Iconify 图标库，用于文字叠加和图形设计。',
-                feature8_title: '隐私优先',
-                feature8_desc: '所有处理在本地进行，视频永不离开你的设备。'
-            }
-        };
-
-        const langSelect = document.querySelectorAll('.lang-select');
-        langSelect.forEach(select => {
-            select.addEventListener('change', (e) => {
-                const lang = e.target.value;
-                if (lang === 'zh' && translations.zh) {
-                    document.querySelectorAll('[data-i18n]').forEach(el => {
-                        const key = el.getAttribute('data-i18n');
-                        if (translations.zh[key]) {
-                            el.innerHTML = translations.zh[key];
-                        }
-                    });
-                } else {
-                    location.reload();
-                }
-                // Sync all language selectors
-                langSelect.forEach(s => s.value = lang);
-            });
-        });
-
-        // Fade in animation
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
-    </script>
 </body>
 </html>
