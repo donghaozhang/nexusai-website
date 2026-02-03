@@ -3,199 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | NexusAI</title>
+    <title>About | QCut - Free Video Editor</title>
+    <meta name="description" content="Learn about QCut - the free, open-source video editor with AI superpowers." />
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
 </head>
 <body class="grid-pattern">
-    <a href="#main-content" class="skip-link">Skip to content</a>
-    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800" role="navigation" aria-label="Main">
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <span class="text-white text-2xl font-bold orbitron gradient-text">NEXUS<span class="text-white">AI</span></span>
-                    </div>
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="index.html#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
-                            <a href="index.html#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
-                            <a href="about.html" data-i18n="nav_about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
-                            <a href="blog.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Blog</a>
-                            <a href="case-studies.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Case Studies</a>
-                            <a href="index.html#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
+                    <a href="index.html" class="flex-shrink-0 flex items-center">
+                        <img src="assets/qcut-logo.png" alt="QCut Logo" class="h-10 w-10 mr-3">
+                        <span class="text-white text-2xl font-bold orbitron gradient-text">QCut</span>
+                    </a>
+                    <div class="hidden md:block ml-10">
+                        <div class="flex items-baseline space-x-4">
+                            <a href="solutions.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Features</a>
+                            <a href="index.html#ai-models" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">AI Models</a>
+                            <a href="about.html" class="text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
+                            <a href="blog.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Docs</a>
                         </div>
                     </div>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-4 flex items-center md:ml-6">
-                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300" data-i18n="nav_get_started">Get Started</button>
-                        <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl" aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
-                        <select class="lang-select ml-4 bg-gray-700 text-white text-sm rounded px-2 py-1 focus:outline-none">
-                            <option value="en">EN</option>
-                            <option value="zh">中文</option>
-                        </select>
-                    </div>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron">
+                        <i class="fas fa-download mr-2"></i> Download
+                    </a>
                 </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false"><span class="sr-only">Open main menu</span><i class="fas fa-bars"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="hidden md:hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="index.html#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
-                <a href="index.html#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
-                <a href="about.html" data-i18n="nav_about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="blog.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Blog</a>
-                <a href="case-studies.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Case Studies</a>
-                <a href="index.html#contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
-                <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">Get Started</button>
-                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" aria-label="Toggle theme">Toggle Theme</button>
-                <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none">
-                    <option value="en">EN</option>
-                    <option value="zh">中文</option>
-                </select>
             </div>
         </div>
     </nav>
-    <main id="main-content" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto text-center">
-            <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6" data-i18n="about_page_title">About NexusAI</h1>
-            <p class="text-gray-300 text-lg max-w-3xl mx-auto">NexusAI pioneers intelligent agent technologies that automate complex tasks and empower organizations worldwide.</p>
-        </div>
+
+    <main class="pt-24">
+        <!-- Hero -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center">
+                <img src="assets/qcut-logo.png" alt="QCut Logo" class="w-24 h-24 mx-auto mb-6">
+                <h1 class="text-4xl sm:text-5xl font-bold orbitron mb-6">
+                    <span class="gradient-text">About QCut</span>
+                </h1>
+                <p class="text-xl text-gray-400">
+                    Free, open-source video editor with AI superpowers.
+                </p>
+            </div>
+        </section>
+
+        <!-- Story -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900 bg-opacity-50">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold orbitron mb-6 text-white">Why We Built QCut</h2>
+                <div class="prose prose-invert max-w-none">
+                    <p class="text-gray-400 mb-4 text-lg">
+                        <span class="text-white font-semibold">CapCut's basic features are increasingly behind paywalls.</span> What started as a free editing tool has evolved into yet another subscription service. We believe video editing should be accessible to everyone.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        QCut is our answer: a completely free, open-source video editor that respects your privacy and gives you professional tools without the price tag. Every feature that CapCut locks behind a subscription, we offer for free.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        But we didn't stop there. By integrating with <span class="text-purple-400">video-agent-skill</span>, we've added access to 40+ cutting-edge AI models for content generation. Text-to-video, image generation, AI voiceovers — all available at transparent API costs, no hidden subscription fees.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Values -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl font-bold orbitron mb-8 text-white text-center">Our Principles</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="bg-purple-900 bg-opacity-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-gift text-purple-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 orbitron">100% Free</h3>
+                        <p class="text-gray-400">No subscriptions, no watermarks, no hidden fees. Free forever.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-pink-900 bg-opacity-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-lock text-pink-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 orbitron">Privacy First</h3>
+                        <p class="text-gray-400">Your videos stay on your device. We never see your content.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-blue-900 bg-opacity-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-github text-blue-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 orbitron">Open Source</h3>
+                        <p class="text-gray-400">MIT licensed. Fork it, modify it, contribute to it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900 bg-opacity-50">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl font-bold orbitron mb-8 text-white">Tech Stack</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-4">
+                            <i class="fas fa-desktop text-purple-400 mr-2"></i> QCut Desktop
+                        </h3>
+                        <ul class="text-gray-400 space-y-2">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> Electron + TypeScript</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> React 18 + Vite 7</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> Tailwind CSS 4</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> Zustand State Management</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> FFmpeg WebAssembly</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> TanStack Router</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-4">
+                            <i class="fas fa-robot text-pink-400 mr-2"></i> video-agent-skill
+                        </h3>
+                        <ul class="text-gray-400 space-y-2">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> Python 3.10+</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> 40+ AI Models</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> FAL AI Integration</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> ElevenLabs TTS</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> Google Vertex AI</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i> YAML Pipeline Config</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Source -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-2xl font-bold orbitron mb-6 text-white">Contribute</h2>
+                <p class="text-gray-400 mb-8">
+                    QCut is open source and we welcome contributions! Whether it's bug fixes, new features, or documentation improvements, we'd love your help.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium">
+                        <i class="fab fa-github mr-2"></i> QCut Repository
+                    </a>
+                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium">
+                        <i class="fas fa-robot mr-2"></i> AI Pipeline Repository
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900 to-pink-900">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold orbitron mb-6 text-white">Ready to start creating?</h2>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="inline-block bg-white text-purple-900 hover:bg-gray-100 px-8 py-4 rounded-md text-lg font-medium orbitron">
+                    <i class="fas fa-download mr-2"></i> Download QCut
+                </a>
+            </div>
+        </section>
     </main>
-    <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">NexusAI</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">About</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Careers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Press</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Products</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Autonomous Agents</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Cognitive Assistants</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Predictive Engines</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">API</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Resources</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Documentation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Whitepapers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Research</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Legal</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Privacy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Terms</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Security</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Compliance</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-6 mb-4 md:mb-0">
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                </div>
-                <div class="text-gray-500 text-sm">&copy; 2023 NexusAI Technologies. All rights reserved.</div>
-            </div>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-gray-500 text-sm">&copy; 2026 QCut. Open Source under MIT License.</p>
         </div>
     </footer>
-
-    <!-- Cookie consent banner -->
-    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 text-gray-100 p-4 text-sm flex flex-col sm:flex-row items-center justify-between hidden z-50">
-        <span>We use cookies to improve your experience on our site.</span>
-        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded" aria-label="Accept cookies">Accept</button>
-    </div>
-
-    <script>
-        // Language selector
-        const translations = {
-            zh: {
-                nav_solutions: '解决方案',
-                nav_technology: '技术',
-                nav_about: '关于',
-                nav_contact: '联系',
-                nav_get_started: '开始使用',
-                about_page_title: '关于 NexusAI'
-            }
-        };
-
-        const langSelectors = document.querySelectorAll('.lang-select');
-        const i18nElements = document.querySelectorAll('[data-i18n]');
-        i18nElements.forEach(el => { el.dataset.en = el.innerHTML; });
-
-        function applyLanguage(lang) {
-            document.documentElement.lang = lang;
-            localStorage.setItem('lang', lang);
-            langSelectors.forEach(sel => { sel.value = lang; });
-            i18nElements.forEach(el => {
-                const key = el.dataset.i18n;
-                el.innerHTML = (lang === 'zh' && translations.zh[key]) ? translations.zh[key] : el.dataset.en;
-            });
-        }
-
-        langSelectors.forEach(sel => sel.addEventListener('change', e => applyLanguage(e.target.value)));
-
-        applyLanguage(localStorage.getItem('lang') || 'en');
-
-        const themeButtons = document.querySelectorAll('.theme-toggle');
-        const rootElement = document.documentElement;
-        function updateThemeIcon(){themeButtons.forEach(btn=>{btn.innerHTML=rootElement.classList.contains('light')?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';});}
-        function toggleTheme(){rootElement.classList.toggle('light');localStorage.setItem('theme',rootElement.classList.contains('light')?'light':'dark');updateThemeIcon();}
-        themeButtons.forEach(btn=>btn.addEventListener('click',toggleTheme));
-        if(localStorage.getItem('theme')==='light'){rootElement.classList.add('light');}
-        updateThemeIcon();
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click',()=>{
-            const expanded = !mobileMenu.classList.toggle('hidden');
-            mobileMenuButton.setAttribute('aria-expanded', expanded);
-        });
-        document.addEventListener('keydown',e=>{
-            if(e.key==='Escape' && !mobileMenu.classList.contains('hidden')){
-                mobileMenu.classList.add('hidden');
-                mobileMenuButton.setAttribute('aria-expanded','false');
-                mobileMenuButton.focus();
-            }
-        });
-
-        // Cookie consent banner
-        const cookieBanner = document.getElementById('cookie-banner');
-        const acceptCookiesBtn = document.getElementById('accept-cookies');
-
-        if(!localStorage.getItem('cookiesAccepted')){
-            cookieBanner.classList.remove('hidden');
-        }
-
-        acceptCookiesBtn.addEventListener('click',()=>{
-            localStorage.setItem('cookiesAccepted','true');
-            cookieBanner.classList.add('hidden');
-        });
-    </script>
 </body>
 </html>
