@@ -3,55 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QURIOSITY AI | Intelligent Agent Solutions</title>
-    <meta name="description" content="QURIOSITY AI delivers cutting-edge intelligent agent solutions powered by advanced artificial intelligence." />
-    <meta name="keywords" content="QURIOSITY AI, AI, intelligent agents, machine learning, automation" />
-    <meta property="og:title" content="QURIOSITY AI | Intelligent Agent Solutions" />
-    <meta property="og:description" content="Discover innovative AI-driven agent technology from QURIOSITY AI." />
+    <title>QCut | Free Video Editor with AI Superpowers</title>
+    <meta name="description" content="QCut is a free, open-source video editor for Windows with AI-powered features. No watermarks, no subscriptions, privacy-first." />
+    <meta name="keywords" content="QCut, video editor, free video editor, AI video, open source, Windows" />
+    <meta property="og:title" content="QCut | Free Video Editor with AI Superpowers" />
+    <meta property="og:description" content="Free, open-source video editor with 40+ AI models for content generation." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://donghaozhang.github.io/nexusai-website/" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&amp;fit=crop&amp;w=800&amp;q=60" />
+    <meta property="og:image" content="assets/qcut-logo.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
 </head>
 <body class="grid-pattern">
     <a href="#main-content" class="skip-link">Skip to content</a>
+    
     <!-- Navigation -->
     <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800" role="navigation" aria-label="Main">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <span class="text-white text-2xl font-bold orbitron gradient-text">QURIOSITY<span class="text-white"> AI</span></span>
+                    <div class="flex-shrink-0 flex items-center">
+                        <img src="assets/qcut-logo.png" alt="QCut Logo" class="h-10 w-10 mr-3">
+                        <span class="text-white text-2xl font-bold orbitron gradient-text">QCut</span>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Solutions</a>
-                            <a href="#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Technology</a>
+                            <a href="#features" data-i18n="nav_features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Features</a>
+                            <a href="#ai-models" data-i18n="nav_ai_models" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">AI Models</a>
                             <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">About</a>
-                            <a href="#ai-art-showcase" data-i18n="nav_ai_art_showcase" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Showcases</a>
-                            <a href="#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">Contact</a>
+                            <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
+                                <i class="fab fa-github mr-1"></i> GitHub
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
-                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300" data-i18n="nav_get_started">
-                            Get Started
-                        </button>
+                        <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium orbitron transition-all duration-300">
+                            <i class="fas fa-download mr-2"></i> Download
+                        </a>
                         <button class="theme-toggle ml-4 text-gray-400 hover:text-white focus:outline-none text-xl" aria-label="Toggle theme">
                             <i class="fas fa-sun"></i>
                         </button>
@@ -73,47 +68,62 @@
         <!-- Mobile menu -->
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#solutions" data-i18n="nav_solutions" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Solutions</a>
-                <a href="#technology" data-i18n="nav_technology" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Technology</a>
-                <a href="#about" data-i18n="nav_about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="#ai-art-showcase" data-i18n="nav_ai_art_showcase" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Showcases</a>
-                <a href="#contact" data-i18n="nav_contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
-                <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2">
-                    Get Started
-                </button>
-                <button class="theme-toggle text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" aria-label="Toggle theme">Toggle Theme</button>
-                <select class="lang-select mt-2 bg-gray-700 text-white text-sm rounded px-2 py-1 w-full focus:outline-none" aria-label="Language selector">
-                    <option value="en">EN</option>
-                    <option value="zh">中文</option>
-                </select>
+                <a href="#features" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                <a href="#ai-models" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">AI Models</a>
+                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fab fa-github mr-1"></i> GitHub
+                </a>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 text-white w-full px-3 py-2 rounded-md text-base font-medium mt-2 block text-center">
+                    <i class="fas fa-download mr-2"></i> Download
+                </a>
             </div>
         </div>
     </nav>
 
     <main id="main-content">
+    
     <!-- Hero Section -->
     <section class="hero-gradient fade-in pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                 <div class="px-4 sm:px-0 lg:col-span-7">
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight orbitron mb-6" data-i18n="hero_title">
-                        <span class="gradient-text glow">Next-Gen</span> AI Agents
+                        <span class="gradient-text glow">Free</span> Video Editor
+                        <br><span class="text-white text-3xl sm:text-4xl">with AI Superpowers</span>
                     </h1>
                     <p class="text-xl text-gray-300 mb-8 max-w-3xl" data-i18n="hero_tagline">
-                        Revolutionizing industries with autonomous, intelligent agents that learn, adapt, and outperform. Our AI solutions are transforming how businesses operate in the digital age.
+                        Open-source video editing for Windows. Timeline editing, AI content generation, and professional tools — completely free, no watermarks, privacy-first.
                     </p>
+                    
+                    <!-- Feature badges -->
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="bg-green-900 bg-opacity-50 text-green-400 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i> 100% Free
+                        </span>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-400 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i> No Watermark
+                        </span>
+                        <span class="bg-purple-900 bg-opacity-50 text-purple-400 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i> Open Source
+                        </span>
+                        <span class="bg-pink-900 bg-opacity-50 text-pink-400 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i> 40+ AI Models
+                        </span>
+                    </div>
+                    
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 pulse-animation" data-i18n="hero_request_demo">
-                            Request Demo <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                        <button class="border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300" data-i18n="hero_learn_more">
-                            Learn More
-                        </button>
+                        <a href="https://github.com/donghaozhang/qcut/releases" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 pulse-animation text-center">
+                            <i class="fas fa-download mr-2"></i> Download for Windows
+                        </a>
+                        <a href="https://github.com/donghaozhang/qcut" target="_blank" class="border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300 text-center">
+                            <i class="fab fa-github mr-2"></i> Star on GitHub
+                        </a>
                     </div>
                 </div>
                 <div class="mt-12 lg:mt-0 lg:col-span-5 flex justify-center">
                     <div class="relative w-full max-w-md">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
+                        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl opacity-20 blur-lg"></div>
                         <div class="relative bg-gray-900 rounded-xl overflow-hidden p-1">
                             <div class="terminal">
                                 <div class="terminal-header px-4 py-2 flex items-center">
@@ -122,20 +132,21 @@
                                         <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                                         <div class="w-3 h-3 rounded-full bg-green-500"></div>
                                     </div>
-                                    <div class="text-xs text-gray-400 ml-4">q-agent-terminal</div>
+                                    <div class="text-xs text-gray-400 ml-4">qcut-ai-terminal</div>
                                 </div>
                                 <div class="terminal-body p-4">
-                                    <div class="text-green-400">$ q-agent --init</div>
-                                    <div class="text-gray-400 mt-2">Initializing QURIOSITY AI agent system...</div>
-                                    <div class="text-gray-400 mt-1">Loading neural networks <span class="text-blue-400">[=====>]</span> 100%</div>
-                                    <div class="text-gray-400 mt-1">Connecting to knowledge graph...</div>
-                                    <div class="text-green-400 mt-2">$ q-agent --status</div>
-                                    <div class="text-gray-400 mt-1">System: <span class="text-white">Operational</span></div>
-                                    <div class="text-gray-400 mt-1">Memory: <span class="text-white">16.8TB</span></div>
-                                    <div class="text-gray-400 mt-1">Processing: <span class="text-white">1.2 petaflops</span></div>
-                                    <div class="text-green-400 mt-2">$ q-agent --query "optimize supply chain"</div>
-                                    <div class="text-gray-400 mt-1">Analyzing supply chain data...</div>
-                                    <div class="text-white mt-1">Identified 3 bottlenecks (saving potential: $2.4M/yr)</div>
+                                    <div class="text-green-400">$ ai-content-pipeline list-models</div>
+                                    <div class="text-gray-400 mt-2">📦 Available AI Models:</div>
+                                    <div class="text-gray-400 mt-1">├── Text-to-Image: <span class="text-blue-400">8 models</span></div>
+                                    <div class="text-gray-400 mt-1">├── Image-to-Video: <span class="text-purple-400">12 models</span></div>
+                                    <div class="text-gray-400 mt-1">├── Text-to-Video: <span class="text-pink-400">6 models</span></div>
+                                    <div class="text-gray-400 mt-1">├── Avatar: <span class="text-cyan-400">9 models</span></div>
+                                    <div class="text-gray-400 mt-1">└── TTS: <span class="text-green-400">20+ voices</span></div>
+                                    <div class="text-green-400 mt-3">$ ai-content-pipeline create-video</div>
+                                    <div class="text-gray-400 mt-1">--text "epic dragon battle"</div>
+                                    <div class="text-gray-400 mt-1">⏳ Generating image... <span class="text-white">Done!</span></div>
+                                    <div class="text-gray-400 mt-1">⏳ Creating video... <span class="text-white">Done!</span></div>
+                                    <div class="text-white mt-1">✅ Output: dragon_battle.mp4</div>
                                     <div class="text-green-400 mt-2">$ <span class="blink">_</span></div>
                                 </div>
                             </div>
@@ -146,192 +157,248 @@
         </div>
     </section>
 
-    <!-- Clients Section -->
-    <section class="py-16 bg-black bg-opacity-50 fade-in">
+    <!-- Stats Section -->
+    <section class="py-16 bg-gradient-to-r from-purple-900 to-pink-900 fade-in">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-center text-gray-400 text-sm uppercase tracking-wider mb-8 orbitron">Trusted by industry leaders</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
-                <div class="flex justify-center">
-                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">Meta</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">40+</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">AI Models</div>
                 </div>
-                <div class="flex justify-center">
-                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">Google</div>
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">100%</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">Free Forever</div>
                 </div>
-                <div class="flex justify-center">
-                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">NVIDIA</div>
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">0</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">Watermarks</div>
                 </div>
-                <div class="flex justify-center">
-                    <div class="text-3xl font-bold text-gray-300 opacity-80 hover:opacity-100 transition-opacity duration-300">OpenAI</div>
+                <div class="p-6">
+                    <div class="text-5xl font-bold text-white orbitron mb-2">∞</div>
+                    <div class="text-gray-300 uppercase tracking-wider text-sm">Projects</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Solutions Section -->
-    <section id="solutions" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
+    <!-- Features Section -->
+    <section id="features" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="solutions_title">
-                    <span class="gradient-text">AI Agent Solutions</span>
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="features_title">
+                    <span class="gradient-text">Powerful Features</span>
                 </h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto" data-i18n="solutions_subtitle">
-                    Custom-built intelligent agents designed to solve your most complex challenges.
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto" data-i18n="features_subtitle">
+                    Everything you need to create professional videos, powered by AI.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature 1: Timeline Editing -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-purple-500 transition-all duration-300 p-6">
+                    <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-film text-purple-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature1_title">Timeline Editing</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature1_desc">
+                        Multi-track audio and video editing with drag-and-drop, precise cuts, and real-time preview.
+                    </p>
+                </div>
+                
+                <!-- Feature 2: AI Text-to-Video -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-pink-500 transition-all duration-300 p-6">
+                    <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-magic text-pink-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature2_title">AI Text-to-Video</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature2_desc">
+                        Generate videos from text prompts using Sora 2, Veo 3, Kling Pro, and more.
+                    </p>
+                </div>
+                
+                <!-- Feature 3: AI Image Generation -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-blue-500 transition-all duration-300 p-6">
+                    <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-image text-blue-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature3_title">AI Image Generation</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature3_desc">
+                        Create stunning images with FLUX, Imagen 4, and Nano Banana Pro models.
+                    </p>
+                </div>
+                
+                <!-- Feature 4: AI Voiceover -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-green-500 transition-all duration-300 p-6">
+                    <div class="bg-green-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-microphone text-green-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature4_title">AI Voiceover</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature4_desc">
+                        Professional text-to-speech with 20+ ElevenLabs voices in multiple languages.
+                    </p>
+                </div>
+                
+                <!-- Feature 5: AI Avatar -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-cyan-500 transition-all duration-300 p-6">
+                    <div class="bg-cyan-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-user-circle text-cyan-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature5_title">AI Avatar</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature5_desc">
+                        Create talking head videos with OmniHuman, VEED Fabric, and more.
+                    </p>
+                </div>
+                
+                <!-- Feature 6: Sound Library -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-yellow-500 transition-all duration-300 p-6">
+                    <div class="bg-yellow-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-music text-yellow-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature6_title">Sound Library</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature6_desc">
+                        Integrated Freesound library with search and commercial-use filtering.
+                    </p>
+                </div>
+                
+                <!-- Feature 7: Stickers & Graphics -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-orange-500 transition-all duration-300 p-6">
+                    <div class="bg-orange-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-icons text-orange-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature7_title">Stickers & Graphics</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature7_desc">
+                        Rich icon library with Iconify integration for text overlays and graphics.
+                    </p>
+                </div>
+                
+                <!-- Feature 8: Privacy First -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-red-500 transition-all duration-300 p-6">
+                    <div class="bg-red-900 bg-opacity-50 p-3 rounded-lg w-fit mb-4">
+                        <i class="fas fa-shield-alt text-red-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white orbitron mb-2" data-i18n="feature8_title">Privacy First</h3>
+                    <p class="text-gray-400 text-sm" data-i18n="feature8_desc">
+                        All processing happens locally. Your videos never leave your device.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Models Section -->
+    <section id="ai-models" class="fade-in py-20 bg-gray-900 bg-opacity-50 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4">
+                    <span class="gradient-text">40+ AI Models</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Powered by video-agent-skill — access the best AI models for content creation.
                 </p>
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Solution 1 -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-blue-500 transition-all duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-robot text-blue-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="solution1_title">Autonomous Agents</h3>
+                <!-- Text-to-Image -->
+                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-900 bg-opacity-50 p-3 rounded-lg">
+                            <i class="fas fa-image text-blue-400 text-xl"></i>
                         </div>
-                        <p class="text-gray-400 mb-6" data-i18n="solution1_desc">
-                            Self-learning agents that operate independently, making real-time decisions to optimize your business processes without human intervention.
-                        </p>
-                        <a href="https://quriosity.mintlify.app/" target="_blank" rel="noopener" class="flex items-center text-blue-400">
-                            <span class="text-sm orbitron">Learn more</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </a>
+                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Text-to-Image</h3>
                     </div>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between"><span>FLUX.1 Dev</span><span class="text-green-400">$0.003</span></li>
+                        <li class="flex justify-between"><span>Imagen 4</span><span class="text-green-400">$0.002</span></li>
+                        <li class="flex justify-between"><span>Nano Banana Pro</span><span class="text-green-400">$0.002</span></li>
+                        <li class="flex justify-between"><span>GPT Image 1.5</span><span class="text-green-400">$0.003</span></li>
+                    </ul>
                 </div>
                 
-                <!-- Solution 2 -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-purple-500 transition-all duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-brain text-purple-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="solution2_title">Cognitive Assistants</h3>
+                <!-- Image-to-Video -->
+                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-900 bg-opacity-50 p-3 rounded-lg">
+                            <i class="fas fa-video text-purple-400 text-xl"></i>
                         </div>
-                        <p class="text-gray-400 mb-6" data-i18n="solution2_desc">
-                            AI-powered digital employees that understand natural language, context, and intent to provide human-like assistance at scale.
-                        </p>
-                        <div class="flex items-center text-purple-400">
-                            <span class="text-sm orbitron">Learn more</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
+                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Image-to-Video</h3>
                     </div>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between"><span>Veo 3</span><span class="text-yellow-400">$2.50-6.00</span></li>
+                        <li class="flex justify-between"><span>Sora 2</span><span class="text-yellow-400">$0.40-1.20</span></li>
+                        <li class="flex justify-between"><span>Kling 2.6 Pro</span><span class="text-yellow-400">$0.50-1.00</span></li>
+                        <li class="flex justify-between"><span>Hailuo</span><span class="text-green-400">$0.08</span></li>
+                    </ul>
                 </div>
                 
-                <!-- Solution 3 -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-pink-500 transition-all duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-chart-line text-pink-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="solution3_title">Predictive Engines</h3>
+                <!-- Text-to-Video -->
+                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-pink-900 bg-opacity-50 p-3 rounded-lg">
+                            <i class="fas fa-film text-pink-400 text-xl"></i>
                         </div>
-                        <p class="text-gray-400 mb-6" data-i18n="solution3_desc">
-                            Advanced forecasting systems that analyze patterns and predict outcomes with unprecedented accuracy, giving you a competitive edge.
-                        </p>
-                        <div class="flex items-center text-pink-400">
-                            <span class="text-sm orbitron">Learn more</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
+                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Text-to-Video</h3>
                     </div>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between"><span>Sora 2</span><span class="text-yellow-400">$0.40-1.20</span></li>
+                        <li class="flex justify-between"><span>Kling 2.6 Pro</span><span class="text-yellow-400">$0.35-1.40</span></li>
+                        <li class="flex justify-between"><span>Hailuo Pro</span><span class="text-green-400">$0.10</span></li>
+                        <li class="flex justify-between"><span>Veo 3</span><span class="text-yellow-400">$2.50-6.00</span></li>
+                    </ul>
+                </div>
+                
+                <!-- Avatar Generation -->
+                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-cyan-900 bg-opacity-50 p-3 rounded-lg">
+                            <i class="fas fa-user text-cyan-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Avatar Generation</h3>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between"><span>OmniHuman v1.5</span><span class="text-green-400">$0.15</span></li>
+                        <li class="flex justify-between"><span>VEED Fabric 1.0</span><span class="text-green-400">$0.08</span></li>
+                        <li class="flex justify-between"><span>VEED Fabric Fast</span><span class="text-green-400">$0.05</span></li>
+                        <li class="flex justify-between"><span>Kling Motion</span><span class="text-green-400">$0.12</span></li>
+                    </ul>
+                </div>
+                
+                <!-- Text-to-Speech -->
+                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-900 bg-opacity-50 p-3 rounded-lg">
+                            <i class="fas fa-microphone-alt text-green-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Text-to-Speech</h3>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between"><span>ElevenLabs</span><span class="text-blue-400">20+ voices</span></li>
+                        <li class="flex justify-between"><span>Multiple Languages</span><span class="text-blue-400">Supported</span></li>
+                        <li class="flex justify-between"><span>Voice Cloning</span><span class="text-blue-400">Available</span></li>
+                        <li class="flex justify-between"><span>Scribe v2 STT</span><span class="text-blue-400">Transcription</span></li>
+                    </ul>
+                </div>
+                
+                <!-- Video Processing -->
+                <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-900 bg-opacity-50 p-3 rounded-lg">
+                            <i class="fas fa-cogs text-orange-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white ml-4 orbitron">Video Processing</h3>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between"><span>ThinksSound</span><span class="text-blue-400">Audio Gen</span></li>
+                        <li class="flex justify-between"><span>Topaz Upscale</span><span class="text-blue-400">4K/8K</span></li>
+                        <li class="flex justify-between"><span>Gemini Analysis</span><span class="text-blue-400">Video AI</span></li>
+                        <li class="flex justify-between"><span>FFmpeg WebASM</span><span class="text-blue-400">Local</span></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Technology Section -->
-    <section id="technology" class="fade-in py-20 bg-gray-900 bg-opacity-50 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
-                <div class="lg:col-span-6 mb-12 lg:mb-0">
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
-                        <div class="relative bg-gray-900 rounded-xl overflow-hidden p-1">
-                            <div class="aspect-w-16 aspect-h-9">
-                                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
-                                    <div class="text-center p-8">
-                                        <i class="fas fa-cogs text-6xl text-blue-400 mb-4"></i>
-                                        <h3 class="text-xl font-bold text-white orbitron mb-2">QURIOSITY AI Platform</h3>
-                                        <p class="text-gray-400">Interactive demo available upon request</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:col-span-6">
-                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6" data-i18n="technology_title">
-                        <span class="gradient-text">Our Technology</span>
-                    </h2>
-                    <p class="text-gray-400 text-lg mb-8">
-                        Built on cutting-edge research and proprietary algorithms, our platform delivers unmatched performance and scalability.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-blue-900 bg-opacity-50 text-blue-400">
-                                    <i class="fas fa-atom"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-white orbitron">Neural Architecture</h4>
-                                <p class="text-gray-400 mt-1">
-                                    Multi-modal transformer networks with dynamic attention mechanisms.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-purple-900 bg-opacity-50 text-purple-400">
-                                    <i class="fas fa-project-diagram"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-white orbitron">Knowledge Graph</h4>
-                                <p class="text-gray-400 mt-1">
-                                    Trillion-edge semantic network for contextual understanding.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-pink-900 bg-opacity-50 text-pink-400">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-white orbitron">Security</h4>
-                                <p class="text-gray-400 mt-1">
-                                    End-to-end encrypted with zero-trust architecture and differential privacy.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="py-16 bg-gradient-to-r from-blue-900 to-purple-900 fade-in">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">24/7</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">Operational Uptime</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">99.9%</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">Accuracy Rate</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-5xl font-bold text-white orbitron mb-2">10x</div>
-                    <div class="text-gray-300 uppercase tracking-wider text-sm">Faster Decisions</div>
-                </div>
+            
+            <div class="text-center mt-12">
+                <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-purple-400 hover:text-purple-300 orbitron">
+                    View all models on GitHub <i class="fas fa-arrow-right ml-2"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -339,528 +406,212 @@
     <!-- About Section -->
     <section id="about" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="about_title">
-                    <span class="gradient-text">About QURIOSITY AI</span>
-                </h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-                    Pioneering the future of autonomous intelligence since 2018.
-                </p>
-            </div>
-            
             <div class="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
                 <div class="lg:col-span-7 mb-12 lg:mb-0">
-                    <h3 class="text-2xl font-bold text-white orbitron mb-6">Our Mission</h3>
-                    <p class="text-gray-400 mb-6">
-                        At QURIOSITY AI, we believe in creating intelligent systems that augment human capabilities rather than replace them. Our mission is to build AI agents that are not just tools, but collaborative partners in solving humanity's most pressing challenges.
+                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                        <span class="gradient-text">Why QCut?</span>
+                    </h2>
+                    <p class="text-gray-400 mb-6 text-lg">
+                        CapCut's basic features are increasingly behind paywalls. We believe video editing should be accessible to everyone.
                     </p>
                     <p class="text-gray-400 mb-8">
-                        Founded by a team of AI researchers from leading tech companies and academic institutions, we combine cutting-edge research with practical business applications to deliver real-world impact.
+                        QCut is built by creators, for creators. It's 100% open-source, runs completely offline, and respects your privacy. Combined with video-agent-skill's 40+ AI models, you get professional-grade content creation tools without the subscription fees.
                     </p>
                     
                     <div class="grid grid-cols-2 gap-6">
                         <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
-                            <div class="text-blue-400 text-3xl mb-3">
-                                <i class="fas fa-flask"></i>
+                            <div class="text-purple-400 text-3xl mb-3">
+                                <i class="fab fa-github"></i>
                             </div>
-                            <h4 class="text-lg font-medium text-white orbitron mb-2">Research-Driven</h4>
+                            <h4 class="text-lg font-medium text-white orbitron mb-2">Open Source</h4>
                             <p class="text-gray-400 text-sm">
-                                15+ published papers in top AI conferences and journals.
+                                MIT licensed. Fork it, modify it, contribute to it.
                             </p>
                         </div>
                         <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
-                            <div class="text-purple-400 text-3xl mb-3">
-                                <i class="fas fa-users"></i>
+                            <div class="text-pink-400 text-3xl mb-3">
+                                <i class="fas fa-lock"></i>
                             </div>
-                            <h4 class="text-lg font-medium text-white orbitron mb-2">Team</h4>
+                            <h4 class="text-lg font-medium text-white orbitron mb-2">Privacy First</h4>
                             <p class="text-gray-400 text-sm">
-                                50+ world-class engineers, scientists, and designers.
+                                Your videos stay on your device. No cloud uploads required.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="lg:col-span-5">
                     <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
-                        <div class="relative bg-gray-900 rounded-xl overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60" alt="QURIOSITY AI Team" class="w-full h-auto opacity-90" loading="lazy">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl opacity-20 blur-lg"></div>
+                        <div class="relative bg-gray-900 rounded-xl overflow-hidden p-8 border border-gray-800">
+                            <div class="text-center">
+                                <img src="assets/qcut-logo.png" alt="QCut Logo" class="w-32 h-32 mx-auto mb-6">
+                                <h3 class="text-2xl font-bold text-white orbitron mb-2">QCut</h3>
+                                <p class="text-gray-400 mb-6">Free Video Editor with AI Superpowers</p>
+                                <div class="flex justify-center space-x-4">
+                                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-gray-400 hover:text-white text-2xl">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-gray-400 hover:text-white text-2xl">
+                                        <i class="fas fa-robot"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Showcase Section -->
-    <section id="ai-art-showcase" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-4" data-i18n="showcase_title">
-                    <span class="gradient-text">Showcases</span>
-                </h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto" data-i18n="showcase_subtitle">
-                    Explore our collection of AI-powered projects, interactive demos, and creative applications.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-                <!-- Quriosity Game Agent Card -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-red-500 transition-all duration-300 transform hover:scale-105">
-                    <a href="https://donghaozhang.github.io/fight-the-landlord-game/" target="_blank" rel="noopener" class="block p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-red-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-gamepad text-red-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_fight_landlord_title">Quriosity Game Agent</h3>
-                        </div>
-                        <p class="text-gray-400 mb-6" data-i18n="showcase_fight_landlord_desc">
-                            An interactive card game implementation with Black Myth-inspired themes. Experience traditional Chinese card gameplay with modern web technology.
-                        </p>
-                        <div class="flex items-center text-red-400">
-                            <span class="text-sm orbitron">Play Game</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Quriosity Design Agent Showcase -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-orange-500 transition-all duration-300 transform hover:scale-105">
-                    <a href="quriosity-brand-showcase.html" class="block p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-orange-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-paint-brush text-orange-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_brand_title">Quriosity Design Agent</h3>
-                        </div>
-                        <p class="text-gray-400 mb-6" data-i18n="showcase_brand_desc">
-                            Comprehensive brand identity showcase featuring merchandise designs, stationery, digital assets, and complete brand applications for the Quriosity ecosystem.
-                        </p>
-                        <div class="flex items-center text-orange-400">
-                            <span class="text-sm orbitron">View Gallery</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Panda Coffee Showcase Card -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-green-500 transition-all duration-300 transform hover:scale-105">
-                    <a href="panda-coffee-showcase.html" class="block p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-green-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-coffee text-green-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_panda_coffee_title">Quriosity Brand Agent</h3>
-                        </div>
-                        <p class="text-gray-400 mb-6" data-i18n="showcase_panda_coffee_desc">
-                            AI-generated branding and mockups for a charming fictional coffee brand, "Panda Coffee".
-                        </p>
-                        <div class="flex items-center text-green-400">
-                            <span class="text-sm orbitron">View Gallery</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- AI Agent Demo Card -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-cyan-500 transition-all duration-300 transform hover:scale-105">
-                    <div class="block p-6 cursor-pointer" onclick="showAIAgentDemo()">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-cyan-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-robot text-cyan-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_ai_agent_title">Quriosity Web Agent</h3>
-                        </div>
-                        <p class="text-gray-400 mb-6" data-i18n="showcase_ai_agent_desc">
-                            Experience our autonomous AI agent that plans complex trips using web search, code execution, and multi-step reasoning. Watch it plan a Tokyo-Kyoto-Osaka journey in real-time.
-                        </p>
-                        <div class="flex items-center text-cyan-400">
-                            <span class="text-sm orbitron">View Demo</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quriosity Art Agent Showcase -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-yellow-500 transition-all duration-300 transform hover:scale-105">
-                    <a href="card-animation.html" target="_blank" class="block p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-yellow-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-palette text-yellow-400 text-2xl"></i> <!-- Using 'fa-palette' for art -->
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_card_animation_title">Quriosity Art Agent</h3>
-                        </div>
-                        <p class="text-gray-400 mb-6" data-i18n="showcase_card_animation_desc">
-                            A mesmerizing animation of AI-generated poker cards, inspired by the Black Myth: Wukong art style. 
-                        </p>
-                        <div class="flex items-center text-yellow-400">
-                            <span class="text-sm orbitron">View Animation</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Netflix Emergent Project Card -->
-                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 card-glow hover:border-red-600 transition-all duration-300 transform hover:scale-105">
-                    <a href="https://donghaozhang.github.io/netflix/" target="_blank" rel="noopener" class="block p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-red-900 bg-opacity-50 p-3 rounded-lg">
-                                <i class="fas fa-play text-red-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white ml-4 orbitron" data-i18n="showcase_netflix_title">Quriosity Clone Agent</h3>
-                        </div>
-                        <p class="text-gray-400 mb-6" data-i18n="showcase_netflix_desc">
-                            Advanced web cloning agent that replicates complex streaming interfaces using Emergent technology. Demonstrates autonomous UI reconstruction and intelligent web architecture replication capabilities.
-                        </p>
-                        <div class="flex items-center text-red-400">
-                            <span class="text-sm orbitron">View Project</span>
-                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                        </div>
-                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 bg-black bg-opacity-70 px-4 sm:px-6 lg:px-8 fade-in">
+    <section class="py-20 bg-gradient-to-r from-purple-900 to-pink-900 px-4 sm:px-6 lg:px-8 fade-in">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6" data-i18n="cta_question">
-                Ready to <span class="gradient-text">transform</span> your business with AI?
+            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6">
+                Ready to <span class="text-white">create</span>?
             </h2>
-            <p class="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-                Schedule a consultation with our AI experts to discover how QURIOSITY AI can drive innovation and efficiency in your organization.
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Download QCut now and start creating professional videos with AI — completely free.
             </p>
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300" data-i18n="contact_sales">
-                    Contact Sales <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-                <button class="border border-gray-600 hover:border-white text-white px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
-                    Join Our Team
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="fade-in py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
-                <div class="lg:col-span-5 mb-12 lg:mb-0">
-                    <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-6" data-i18n="contact_heading">
-                        <span class="gradient-text">Get in Touch</span>
-                    </h2>
-                    <p class="text-gray-400 mb-8">
-                        Have questions about our technology or want to explore partnership opportunities? Our team is ready to assist you.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-blue-900 bg-opacity-50 text-blue-400">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-white orbitron">Headquarters</h4>
-                                <p class="text-gray-400 mt-1">
-                                    Level 8, 1 Elizabeth Street<br>
-                                    Melbourne 3000
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-purple-900 bg-opacity-50 text-purple-400">
-                                    <i class="fas fa-envelope"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-white orbitron">Email</h4>
-                                <p class="text-gray-400 mt-1">
-                                    info@quriosity.com.au
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-10 w-10 rounded-md bg-pink-900 bg-opacity-50 text-pink-400">
-                                    <i class="fas fa-phone-alt"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-white orbitron">Phone</h4>
-                                <p class="text-gray-400 mt-1">
-                                    +61 425406759
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:col-span-7">
-                    <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 p-6">
-                        <form id="contact-form" action="https://formspree.io/f/xovdyprn" method="POST" novalidate>
-                            <div id="form-errors" class="text-red-500 mb-4 hidden" aria-live="polite"></div>
-                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                                <div>
-                                    <label for="first-name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
-                                    <input type="text" id="first-name" name="first-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="John" required>
-                                </div>
-                                <div>
-                                    <label for="last-name" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
-                                    <input type="text" id="last-name" name="last-name" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Doe" required>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                                    <input type="email" id="email" name="email" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="john@example.com" required>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label for="company" class="block text-sm font-medium text-gray-300 mb-1">Company</label>
-                                    <input type="text" id="company" name="company" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="ACME Corp">
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
-                                    <textarea id="message" name="message" rows="4" class="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Tell us about your project..." required></textarea>
-                                </div>
-                            </div>
-                            <div class="mt-8">
-                                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-md text-lg font-medium orbitron transition-all duration-300">
-                                    Send Message <i class="fas fa-paper-plane ml-2"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <a href="https://github.com/donghaozhang/qcut/releases" class="bg-white text-purple-900 hover:bg-gray-100 px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                    <i class="fas fa-download mr-2"></i> Download for Windows
+                </a>
+                <a href="https://github.com/donghaozhang/qcut" target="_blank" class="border-2 border-white text-white hover:bg-white hover:text-purple-900 px-8 py-4 rounded-md text-lg font-medium orbitron transition-all duration-300">
+                    <i class="fab fa-github mr-2"></i> View Source
+                </a>
             </div>
         </div>
     </section>
 
     </main>
 
-    <!-- AI Agent Demo Modal -->
-    <div id="ai-agent-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="bg-gray-900 rounded-xl max-w-4xl max-h-[90vh] overflow-auto m-4 border border-gray-700">
-            <div class="flex justify-between items-center p-6 border-b border-gray-700">
-                <h3 class="text-2xl font-bold text-white orbitron">AI Agent Trip Planner Demo</h3>
-                <button onclick="closeAIAgentDemo()" class="text-gray-400 hover:text-white text-2xl" aria-label="Close AI Agent Demo" title="Close AI Agent Demo">
-                    <span class="sr-only">Close</span>
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="bg-gray-800 rounded-lg p-4 font-mono text-sm">
-                    <div id="terminal-output">
-                        <!-- Terminal output will be populated by JavaScript animation -->
-                    </div>
-                </div>
-                
-                <div class="mt-6 text-gray-400">
-                    <p class="mb-4">This demonstration shows how QURIOSITY AI agents autonomously:</p>
-                    <ul class="list-disc list-inside space-y-2 ml-4">
-                        <li>Process massive datasets in real-time (8.2k+ data points)</li>
-                        <li>Execute multi-step reasoning with optimization algorithms</li>
-                        <li>Integrate predictive analytics for enhanced decision-making</li>
-                        <li>Deliver structured, actionable results with confidence metrics</li>
-                        <li>Maintain context across complex, multi-variable problems</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="bg-black bg-opacity-80 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">QURIOSITY AI</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">About</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Careers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Press</a></li>
-                    </ul>
+                    <div class="flex items-center mb-4">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-8 w-8 mr-2">
+                        <span class="text-white text-lg font-medium orbitron">QCut</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Free, open-source video editor with AI superpowers.
+                    </p>
                 </div>
                 <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Products</h3>
+                    <h3 class="text-white text-lg font-medium orbitron mb-4">Product</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Autonomous Agents</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Cognitive Assistants</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Predictive Engines</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">API</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors duration-300">Features</a></li>
+                        <li><a href="#ai-models" class="text-gray-400 hover:text-white transition-colors duration-300">AI Models</a></li>
+                        <li><a href="https://github.com/donghaozhang/qcut/releases" class="text-gray-400 hover:text-white transition-colors duration-300">Download</a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-white text-lg font-medium orbitron mb-4">Resources</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Documentation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Whitepapers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Research</a></li>
+                        <li><a href="https://github.com/donghaozhang/qcut" class="text-gray-400 hover:text-white transition-colors duration-300">Documentation</a></li>
+                        <li><a href="https://github.com/donghaozhang/video-agent-skill" class="text-gray-400 hover:text-white transition-colors duration-300">AI Pipeline</a></li>
+                        <li><a href="https://github.com/donghaozhang/qcut/issues" class="text-gray-400 hover:text-white transition-colors duration-300">Report Bug</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-white text-lg font-medium orbitron mb-4">Legal</h3>
+                    <h3 class="text-white text-lg font-medium orbitron mb-4">Community</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Privacy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Terms</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Security</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Compliance</a></li>
+                        <li><a href="https://github.com/donghaozhang/qcut" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-discord mr-2"></i>Discord</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-twitter mr-2"></i>Twitter</a></li>
                     </ul>
                 </div>
             </div>
             <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-6 mb-4 md:mb-0">
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
+                    <a href="https://github.com/donghaozhang/qcut" class="text-gray-400 hover:text-white" aria-label="GitHub">
+                        <i class="fab fa-github text-xl"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white" aria-label="YouTube">
-                        <i class="fab fa-youtube"></i>
+                    <a href="https://github.com/donghaozhang/video-agent-skill" class="text-gray-400 hover:text-white" aria-label="AI Pipeline">
+                        <i class="fas fa-robot text-xl"></i>
                     </a>
                 </div>
                 <div class="text-gray-500 text-sm">
-                    &copy; 2023 QURIOSITY AI Technologies. All rights reserved.
+                    &copy; 2026 QCut. Open Source under MIT License.
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Cookie consent banner -->
-    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 text-gray-100 p-4 text-sm flex flex-col sm:flex-row items-center justify-between hidden z-50">
-        <span>We use cookies to improve your experience on our site.</span>
-        <button id="accept-cookies" class="mt-2 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded" aria-label="Accept cookies">Accept</button>
-    </div>
-
     <script>
-        // Language selector
-        const translations = {
-            zh: {
-                nav_solutions: '解决方案',
-                nav_technology: '技术',
-                nav_about: '关于',
-                nav_contact: '联系',
-                nav_get_started: '开始使用',
-                hero_title: '<span class="gradient-text glow">新一代</span> AI 代理',
-                hero_tagline: '通过自主智能代理革新各行各业。我们的 AI 解决方案正在改变企业在数字时代的运营方式。',
-                hero_request_demo: '申请演示 <i class="fas fa-arrow-right ml-2"></i>',
-                hero_learn_more: '了解更多',
-                solutions_title: '<span class="gradient-text">AI 代理解决方案</span>',
-                solutions_subtitle: '定制智能代理，解决您最复杂的挑战。',
-                solution1_title: '自主代理',
-                solution1_desc: '自学习代理可独立运行，实时决策，优化业务流程，无需人工干预。',
-                solution2_title: '认知助手',
-                solution2_desc: '由 AI 驱动的数字员工，理解自然语言和上下文，大规模提供类人协助。',
-                solution3_title: '预测引擎',
-                solution3_desc: '先进的预测系统，分析模式并准确预测结果，助您保持竞争优势。',
-                technology_title: '<span class="gradient-text">我们的技术</span>',
-                about_title: '<span class="gradient-text">关于 QURIOSITY AI</span>',
-                cta_question: '准备好 <span class="gradient-text">变革</span> 您的业务吗？',
-                contact_sales: '联系销售 <i class="fas fa-arrow-right ml-2"></i>',
-                contact_heading: '<span class="gradient-text">联系我们</span>',
-                nav_ai_art_showcase: '展示案例',
-                showcase_title: '<span class="gradient-text">Showcases</span>',
-                showcase_subtitle: 'Explore our collection of AI-powered projects, interactive demos, and creative applications.',
-                showcase_card_animation_title: 'Quriosity艺术代理',
-                showcase_card_animation_desc: '一个令人着迷的AI生成扑克牌动画，灵感来自《黑神话：悟空》的艺术风格。',
-                showcase_panda_coffee_title: 'Quriosity品牌代理',
-                showcase_panda_coffee_desc: '为虚拟咖啡品牌"熊猫咖啡"设计的AI生成品牌和模型。',
-                showcase_fight_landlord_title: 'Quriosity游戏代理',
-                showcase_fight_landlord_desc: '带有黑神话主题的互动卡牌游戏实现。体验结合现代网络技术的传统中国卡牌游戏。',
-                showcase_ai_agent_title: 'Quriosity网络代理',
-                showcase_ai_agent_desc: 'Experience our autonomous AI agent that plans complex trips using web search, code execution, and multi-step reasoning. Watch it plan a Tokyo-Kyoto-Osaka journey in real-time.',
-                showcase_brand_title: 'Quriosity设计代理',
-                showcase_brand_desc: 'Comprehensive brand identity showcase featuring merchandise designs, stationery, digital assets, and complete brand applications for the Quriosity ecosystem.',
-                showcase_netflix_title: 'Quriosity克隆代理',
-                showcase_netflix_desc: 'Advanced web cloning agent that replicates complex streaming interfaces using Emergent technology. Demonstrates autonomous UI reconstruction and intelligent web architecture replication capabilities.'
-            }
-        };
-
-        const langSelectors = document.querySelectorAll('.lang-select');
-        const i18nElements = document.querySelectorAll('[data-i18n]');
-        i18nElements.forEach(el => { el.dataset.en = el.innerHTML; });
-
-        function applyLanguage(lang) {
-            document.documentElement.lang = lang;
-            localStorage.setItem('lang', lang);
-            langSelectors.forEach(sel => { sel.value = lang; });
-            i18nElements.forEach(el => {
-                const key = el.dataset.i18n;
-                el.innerHTML = (lang === 'zh' && translations.zh[key]) ? translations.zh[key] : el.dataset.en;
-            });
-        }
-
-        langSelectors.forEach(sel => sel.addEventListener('change', e => applyLanguage(e.target.value)));
-
-        applyLanguage(localStorage.getItem('lang') || 'en');
-
-        // Theme toggle
-        const themeButtons = document.querySelectorAll(".theme-toggle");
-        const rootElement = document.documentElement;
-
-        function updateThemeIcon() {
-            themeButtons.forEach(btn => {
-                btn.innerHTML = rootElement.classList.contains("light") ? "<i class=\"fas fa-moon\"></i>" : "<i class=\"fas fa-sun\"></i>";
-            });
-        }
-
-        function toggleTheme() {
-            rootElement.classList.toggle("light");
-            localStorage.setItem("theme", rootElement.classList.contains("light") ? "light" : "dark");
-            updateThemeIcon();
-        }
-
-        themeButtons.forEach(btn => btn.addEventListener("click", toggleTheme));
-
-        if (localStorage.getItem("theme") === "light") {
-            rootElement.classList.add("light");
-        }
-        updateThemeIcon();
-
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            const expanded = !mobileMenu.classList.toggle('hidden');
-            mobileMenuButton.setAttribute('aria-expanded', expanded);
-        });
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
-                mobileMenu.classList.add('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
-                mobileMenuButton.focus();
-            }
-        });
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-
-                if (targetId && targetId !== '#' && targetElement) {
-                    e.preventDefault();
-
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-
-                    // Close mobile menu if open
-                    const mobileMenu = document.getElementById('mobile-menu');
-                    if (!mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
+        // Theme toggle
+        const themeToggle = document.querySelectorAll('.theme-toggle');
+        themeToggle.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-sun');
+                    icon.classList.toggle('fa-moon');
                 }
             });
         });
 
-        // Add animation on scroll
+        // Language selector
+        const translations = {
+            zh: {
+                nav_features: '功能',
+                nav_ai_models: 'AI 模型',
+                nav_about: '关于',
+                hero_title: '<span class="gradient-text glow">免费</span> 视频编辑器<br><span class="text-white text-3xl sm:text-4xl">AI 超能力加持</span>',
+                hero_tagline: '开源 Windows 视频编辑软件。时间轴编辑、AI 内容生成、专业工具 — 完全免费，无水印，隐私优先。',
+                features_title: '<span class="gradient-text">强大功能</span>',
+                features_subtitle: '创作专业视频所需的一切，由 AI 驱动。',
+                feature1_title: '时间轴编辑',
+                feature1_desc: '多轨道音视频编辑，支持拖放、精确剪辑和实时预览。',
+                feature2_title: 'AI 文生视频',
+                feature2_desc: '使用 Sora 2、Veo 3、Kling Pro 等从文字生成视频。',
+                feature3_title: 'AI 图像生成',
+                feature3_desc: '使用 FLUX、Imagen 4、Nano Banana Pro 创建精美图像。',
+                feature4_title: 'AI 配音',
+                feature4_desc: '专业文字转语音，支持 20+ ElevenLabs 语音和多种语言。',
+                feature5_title: 'AI 数字人',
+                feature5_desc: '使用 OmniHuman、VEED Fabric 等创建口播视频。',
+                feature6_title: '音效库',
+                feature6_desc: '集成 Freesound 库，支持搜索和商用过滤。',
+                feature7_title: '贴纸图形',
+                feature7_desc: '丰富的 Iconify 图标库，用于文字叠加和图形设计。',
+                feature8_title: '隐私优先',
+                feature8_desc: '所有处理在本地进行，视频永不离开你的设备。'
+            }
+        };
+
+        const langSelect = document.querySelectorAll('.lang-select');
+        langSelect.forEach(select => {
+            select.addEventListener('change', (e) => {
+                const lang = e.target.value;
+                if (lang === 'zh' && translations.zh) {
+                    document.querySelectorAll('[data-i18n]').forEach(el => {
+                        const key = el.getAttribute('data-i18n');
+                        if (translations.zh[key]) {
+                            el.innerHTML = translations.zh[key];
+                        }
+                    });
+                } else {
+                    location.reload();
+                }
+                // Sync all language selectors
+                langSelect.forEach(s => s.value = lang);
+            });
+        });
+
+        // Fade in animation
         const observerOptions = {
             threshold: 0.1
         };
@@ -868,290 +619,14 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fadeIn');
+                    entry.target.classList.add('visible');
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach(element => {
-            observer.observe(element);
-        });
-
-        // Terminal typing effect
-        const terminalLines = [
-            "Analyzing customer behavior patterns...",
-            "Generating personalized recommendations...",
-            "Optimizing marketing campaign ROI...",
-            "Identifying new market opportunities...",
-            "Preparing executive summary..."
-        ];
-
-        const terminalElement = document.querySelector('.terminal-body');
-        let currentLine = 0;
-
-        function typeTerminalLine() {
-            if (currentLine < terminalLines.length) {
-                const line = terminalLines[currentLine];
-                const prompt = `<div class="text-green-400 mt-2">$ q-agent --analyze</div>`;
-                const output = `<div class="text-gray-400 mt-1">${line}</div>`;
-                const cursor = `<div class="text-green-400 mt-2">$ <span class="blink">_</span></div>`;
-                
-                terminalElement.innerHTML += prompt + output;
-                currentLine++;
-                
-                // Scroll to bottom
-                terminalElement.scrollTop = terminalElement.scrollHeight;
-                
-                // Schedule next line
-                if (currentLine < terminalLines.length) {
-                    setTimeout(typeTerminalLine, 1500);
-                } else {
-                    terminalElement.innerHTML += cursor;
-                }
-            }
-        }
-
-        // Start typing effect after a delay
-        setTimeout(typeTerminalLine, 3000);
-
-        // Cookie consent banner
-        const cookieBanner = document.getElementById('cookie-banner');
-        const acceptCookiesBtn = document.getElementById('accept-cookies');
-
-        if (!localStorage.getItem('cookiesAccepted')) {
-            cookieBanner.classList.remove('hidden');
-        }
-
-        acceptCookiesBtn.addEventListener('click', () => {
-            localStorage.setItem('cookiesAccepted', 'true');
-            cookieBanner.classList.add('hidden');
-        });
-
-        // Contact form validation
-        const contactForm = document.getElementById('contact-form');
-        const formErrors = document.getElementById('form-errors');
-
-        contactForm.addEventListener('submit', e => {
-            formErrors.innerHTML = '';
-            formErrors.classList.add('hidden');
-
-            const firstName = document.getElementById('first-name').value.trim();
-            const lastName = document.getElementById('last-name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-
-            const errors = [];
-            if (!firstName) errors.push('First name is required.');
-            if (!lastName) errors.push('Last name is required.');
-            if (!/^\S+@\S+\.\S+$/.test(email)) errors.push('A valid email is required.');
-            if (!message) errors.push('Message is required.');
-
-            if (errors.length > 0) {
-                e.preventDefault();
-                formErrors.innerHTML = errors.map(err => `<p>${err}</p>`).join('');
-                formErrors.classList.remove('hidden');
-            }
-        });
-
-        // AI Agent Demo Modal Functions
-        function showAIAgentDemo() {
-            const modal = document.getElementById('ai-agent-modal');
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            startTerminalAnimation();
-        }
-
-        function closeAIAgentDemo() {
-            const modal = document.getElementById('ai-agent-modal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            // Reset terminal output
-            document.getElementById('terminal-output').innerHTML = '';
-        }
-
-        // Terminal Animation Function
-        function startTerminalAnimation() {
-            const terminalOutput = document.getElementById('terminal-output');
-            terminalOutput.innerHTML = '';
-            
-            const steps = [
-                { 
-                    id: 'init-cmd',
-                    content: '<div class="text-green-400 mb-2">$ q-agent --init</div>', 
-                    delay: 500 
-                },
-                { 
-                    id: 'init-msg',
-                    content: '<div class="text-gray-400 mt-1 mb-2">Initializing QURIOSITY AI agent system...</div>', 
-                    delay: 1000 
-                },
-                { 
-                    id: 'loading',
-                    content: '<div class="text-gray-400 mt-1 mb-2">Loading neural networks <span class="text-blue-400">[=====>]</span> 100%</div>', 
-                    delay: 1500 
-                },
-                { 
-                    id: 'connecting',
-                    content: '<div class="text-gray-400 mt-1 mb-4">Connecting to knowledge graph...</div>', 
-                    delay: 1000 
-                },
-                { 
-                    id: 'query-cmd',
-                    content: '<div class="text-green-400 mb-2">$ q-agent --query "plan trip to Tokyo, Kyoto and Osaka"</div>', 
-                    delay: 1500 
-                },
-                { 
-                    id: 'analyzing',
-                    content: '<div class="text-gray-400 mt-1 mb-4">Analyzing travel requirements and preferences...</div>', 
-                    delay: 1000 
-                },
-                { 
-                    id: 'step1-container',
-                    content: `<div id="step1-box" class="border border-gray-600 rounded p-4 mb-4">
-                        <div class="text-blue-400 font-bold mb-2">═══ Step 1: Research Phase ═══</div>
-                        <div class="text-gray-300 mb-2">Accessing global travel database...</div>
-                    </div>`, 
-                    delay: 1500 
-                },
-                { 
-                    id: 'step1-update1',
-                    content: `<div class="text-blue-400 font-bold mb-2">═══ Step 1: Research Phase ═══</div>
-                        <div class="text-gray-300 mb-2">Accessing global travel database...</div>
-                        <div class="text-green-400">✓ Tokyo attractions data retrieved (8.2k entries)</div>`,
-                    delay: 800,
-                    updateContainer: 'step1-box'
-                },
-                { 
-                    id: 'step1-update2',
-                    content: `<div class="text-blue-400 font-bold mb-2">═══ Step 1: Research Phase ═══</div>
-                        <div class="text-gray-300 mb-2">Accessing global travel database...</div>
-                        <div class="text-green-400">✓ Tokyo attractions data retrieved (8.2k entries)</div>
-                        <div class="text-green-400">✓ Kyoto cultural sites analyzed (3.1k temples/shrines)</div>`,
-                    delay: 800,
-                    updateContainer: 'step1-box'
-                },
-                { 
-                    id: 'step1-final',
-                    content: `<div class="text-blue-400 font-bold mb-2">═══ Step 1: Research Phase ═══</div>
-                        <div class="text-gray-300 mb-2">Accessing global travel database...</div>
-                        <div class="text-green-400">✓ Tokyo attractions data retrieved (8.2k entries)</div>
-                        <div class="text-green-400">✓ Kyoto cultural sites analyzed (3.1k temples/shrines)</div>
-                        <div class="text-green-400">✓ Osaka entertainment venues catalogued (2.4k locations)</div>
-                        <div class="text-white mt-2">Processing time: 0.8 seconds</div>`,
-                    delay: 1000,
-                    updateContainer: 'step1-box'
-                },
-                { 
-                    id: 'step2-container',
-                    content: `<div id="step2-box" class="border border-gray-600 rounded p-4 mb-4">
-                        <div class="text-blue-400 font-bold mb-2">═══ Step 2: Optimization Engine ═══</div>
-                        <div class="text-gray-300 mb-2">Running multi-variable optimization algorithm...</div>
-                    </div>`, 
-                    delay: 1500 
-                },
-                { 
-                    id: 'step2-final',
-                    content: `<div class="text-blue-400 font-bold mb-2">═══ Step 2: Optimization Engine ═══</div>
-                        <div class="text-gray-300 mb-2">Running multi-variable optimization algorithm...</div>
-                        <div class="text-white">• Tokyo allocation: 4 days (Shibuya, Asakusa, Harajuku districts)</div>
-                        <div class="text-white">• Kyoto allocation: 3 days (Traditional temples, Bamboo Grove)</div>
-                        <div class="text-white">• Osaka allocation: 3 days (Castle, Dotonbori, Universal Studios)</div>
-                        <div class="text-cyan-400 mt-2">Route efficiency: 94.7% optimized</div>`,
-                    delay: 2000,
-                    updateContainer: 'step2-box'
-                },
-                { 
-                    id: 'step3-container',
-                    content: `<div class="border border-gray-600 rounded p-4 mb-4">
-                        <div class="text-blue-400 font-bold mb-2">═══ Step 3: Logistics Matrix ═══</div>
-                        <div class="text-gray-300 mb-2">Calculating transportation and accommodation...</div>
-                        <div class="text-cyan-400">Timeline: Mar 28 - Apr 07 (10 days total)</div>
-                        <div class="text-green-400">✓ Shinkansen reservations: 2 segments booked</div>
-                        <div class="text-green-400">✓ Hotels: 3 properties secured (avg 4.6★ rating)</div>
-                        <div class="text-white mt-2">Cost optimization: ¥127,400 (15% below market rate)</div>
-                    </div>`, 
-                    delay: 2000 
-                },
-                { 
-                    id: 'step4-container',
-                    content: `<div class="border border-gray-600 rounded p-4 mb-4">
-                        <div class="text-blue-400 font-bold mb-2">═══ Step 4: Predictive Analysis ═══</div>
-                        <div class="text-gray-300 mb-2">Analyzing weather, crowds, and seasonal factors...</div>
-                        <div class="text-yellow-400">⚠ Cherry blossom season detected - expect 40% higher crowds</div>
-                        <div class="text-green-400">✓ Alternative routes calculated for peak times</div>
-                        <div class="text-green-400">✓ Weather-contingent indoor activities mapped</div>
-                        <div class="text-white mt-2">Trip success probability: 97.3%</div>
-                    </div>`, 
-                    delay: 2500 
-                },
-                { 
-                    id: 'completion',
-                    content: `<div class="text-green-400 font-bold">
-                        ✅ Trip optimization completed successfully!
-                    </div>
-                    <div class="text-gray-400 mt-2 text-xs">
-                        Total processing: 4.2 seconds | Neural paths: 2.4M evaluated | Confidence: 97.3%
-                    </div>`, 
-                    delay: 1500 
-                },
-                { 
-                    id: 'status',
-                    content: `<div class="text-green-400 mt-4">$ q-agent --status</div>
-                    <div class="text-gray-400 mt-1">System: <span class="text-white">Operational</span></div>
-                    <div class="text-gray-400 mt-1">Active tasks: <span class="text-white">Travel Planning</span></div>
-                    <div class="text-gray-400 mt-1">Processing: <span class="text-white">1.2 petaflops</span></div>
-                    <div class="text-green-400 mt-2">$ <span class="blink">_</span></div>`, 
-                    delay: 1000 
-                }
-            ];
-
-            let stepIndex = 0;
-
-            function executeStep() {
-                if (stepIndex < steps.length) {
-                    const step = steps[stepIndex];
-                    
-                    if (step.updateContainer) {
-                        // Update existing container content
-                        const container = document.getElementById(step.updateContainer);
-                        if (container) {
-                            container.innerHTML = step.content;
-                        }
-                    } else {
-                        // Add new content
-                        const newElement = document.createElement('div');
-                        newElement.innerHTML = step.content;
-                        terminalOutput.appendChild(newElement);
-                    }
-                    
-                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
-                    
-                    stepIndex++;
-                    setTimeout(executeStep, step.delay);
-                }
-            }
-
-            executeStep();
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('ai-agent-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAIAgentDemo();
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('ai-agent-modal');
-                if (!modal.classList.contains('hidden')) {
-                    closeAIAgentDemo();
-                }
-            }
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
         });
     </script>
 </body>
 </html>
-
-

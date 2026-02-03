@@ -51,3 +51,4 @@ Thumbs.db
 # *.css.map
 # *.sass.map
 # *.scss.map 
+ignore/
