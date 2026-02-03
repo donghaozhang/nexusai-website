@@ -6,53 +6,98 @@
     <title>QCut - The AI Video Editor</title>
     <meta name="description" content="QCut is a free, open-source video editor with AI superpowers." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #faf9f7; color: #1a1a1a; }
         
-        .bg-cream { background: #faf9f7; }
-        .bg-cream-dark { background: #f0eeeb; }
+        /* Light Mode (default) */
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #f0eeeb;
+            --bg-card: #fff;
+            --text-primary: #1a1a1a;
+            --text-muted: #666;
+            --text-light: #999;
+            --border-color: #e5e5e5;
+            --border-hover: #ccc;
+            --code-bg: #1a1a1a;
+            --code-text: #e5e5e5;
+        }
+        
+        /* Dark Mode */
+        .dark {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111;
+            --bg-card: #1a1a1a;
+            --text-primary: #fff;
+            --text-muted: #999;
+            --text-light: #666;
+            --border-color: #2a2a2a;
+            --border-hover: #444;
+            --code-bg: #000;
+            --code-text: #e5e5e5;
+        }
+        
+        body { 
+            background: var(--bg-primary); 
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .bg-primary { background: var(--bg-primary); }
+        .bg-secondary { background: var(--bg-secondary); }
+        .bg-card { background: var(--bg-card); }
+        .text-primary { color: var(--text-primary); }
+        .text-muted { color: var(--text-muted); }
+        .text-light { color: var(--text-light); }
+        .border-main { border-color: var(--border-color); }
         
         .btn-dark {
-            background: #1a1a1a;
-            color: #fff;
+            background: var(--text-primary);
+            color: var(--bg-primary);
             transition: all 0.2s ease;
         }
-        .btn-dark:hover { background: #333; }
+        .btn-dark:hover { opacity: 0.8; }
         
         .btn-outline {
-            border: 1px solid #d1d1d1;
+            border: 1px solid var(--border-color);
             background: transparent;
+            color: var(--text-primary);
             transition: all 0.2s ease;
         }
-        .btn-outline:hover { border-color: #1a1a1a; }
+        .btn-outline:hover { border-color: var(--text-muted); }
         
         .card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             transition: all 0.2s ease;
         }
-        .card:hover { border-color: #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        
-        .code-block {
-            background: #1a1a1a;
-            color: #e5e5e5;
+        .card:hover { 
+            border-color: var(--border-hover); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
         }
         
-        .text-muted { color: #666; }
-        .text-light { color: #999; }
+        .code-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+        }
         
-        .nav-border { border-bottom: 1px solid #e5e5e5; }
+        .nav-border { border-bottom: 1px solid var(--border-color); }
+        
+        .theme-toggle {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .theme-toggle:hover { background: var(--bg-secondary); }
     </style>
 </head>
 <body class="antialiased">
     
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-cream nav-border">
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
         <div class="max-w-5xl mx-auto px-6">
             <div class="flex items-center justify-between h-14">
                 <div class="flex items-center space-x-8">
@@ -61,15 +106,21 @@
                         <span class="text-lg font-semibold">QCut</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="#features" class="text-sm text-muted hover:text-black transition-colors">Features</a>
-                        <a href="#ai" class="text-sm text-muted hover:text-black transition-colors">AI Models</a>
-                        <a href="blog.html" class="text-sm text-muted hover:text-black transition-colors">Docs</a>
-                        <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-sm text-muted hover:text-black transition-colors">GitHub</a>
+                        <a href="#features" class="text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="#ai" class="text-sm text-muted hover:text-primary transition-colors">AI Models</a>
+                        <a href="blog.html" class="text-sm text-muted hover:text-primary transition-colors">Docs</a>
+                        <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-sm text-muted hover:text-primary transition-colors">GitHub</a>
                     </div>
                 </div>
-                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium">
-                    Download
-                </a>
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium">
+                        Download
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -98,7 +149,7 @@
         <section class="pb-24 px-6">
             <div class="max-w-4xl mx-auto">
                 <div class="code-block rounded-2xl overflow-hidden shadow-2xl">
-                    <div class="flex items-center gap-2 px-4 py-3 bg-black/50">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10">
                         <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
                         <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
@@ -122,7 +173,7 @@
         </section>
 
         <!-- Features Section -->
-        <section id="features" class="py-24 px-6 bg-cream-dark">
+        <section id="features" class="py-24 px-6 bg-secondary">
             <div class="max-w-5xl mx-auto">
                 <h2 class="text-2xl font-semibold mb-12">Everything you need</h2>
                 
@@ -132,31 +183,26 @@
                         <h3 class="font-semibold mb-2">Timeline Editing</h3>
                         <p class="text-sm text-muted">Multi-track timeline with drag-and-drop and real-time preview.</p>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-2xl mb-3">✨</div>
                         <h3 class="font-semibold mb-2">AI Text-to-Video</h3>
                         <p class="text-sm text-muted">Generate videos from text with Sora 2, Veo 3, Kling Pro.</p>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-2xl mb-3">🖼️</div>
                         <h3 class="font-semibold mb-2">AI Image Generation</h3>
                         <p class="text-sm text-muted">Create images with FLUX, Imagen 4, Nano Banana Pro.</p>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-2xl mb-3">🎙️</div>
                         <h3 class="font-semibold mb-2">AI Voiceover</h3>
                         <p class="text-sm text-muted">Professional TTS with 20+ ElevenLabs voices.</p>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-2xl mb-3">👤</div>
                         <h3 class="font-semibold mb-2">AI Avatar</h3>
                         <p class="text-sm text-muted">Talking head videos with OmniHuman and VEED.</p>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-2xl mb-3">🔒</div>
                         <h3 class="font-semibold mb-2">Privacy First</h3>
@@ -181,7 +227,6 @@
                             <div class="flex justify-between"><span>Nano Banana Pro</span><span class="text-light">$0.002</span></div>
                         </div>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-xs text-muted uppercase tracking-wider mb-4">Text-to-Video</div>
                         <div class="space-y-3 text-sm">
@@ -190,7 +235,6 @@
                             <div class="flex justify-between"><span>Kling 2.6 Pro</span><span class="text-light">$0.35-1.40</span></div>
                         </div>
                     </div>
-                    
                     <div class="card rounded-xl p-6">
                         <div class="text-xs text-muted uppercase tracking-wider mb-4">AI Avatar</div>
                         <div class="space-y-3 text-sm">
@@ -200,30 +244,17 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-8">
-                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="text-sm text-muted hover:text-black transition-colors">
-                        View all 40+ models →
-                    </a>
-                </div>
             </div>
         </section>
 
         <!-- Why Section -->
-        <section class="py-24 px-6 bg-cream-dark">
+        <section class="py-24 px-6 bg-secondary">
             <div class="max-w-3xl mx-auto">
                 <h2 class="text-2xl font-semibold mb-8">Why QCut?</h2>
-                
                 <div class="space-y-6 text-muted leading-relaxed">
-                    <p>
-                        <span class="text-black font-medium">CapCut's basic features are now paywalled.</span> What started as a free editing tool has become another subscription service.
-                    </p>
-                    <p>
-                        QCut is our answer: a completely free, open-source video editor. Every feature CapCut locks behind a subscription, we offer for free. No watermarks, no limitations.
-                    </p>
-                    <p>
-                        <span class="text-black font-medium">Privacy-first:</span> all processing happens locally. Your videos never leave your device. Open source under MIT license.
-                    </p>
+                    <p><span class="text-primary font-medium">CapCut's basic features are now paywalled.</span> What started as a free editing tool has become another subscription service.</p>
+                    <p>QCut is our answer: a completely free, open-source video editor. Every feature CapCut locks behind a subscription, we offer for free.</p>
+                    <p><span class="text-primary font-medium">Privacy-first:</span> all processing happens locally. Your videos never leave your device.</p>
                 </div>
             </div>
         </section>
@@ -232,34 +263,57 @@
         <section class="py-24 px-6">
             <div class="max-w-2xl mx-auto text-center">
                 <h2 class="text-2xl font-semibold mb-6">Start creating today</h2>
-                <p class="text-muted mb-10">
-                    Download QCut and experience the future of video editing.
-                </p>
+                <p class="text-muted mb-10">Download QCut and experience the future of video editing.</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-8 py-3 rounded-full text-base font-medium">
-                        Download for Windows
-                    </a>
-                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="btn-outline px-8 py-3 rounded-full text-base font-medium">
-                        View on GitHub
-                    </a>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-8 py-3 rounded-full text-base font-medium">Download for Windows</a>
+                    <a href="https://github.com/donghaozhang/qcut" target="_blank" class="btn-outline px-8 py-3 rounded-full text-base font-medium">View on GitHub</a>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="py-12 px-6 border-t border-gray-200">
+    <footer class="py-12 px-6 border-t border-main">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-2">
                 <img src="assets/qcut-logo.png" alt="QCut" class="h-5 w-5">
                 <span class="text-sm text-muted">QCut — Free, open-source video editor</span>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-muted hover:text-black transition-colors">
+                <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-muted hover:text-primary transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                 </a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+        
+        function updateThemeIcon(isDark) {
+            document.getElementById('sun-icon').classList.toggle('hidden', !isDark);
+            document.getElementById('moon-icon').classList.toggle('hidden', isDark);
+        }
+        
+        // Initialize theme from localStorage or system preference
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = saved ? saved === 'dark' : prefersDark;
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            }
+            updateThemeIcon(isDark);
+        }
+        
+        initTheme();
+    </script>
 </body>
 </html>

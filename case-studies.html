@@ -9,19 +9,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #faf9f7; color: #1a1a1a; }
-        .bg-cream { background: #faf9f7; }
-        .btn-dark { background: #1a1a1a; color: #fff; }
-        .btn-outline { border: 1px solid #d1d1d1; }
-        .btn-outline:hover { border-color: #1a1a1a; }
-        .card { background: #fff; border: 1px solid #e5e5e5; transition: all 0.2s; }
-        .card:hover { border-color: #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .text-muted { color: #666; }
-        .nav-border { border-bottom: 1px solid #e5e5e5; }
+        :root { --bg-primary: #faf9f7; --bg-secondary: #f0eeeb; --bg-card: #fff; --text-primary: #1a1a1a; --text-muted: #666; --border-color: #e5e5e5; --border-hover: #ccc; }
+        .dark { --bg-primary: #0a0a0a; --bg-secondary: #111; --bg-card: #1a1a1a; --text-primary: #fff; --text-muted: #999; --border-color: #2a2a2a; --border-hover: #444; }
+        body { background: var(--bg-primary); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
+        .bg-primary { background: var(--bg-primary); }
+        .text-muted { color: var(--text-muted); }
+        .btn-dark { background: var(--text-primary); color: var(--bg-primary); }
+        .btn-outline { border: 1px solid var(--border-color); }
+        .btn-outline:hover { border-color: var(--text-muted); }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); transition: all 0.2s; }
+        .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .nav-border { border-bottom: 1px solid var(--border-color); }
+        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; }
+        .theme-toggle:hover { background: var(--bg-secondary); }
     </style>
 </head>
 <body class="antialiased">
-    <nav class="fixed top-0 w-full z-50 bg-cream nav-border">
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
         <div class="max-w-5xl mx-auto px-6">
             <div class="flex items-center justify-between h-14">
                 <div class="flex items-center space-x-8">
@@ -30,13 +34,19 @@
                         <span class="text-lg font-semibold">QCut</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="solutions.html" class="text-sm text-muted hover:text-black">Features</a>
-                        <a href="index.html#ai" class="text-sm text-muted hover:text-black">AI Models</a>
-                        <a href="about.html" class="text-sm text-muted hover:text-black">About</a>
-                        <a href="blog.html" class="text-sm text-muted hover:text-black">Docs</a>
+                        <a href="solutions.html" class="text-sm text-muted">Features</a>
+                        <a href="index.html#ai" class="text-sm text-muted">AI Models</a>
+                        <a href="about.html" class="text-sm text-muted">About</a>
+                        <a href="blog.html" class="text-sm text-muted">Docs</a>
                     </div>
                 </div>
-                <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -46,103 +56,45 @@
             <h1 class="text-3xl font-semibold mb-4">Gallery</h1>
             <p class="text-muted mb-16">Examples of what you can create with QCut.</p>
 
-            <!-- AI Examples -->
             <div class="mb-16">
                 <h2 class="text-xs text-muted uppercase tracking-wider mb-6">AI Generated Content</h2>
                 <div class="grid md:grid-cols-3 gap-4">
-                    <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
-                            <span class="text-3xl">🎬</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-xs text-purple-600 mb-1">Text-to-Video • Sora 2</div>
-                            <p class="text-sm">"Epic dragon over mountains"</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
-                            <span class="text-3xl">🖼️</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-xs text-blue-600 mb-1">Text-to-Image • FLUX.1</div>
-                            <p class="text-sm">"Cyberpunk city at night"</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center">
-                            <span class="text-3xl">👤</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-xs text-green-600 mb-1">AI Avatar • OmniHuman</div>
-                            <p class="text-sm">Talking head video</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
-                            <span class="text-3xl">🎞️</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-xs text-orange-600 mb-1">Image-to-Video • Kling Pro</div>
-                            <p class="text-sm">Photo animation</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-pink-100 to-rose-100 flex items-center justify-center">
-                            <span class="text-3xl">🎙️</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-xs text-pink-600 mb-1">Text-to-Speech • ElevenLabs</div>
-                            <p class="text-sm">Professional voiceover</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card rounded-xl overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center">
-                            <span class="text-3xl">✨</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-xs text-indigo-600 mb-1">Pipeline • YAML</div>
-                            <p class="text-sm">Text → Image → Video</p>
-                        </div>
-                    </div>
+                    <div class="card rounded-xl overflow-hidden"><div class="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center"><span class="text-3xl">🎬</span></div><div class="p-4"><div class="text-xs text-purple-600 dark:text-purple-400 mb-1">Text-to-Video • Sora 2</div><p class="text-sm">"Epic dragon over mountains"</p></div></div>
+                    <div class="card rounded-xl overflow-hidden"><div class="aspect-video bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 flex items-center justify-center"><span class="text-3xl">🖼️</span></div><div class="p-4"><div class="text-xs text-blue-600 dark:text-blue-400 mb-1">Text-to-Image • FLUX.1</div><p class="text-sm">"Cyberpunk city"</p></div></div>
+                    <div class="card rounded-xl overflow-hidden"><div class="aspect-video bg-gradient-to-br from-green-100 to-teal-100 dark:from-green-900/30 dark:to-teal-900/30 flex items-center justify-center"><span class="text-3xl">👤</span></div><div class="p-4"><div class="text-xs text-green-600 dark:text-green-400 mb-1">AI Avatar • OmniHuman</div><p class="text-sm">Talking head video</p></div></div>
+                    <div class="card rounded-xl overflow-hidden"><div class="aspect-video bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30 flex items-center justify-center"><span class="text-3xl">🎞️</span></div><div class="p-4"><div class="text-xs text-orange-600 dark:text-orange-400 mb-1">Image-to-Video • Kling</div><p class="text-sm">Photo animation</p></div></div>
+                    <div class="card rounded-xl overflow-hidden"><div class="aspect-video bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30 flex items-center justify-center"><span class="text-3xl">🎙️</span></div><div class="p-4"><div class="text-xs text-pink-600 dark:text-pink-400 mb-1">TTS • ElevenLabs</div><p class="text-sm">Professional voiceover</p></div></div>
+                    <div class="card rounded-xl overflow-hidden"><div class="aspect-video bg-gradient-to-br from-indigo-100 to-violet-100 dark:from-indigo-900/30 dark:to-violet-900/30 flex items-center justify-center"><span class="text-3xl">✨</span></div><div class="p-4"><div class="text-xs text-indigo-600 dark:text-indigo-400 mb-1">Pipeline • YAML</div><p class="text-sm">Text → Image → Video</p></div></div>
                 </div>
             </div>
 
-            <!-- Community -->
             <div class="mb-16">
                 <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Community</h2>
                 <div class="card rounded-xl p-8 text-center">
                     <div class="text-4xl mb-4">🎬</div>
                     <h3 class="font-semibold mb-2">Share Your Work</h3>
                     <p class="text-muted mb-6">Created something with QCut? Share it on GitHub!</p>
-                    <a href="https://github.com/donghaozhang/qcut/discussions" target="_blank" class="btn-outline inline-block px-5 py-2.5 rounded-full text-sm">
-                        Share on GitHub
-                    </a>
+                    <a href="https://github.com/donghaozhang/qcut/discussions" target="_blank" class="btn-outline inline-block px-5 py-2.5 rounded-full text-sm">Share on GitHub</a>
                 </div>
             </div>
 
-            <!-- Recommendations -->
             <div>
                 <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Model Recommendations</h2>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="card rounded-xl p-5">
                         <h3 class="font-medium mb-3">Best for Quality</h3>
                         <div class="space-y-2 text-sm text-muted">
-                            <div class="flex justify-between"><span>Text-to-Image</span><span class="text-black">FLUX.1, Imagen 4</span></div>
-                            <div class="flex justify-between"><span>Text-to-Video</span><span class="text-black">Sora 2, Veo 3</span></div>
-                            <div class="flex justify-between"><span>Avatar</span><span class="text-black">OmniHuman v1.5</span></div>
+                            <div class="flex justify-between"><span>Text-to-Image</span><span style="color: var(--text-primary)">FLUX.1, Imagen 4</span></div>
+                            <div class="flex justify-between"><span>Text-to-Video</span><span style="color: var(--text-primary)">Sora 2, Veo 3</span></div>
+                            <div class="flex justify-between"><span>Avatar</span><span style="color: var(--text-primary)">OmniHuman v1.5</span></div>
                         </div>
                     </div>
                     <div class="card rounded-xl p-5">
                         <h3 class="font-medium mb-3">Best for Speed/Cost</h3>
                         <div class="space-y-2 text-sm text-muted">
-                            <div class="flex justify-between"><span>Text-to-Image</span><span class="text-black">FLUX Schnell</span></div>
-                            <div class="flex justify-between"><span>Text-to-Video</span><span class="text-black">Hailuo</span></div>
-                            <div class="flex justify-between"><span>Avatar</span><span class="text-black">VEED Fast</span></div>
+                            <div class="flex justify-between"><span>Text-to-Image</span><span style="color: var(--text-primary)">FLUX Schnell</span></div>
+                            <div class="flex justify-between"><span>Text-to-Video</span><span style="color: var(--text-primary)">Hailuo</span></div>
+                            <div class="flex justify-between"><span>Avatar</span><span style="color: var(--text-primary)">VEED Fast</span></div>
                         </div>
                     </div>
                 </div>
@@ -150,10 +102,9 @@
         </div>
     </main>
 
-    <footer class="py-8 px-6 border-t border-gray-200">
-        <div class="max-w-5xl mx-auto text-center text-sm text-muted">
-            © 2026 QCut. Open source under MIT License.
-        </div>
+    <footer class="py-8 px-6 border-t" style="border-color: var(--border-color)">
+        <div class="max-w-5xl mx-auto text-center text-sm text-muted">© 2026 QCut. MIT License.</div>
     </footer>
+    <script src="theme.js"></script>
 </body>
 </html>
