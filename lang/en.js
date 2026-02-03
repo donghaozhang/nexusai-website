@@ -12,6 +12,9 @@ const en = {
     "hero.downloadWindows": "Download for Windows",
     "hero.starOnGithub": "Star on GitHub",
 
+    // Video
+    "video.title": "See QCut in Action",
+
     // Features
     "features.title": "Everything you need",
     "features.timeline.title": "Timeline Editing",

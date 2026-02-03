@@ -12,6 +12,9 @@ const ja = {
     "hero.downloadWindows": "Windows版をダウンロード",
     "hero.starOnGithub": "GitHubでスター",
 
+    // Video
+    "video.title": "QCutの実際の動作を見る",
+
     // Features
     "features.title": "必要なものがすべて揃う",
     "features.timeline.title": "タイムライン編集",

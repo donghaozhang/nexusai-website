@@ -12,6 +12,9 @@ const zh = {
     "hero.downloadWindows": "下载 Windows 版",
     "hero.starOnGithub": "在 GitHub 加星",
 
+    // Video
+    "video.title": "看看 QCut 的实际效果",
+
     // Features
     "features.title": "你需要的一切",
     "features.timeline.title": "时间轴编辑",
