@@ -390,7 +390,16 @@
                     <!-- Contact Form -->
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="100">
                         <h3 class="font-semibold mb-4">Send us a message</h3>
-                        <form action="mailto:info@quriosity.com.au" method="post" enctype="text/plain" class="space-y-4">
+                        <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+                            <!-- Web3Forms Access Key - Get yours free at https://web3forms.com -->
+                            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                            <!-- Email to receive submissions -->
+                            <input type="hidden" name="to_email" value="info@quriosity.com.au">
+                            <input type="hidden" name="subject" value="New Contact Form Submission - QCut">
+                            <input type="hidden" name="from_name" value="QCut Contact Form">
+                            <!-- Redirect after submission -->
+                            <input type="hidden" name="redirect" value="https://web3forms.com/success">
+                            
                             <div>
                                 <label for="name" class="block text-sm text-muted mb-2">Name</label>
                                 <input type="text" id="name" name="name" required 
@@ -409,10 +418,16 @@
                                     class="w-full px-4 py-3 rounded-lg border border-main bg-primary text-primary focus:outline-none focus:border-gray-400 transition-colors resize-none"
                                     placeholder="How can we help?"></textarea>
                             </div>
-                            <button type="submit" class="btn-dark w-full px-6 py-3 rounded-lg text-base font-medium">
+                            <button type="submit" id="submit-btn" class="btn-dark w-full px-6 py-3 rounded-lg text-base font-medium">
                                 Send Message
                             </button>
                         </form>
+                        <!-- Success Message (hidden by default) -->
+                        <div id="success-message" class="hidden text-center py-8">
+                            <div class="text-4xl mb-4">✅</div>
+                            <h4 class="font-semibold text-lg mb-2">Message Sent!</h4>
+                            <p class="text-muted text-sm">Thanks for reaching out. We'll get back to you soon.</p>
+                        </div>
                     </div>
                     
                     <!-- Connect With Us -->
@@ -507,6 +522,43 @@
             once: true,
             offset: 50
         });
+        
+        // Contact Form Handler
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const successMessage = document.getElementById('success-message');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Update button state
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                
+                try {
+                    const formData = new FormData(contactForm);
+                    const response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Hide form, show success message
+                        contactForm.style.display = 'none';
+                        successMessage.classList.remove('hidden');
+                    } else {
+                        throw new Error(result.message || 'Something went wrong');
+                    }
+                } catch (error) {
+                    alert('Failed to send message. Please try again or email us directly.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                }
+            });
+        }
     </script>
 </body>
 </html>
