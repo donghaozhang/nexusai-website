@@ -392,13 +392,12 @@
                         <h3 class="font-semibold mb-4">Send us a message</h3>
                         <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
                             <!-- Web3Forms Access Key - Get yours free at https://web3forms.com -->
-                            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                            <input type="hidden" name="access_key" value="d20398dc-3bbd-40ce-8b3b-bf2d2dfff0c4">
                             <!-- Email to receive submissions -->
                             <input type="hidden" name="to_email" value="info@quriosity.com.au">
                             <input type="hidden" name="subject" value="New Contact Form Submission - QCut">
                             <input type="hidden" name="from_name" value="QCut Contact Form">
-                            <!-- Redirect after submission -->
-                            <input type="hidden" name="redirect" value="https://web3forms.com/success">
+                            <!-- No redirect - handled by AJAX -->
                             
                             <div>
                                 <label for="name" class="block text-sm text-muted mb-2">Name</label>
