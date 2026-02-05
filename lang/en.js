@@ -9,7 +9,11 @@ const en = {
     // Hero
     "hero.title": "Built for creators who want<br>professional video editing, free.",
     "hero.subtitle": "QCut is the best way to edit videos with AI. Timeline editing, 40+ AI models, and complete privacy - all without subscriptions or watermarks.",
-    "hero.downloadWindows": "Download for Windows",
+    "hero.betaVersion": "Beta v0.3.53 - Free & Open Source",
+    "hero.downloadWindows": "Windows",
+    "hero.downloadMac": "macOS",
+    "hero.downloadLinux": "Linux",
+    "hero.allDownloads": "All downloads & release notes →",
     "hero.starOnGithub": "Star on GitHub",
 
     // Video

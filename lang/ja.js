@@ -9,7 +9,11 @@ const ja = {
     // Hero
     "hero.title": "プロ品質の動画編集を<br>無料で、すべてのクリエイターへ。",
     "hero.subtitle": "QCutはAIで動画を編集する最良の方法です。タイムライン編集、40以上のAIモデル、完全なプライバシー - サブスクも透かしも不要。",
-    "hero.downloadWindows": "Windows版をダウンロード",
+    "hero.betaVersion": "Beta v0.3.53 - 無料・オープンソース",
+    "hero.downloadWindows": "Windows",
+    "hero.downloadMac": "macOS",
+    "hero.downloadLinux": "Linux",
+    "hero.allDownloads": "全ダウンロード & リリースノート →",
     "hero.starOnGithub": "GitHubでスター",
 
     // Video

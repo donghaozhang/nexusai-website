@@ -9,7 +9,11 @@ const zh = {
     // Hero
     "hero.title": "为追求专业视频剪辑的<br>创作者打造，完全免费。",
     "hero.subtitle": "QCut 是用 AI 剪辑视频的最佳方式。时间轴编辑、40+ AI 模型、完全隐私保护 - 无需订阅，无水印。",
-    "hero.downloadWindows": "下载 Windows 版",
+    "hero.betaVersion": "Beta v0.3.53 - 免费开源",
+    "hero.downloadWindows": "Windows",
+    "hero.downloadMac": "macOS",
+    "hero.downloadLinux": "Linux",
+    "hero.allDownloads": "所有下载 & 更新日志 →",
     "hero.starOnGithub": "在 GitHub 加星",
 
     // Video
