@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCut - Releases</title>
+    <meta name="description" content="Download QCut AI Video Editor - Latest and Stable releases for Windows, macOS, and Linux." />
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="lang/en.js"></script>
+    <script src="lang/zh.js"></script>
+    <script src="lang/ja.js"></script>
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        :root {
+            --bg-primary: #faf9f7; --bg-secondary: #f0eeeb; --bg-card: #fff;
+            --text-primary: #1a1a1a; --text-muted: #666; --text-light: #999;
+            --border-color: #e5e5e5; --border-hover: #ccc;
+        }
+        .dark {
+            --bg-primary: #0a0a0a; --bg-secondary: #111; --bg-card: #1a1a1a;
+            --text-primary: #fff; --text-muted: #999; --text-light: #666;
+            --border-color: #2a2a2a; --border-hover: #444;
+        }
+        body { background: var(--bg-primary); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
+        .bg-primary { background: var(--bg-primary); }
+        .bg-secondary { background: var(--bg-secondary); }
+        .bg-card { background: var(--bg-card); }
+        .text-primary { color: var(--text-primary); }
+        .text-muted { color: var(--text-muted); }
+        .text-light { color: var(--text-light); }
+        .border-main { border-color: var(--border-color); }
+        .nav-border { border-bottom: 1px solid var(--border-color); }
+        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.2s; }
+        .theme-toggle:hover { background: var(--bg-secondary); }
+        .btn-dark { background: var(--text-primary); color: var(--bg-primary); transition: all 0.2s ease; }
+        .btn-dark:hover { opacity: 0.8; }
+        .btn-outline { border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); transition: all 0.2s ease; }
+        .btn-outline:hover { border-color: var(--text-muted); }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); transition: all 0.2s ease; }
+        .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .badge-stable { background: #22c55e; color: #fff; }
+        .badge-latest { background: #3b82f6; color: #fff; }
+        .badge-prerelease { background: #f59e0b; color: #000; }
+        .platform-icon { width: 20px; height: 20px; display: inline-block; vertical-align: middle; }
+        .refresh-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .skeleton { background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 50%, var(--bg-secondary) 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .auto-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--bg-secondary); color: var(--text-muted); }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="index.html#features" class="text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="index.html#ai" class="text-sm text-muted hover:text-primary transition-colors">AI Models</a>
+                        <a href="releases.html" class="text-sm font-medium transition-colors" style="color: var(--text-primary);">Releases</a>
+                        <a href="blog.html" class="text-sm text-muted hover:text-primary transition-colors">Docs</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 pt-24 pb-16">
+        <!-- Header -->
+        <div class="mb-10">
+            <div class="flex items-center justify-between mb-2">
+                <h1 class="text-3xl font-bold">Releases</h1>
+                <div class="flex items-center gap-3">
+                    <span class="auto-badge" id="auto-status">Auto-refresh: 5min</span>
+                    <button onclick="fetchReleases()" id="refresh-btn" class="btn-outline rounded-lg px-3 py-1.5 text-sm flex items-center gap-2">
+                        <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <p class="text-muted text-sm">Download QCut AI Video Editor for Windows, macOS, and Linux. Fetched live from <a href="https://github.com/donghaozhang/qcut/releases" target="_blank" class="underline hover:text-primary">GitHub</a>.</p>
+            <p class="text-light text-xs mt-1" id="last-updated"></p>
+        </div>
+
+        <!-- Highlighted: Stable + Latest -->
+        <div class="grid md:grid-cols-2 gap-4 mb-10" id="highlight-cards">
+            <div class="skeleton h-48"></div>
+            <div class="skeleton h-48"></div>
+        </div>
+
+        <!-- All Releases -->
+        <h2 class="text-xl font-semibold mb-4">All Releases</h2>
+        <div class="space-y-4" id="all-releases">
+            <div class="skeleton h-24"></div>
+            <div class="skeleton h-24"></div>
+            <div class="skeleton h-24"></div>
+        </div>
+    </main>
+
+    <footer class="border-t border-main py-8">
+        <div class="max-w-5xl mx-auto px-6 text-center text-sm text-muted">
+            © 2026 QCut by Quriosity. All rights reserved.
+        </div>
+    </footer>
+
+<script>
+const REPO = 'donghaozhang/qcut';
+const API = `https://api.github.com/repos/${REPO}/releases`;
+let autoRefreshInterval;
+
+// === Theme ===
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.body.classList.add('dark');
+}
+
+// === Helpers ===
+function formatSize(bytes) {
+    if (bytes > 1e9) return (bytes / 1e9).toFixed(1) + ' GB';
+    if (bytes > 1e6) return (bytes / 1e6).toFixed(0) + ' MB';
+    return (bytes / 1e3).toFixed(0) + ' KB';
+}
+
+function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return `${Math.floor(hrs / 24)}d ago`;
+}
+
+function getPlatform(name) {
+    if (name.endsWith('.exe')) return { icon: '🪟', label: 'Windows', os: 'windows' };
+    if (name.endsWith('.dmg')) return { icon: '🍎', label: 'macOS', os: 'mac' };
+    if (name.endsWith('.AppImage')) return { icon: '🐧', label: 'Linux', os: 'linux' };
+    if (name.endsWith('.deb')) return { icon: '🐧', label: 'Linux (deb)', os: 'linux' };
+    if (name.endsWith('.zip') && name.includes('mac')) return { icon: '🍎', label: 'macOS (zip)', os: 'mac' };
+    return null;
+}
+
+function filterAssets(assets) {
+    return assets.filter(a => {
+        const n = a.name.toLowerCase();
+        return !n.endsWith('.yml') && !n.endsWith('.blockmap') && !n.endsWith('.txt') &&
+               !n.startsWith('builder-') && !n.includes('SHA256');
+    }).filter(a => {
+        // Deduplicate: prefer "QCut-AI-Video-Editor-" prefix over "QCut.AI.Video.Editor-"
+        if (a.name.includes('.AI.Video.Editor')) {
+            const alt = a.name.replace('QCut.AI.Video.Editor', 'QCut-AI-Video-Editor');
+            return !assets.some(b => b.name === alt);
+        }
+        return true;
+    });
+}
+
+function badgeHTML(release) {
+    if (release.prerelease) return '<span class="badge-prerelease text-xs font-semibold px-2 py-0.5 rounded-full">Pre-release</span>';
+    return '<span class="badge-stable text-xs font-semibold px-2 py-0.5 rounded-full">Stable</span>';
+}
+
+function assetRowHTML(asset) {
+    const p = getPlatform(asset.name);
+    if (!p) return '';
+    return `
+        <a href="${asset.browser_download_url}" class="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary transition-colors group">
+            <div class="flex items-center gap-3">
+                <span class="text-lg">${p.icon}</span>
+                <div>
+                    <div class="text-sm font-medium">${p.label}</div>
+                    <div class="text-xs text-light">${asset.name}</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-muted">${formatSize(asset.size)}</span>
+                <svg class="w-4 h-4 text-muted group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            </div>
+        </a>`;
+}
+
+function highlightCard(release, label, colorClass) {
+    const assets = filterAssets(release.assets);
+    return `
+        <div class="card rounded-xl p-6">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="${colorClass} text-xs font-semibold px-2.5 py-1 rounded-full">${label}</span>
+                    <span class="text-lg font-semibold">${release.tag_name}</span>
+                </div>
+                <span class="text-xs text-muted">${timeAgo(release.published_at)}</span>
+            </div>
+            <p class="text-sm text-muted mb-4">${release.name || release.tag_name}</p>
+            <div class="space-y-1">
+                ${assets.map(a => assetRowHTML(a)).join('')}
+            </div>
+            <div class="mt-3 pt-3 border-t border-main">
+                <a href="${release.html_url}" target="_blank" class="text-xs text-muted hover:text-primary transition-colors">View on GitHub →</a>
+            </div>
+        </div>`;
+}
+
+function releaseRow(release) {
+    const assets = filterAssets(release.assets);
+    const platforms = [...new Set(assets.map(a => getPlatform(a.name)).filter(Boolean).map(p => p.icon))].join(' ');
+    return `
+        <details class="card rounded-xl overflow-hidden">
+            <summary class="px-6 py-4 cursor-pointer flex items-center justify-between hover:bg-secondary transition-colors">
+                <div class="flex items-center gap-3">
+                    ${badgeHTML(release)}
+                    <span class="font-semibold">${release.tag_name}</span>
+                    <span class="text-sm text-muted">${release.name || ''}</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-sm">${platforms}</span>
+                    <span class="text-xs text-muted">${formatDate(release.published_at)}</span>
+                    <svg class="w-4 h-4 text-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+            </summary>
+            <div class="px-6 pb-4 space-y-1 border-t border-main pt-3">
+                ${assets.map(a => assetRowHTML(a)).join('')}
+                <div class="pt-2"><a href="${release.html_url}" target="_blank" class="text-xs text-muted hover:text-primary">View on GitHub →</a></div>
+            </div>
+        </details>`;
+}
+
+// === Fetch ===
+async function fetchReleases() {
+    const icon = document.getElementById('refresh-icon');
+    icon.classList.add('refresh-spin');
+
+    try {
+        const res = await fetch(API, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+        const releases = await res.json();
+
+        // Separate stable vs prerelease
+        const stable = releases.filter(r => !r.prerelease && !r.draft);
+        const prerelease = releases.filter(r => r.prerelease && !r.draft);
+
+        const latest = stable[0];
+        const latestPre = prerelease[0];
+
+        // Highlight cards
+        const highlightEl = document.getElementById('highlight-cards');
+        let cards = '';
+        if (latest) cards += highlightCard(latest, '✅ Stable Release', 'badge-stable');
+        if (latestPre) cards += highlightCard(latestPre, '🚀 Latest Pre-release', 'badge-latest');
+        else if (stable[1]) cards += highlightCard(stable[1], 'Previous Stable', 'badge-stable');
+        highlightEl.innerHTML = cards;
+
+        // All releases
+        const allEl = document.getElementById('all-releases');
+        allEl.innerHTML = releases.filter(r => !r.draft).map(r => releaseRow(r)).join('');
+
+        document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+    } catch (err) {
+        console.error('Failed to fetch releases:', err);
+        document.getElementById('highlight-cards').innerHTML = `<div class="card rounded-xl p-6 col-span-2 text-center text-muted">Failed to load releases. <button onclick="fetchReleases()" class="underline">Retry</button></div>`;
+    }
+
+    icon.classList.remove('refresh-spin');
+}
+
+// Init
+fetchReleases();
+autoRefreshInterval = setInterval(fetchReleases, 5 * 60 * 1000); // 5 min auto-refresh
+</script>
+</body>
+</html>
