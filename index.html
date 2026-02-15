@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="lang/en.js"></script>
     <script src="lang/zh.js"></script>
     <script src="lang/ja.js"></script>
@@ -238,32 +239,44 @@
 
                 <div class="grid md:grid-cols-3 gap-4">
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="0">
-                        <div class="text-2xl mb-3">🔒</div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
+                        </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.privacy.title">Privacy First</h3>
                         <p class="text-sm text-muted" data-i18n="features.privacy.desc">All processing happens locally on your device.</p>
                     </div>
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="50">
-                        <div class="text-2xl mb-3">🎬</div>
+                        <div class="w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="film" class="w-5 h-5 text-violet-600 dark:text-violet-400"></i>
+                        </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.timeline.title">Timeline Editing</h3>
                         <p class="text-sm text-muted" data-i18n="features.timeline.desc">Multi-track timeline with drag-and-drop and real-time preview.</p>
                     </div>
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="text-2xl mb-3">✨</div>
+                        <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="wand-sparkles" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
+                        </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.textToVideo.title">AI Text-to-Video</h3>
                         <p class="text-sm text-muted" data-i18n="features.textToVideo.desc">Generate videos from text with Sora 2, Veo 3, Kling Pro.</p>
                     </div>
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="150">
-                        <div class="text-2xl mb-3">🖼️</div>
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="paintbrush" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                        </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.imageGen.title">AI Image Generation</h3>
                         <p class="text-sm text-muted" data-i18n="features.imageGen.desc">Create images with FLUX, Imagen 4, Nano Banana Pro.</p>
                     </div>
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="text-2xl mb-3">🎙️</div>
+                        <div class="w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="audio-lines" class="w-5 h-5 text-rose-600 dark:text-rose-400"></i>
+                        </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.transcribe.title">AI Transcribe</h3>
                         <p class="text-sm text-muted" data-i18n="features.transcribe.desc">Convert speech to text with ElevenLabs Scribe.</p>
                     </div>
                     <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="250">
-                        <div class="text-2xl mb-3">👤</div>
+                        <div class="w-10 h-10 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="user-round" class="w-5 h-5 text-cyan-600 dark:text-cyan-400"></i>
+                        </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.avatar.title">AI Avatar</h3>
                         <p class="text-sm text-muted" data-i18n="features.avatar.desc">Talking head videos with OmniHuman and VEED.</p>
                     </div>
@@ -331,7 +344,7 @@
                         <!-- Watermark -->
                         <div class="p-4 border-b border-main text-left text-sm" data-i18n="comparison.noWatermark">No watermark</div>
                         <div class="p-4 border-b border-l border-main bg-gray-100 dark:bg-gray-800">
-                            <span class="text-green-600 dark:text-green-400">✓</span>
+                            <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400 inline"></i>
                         </div>
                         <div class="p-4 border-b border-l border-main text-sm text-muted" data-i18n="comparison.proOnly">Pro only</div>
 
@@ -345,21 +358,21 @@
                         <!-- Privacy -->
                         <div class="p-4 border-b border-main text-left text-sm" data-i18n="comparison.localProcessing">Local processing</div>
                         <div class="p-4 border-b border-l border-main bg-gray-100 dark:bg-gray-800">
-                            <span class="text-green-600 dark:text-green-400">✓</span>
+                            <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400 inline"></i>
                         </div>
                         <div class="p-4 border-b border-l border-main text-sm text-muted" data-i18n="comparison.cloudOnly">Cloud only</div>
 
                         <!-- Open Source -->
                         <div class="p-4 border-b border-main text-left text-sm" data-i18n="comparison.openSource">Open source</div>
                         <div class="p-4 border-b border-l border-main bg-gray-100 dark:bg-gray-800">
-                            <span class="text-green-600 dark:text-green-400">✓ MIT</span>
+                            <span class="text-green-600 dark:text-green-400"><i data-lucide="check" class="w-4 h-4 inline"></i> MIT</span>
                         </div>
-                        <div class="p-4 border-b border-l border-main text-sm text-muted">✗</div>
+                        <div class="p-4 border-b border-l border-main text-sm text-muted"><i data-lucide="x" class="w-4 h-4 text-red-400 inline"></i></div>
 
                         <!-- 4K Export -->
                         <div class="p-4 text-left text-sm" data-i18n="comparison.4kExport">4K Export</div>
                         <div class="p-4 border-l border-main bg-gray-100 dark:bg-gray-800">
-                            <span class="text-green-600 dark:text-green-400" data-i18n="comparison.free">✓ Free</span>
+                            <span class="text-green-600 dark:text-green-400" data-i18n="comparison.free"><i data-lucide="check" class="w-4 h-4 inline"></i> Free</span>
                         </div>
                         <div class="p-4 border-l border-main text-sm text-muted" data-i18n="comparison.proOnly">Pro only</div>
                     </div>
@@ -483,7 +496,9 @@
                         </form>
                         <!-- Success Message (hidden by default) -->
                         <div id="success-message" class="hidden text-center py-8">
-                            <div class="text-4xl mb-4">✅</div>
+                            <div class="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="check-circle" class="w-7 h-7 text-green-600 dark:text-green-400"></i>
+                            </div>
                             <h4 class="font-semibold text-lg mb-2" data-i18n="contact.success">Message Sent!</h4>
                             <p class="text-muted text-sm" data-i18n="contact.successMsg">Thanks for reaching out. We'll get back to you soon.</p>
                         </div>
@@ -658,6 +673,9 @@
     </script>
     <script src="i18n.js"></script>
     <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
         // Initialize AOS animations
         AOS.init({
             duration: 600,
