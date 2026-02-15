@@ -7,7 +7,7 @@ const ja = {
     "nav.download": "ダウンロード",
 
     // Hero
-    "hero.title": "プロ品質の動画編集を<br>無料で、すべてのクリエイターへ。",
+    "hero.title": "<span class="text-gradient">プロ品質の動画編集</span>を<br>無料で、すべてのクリエイターへ。",
     "hero.subtitle": "QCutはAIで動画を編集する最良の方法です。タイムライン編集、40以上のAIモデル、完全なプライバシー - サブスクも透かしも不要。",
     "hero.betaVersion": "Beta v0.3.53 - 無料・オープンソース",
     "hero.downloadWindows": "Windows",

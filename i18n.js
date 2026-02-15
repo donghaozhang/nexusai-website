@@ -2,9 +2,9 @@
 const translations = { en, zh, ja };
 
 const LANGUAGES = {
-    en: { name: 'EN', flag: '🇺🇸' },
-    zh: { name: '中文', flag: '🇨🇳' },
-    ja: { name: '日本語', flag: '🇯🇵' }
+    en: { name: 'EN' },
+    zh: { name: '中文' },
+    ja: { name: '日本語' }
 };
 
 let currentLang = 'en';
@@ -52,12 +52,9 @@ function applyTranslations(lang) {
 // Update language selector UI
 function updateLanguageSelector() {
     const btn = document.getElementById('lang-btn');
-    if (btn) {
-        btn.innerHTML = `
-            <span class="text-sm">${LANGUAGES[currentLang].flag}</span>
-            <span class="text-sm">${LANGUAGES[currentLang].name}</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        `;
+    const label = document.getElementById('lang-label');
+    if (label) {
+        label.textContent = LANGUAGES[currentLang].name;
     }
 }
 
