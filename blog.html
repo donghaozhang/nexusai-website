@@ -22,6 +22,7 @@
         .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; }
         .theme-toggle:hover { background: var(--bg-secondary); }
     </style>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body class="antialiased">
     <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
@@ -93,10 +94,10 @@
             <div class="mb-16">
                 <h2 class="text-xs text-muted uppercase tracking-wider mb-6">Guides</h2>
                 <div class="grid md:grid-cols-2 gap-4">
-                    <a href="https://github.com/donghaozhang/qcut#getting-started" target="_blank" class="card rounded-xl p-5 group"><div class="text-xl mb-2">🚀</div><h3 class="font-medium mb-1 group-hover:text-blue-600">Getting Started</h3><p class="text-sm text-muted">Installation guide</p></a>
-                    <a href="https://github.com/donghaozhang/qcut#architecture" target="_blank" class="card rounded-xl p-5 group"><div class="text-xl mb-2">🏗️</div><h3 class="font-medium mb-1 group-hover:text-blue-600">Architecture</h3><p class="text-sm text-muted">How QCut is built</p></a>
-                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="card rounded-xl p-5 group"><div class="text-xl mb-2">🤖</div><h3 class="font-medium mb-1 group-hover:text-blue-600">AI Pipeline</h3><p class="text-sm text-muted">video-agent-skill docs</p></a>
-                    <a href="https://github.com/donghaozhang/qcut#troubleshooting" target="_blank" class="card rounded-xl p-5 group"><div class="text-xl mb-2">🔧</div><h3 class="font-medium mb-1 group-hover:text-blue-600">Troubleshooting</h3><p class="text-sm text-muted">Common issues</p></a>
+                    <a href="https://github.com/donghaozhang/qcut#getting-started" target="_blank" class="card rounded-xl p-5 group"><div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2"><i data-lucide="rocket" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i></div><h3 class="font-medium mb-1 group-hover:text-blue-600">Getting Started</h3><p class="text-sm text-muted">Installation guide</p></a>
+                    <a href="https://github.com/donghaozhang/qcut#architecture" target="_blank" class="card rounded-xl p-5 group"><div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center mb-2"><i data-lucide="building" class="w-5 h-5 text-slate-600 dark:text-slate-400"></i></div></div><h3 class="font-medium mb-1 group-hover:text-blue-600">Architecture</h3><p class="text-sm text-muted">How QCut is built</p></a>
+                    <a href="https://github.com/donghaozhang/video-agent-skill" target="_blank" class="card rounded-xl p-5 group"><div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mb-2"><i data-lucide="bot" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i></div><h3 class="font-medium mb-1 group-hover:text-blue-600">AI Pipeline</h3><p class="text-sm text-muted">video-agent-skill docs</p></a>
+                    <a href="https://github.com/donghaozhang/qcut#troubleshooting" target="_blank" class="card rounded-xl p-5 group"><div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center mb-2"><i data-lucide="wrench" class="w-5 h-5 text-slate-600 dark:text-slate-400"></i></div><h3 class="font-medium mb-1 group-hover:text-blue-600">Troubleshooting</h3><p class="text-sm text-muted">Common issues</p></a>
                 </div>
             </div>
 
@@ -119,5 +120,6 @@
         <div class="max-w-5xl mx-auto text-center text-sm text-muted">© 2026 QCut. MIT License.</div>
     </footer>
     <script src="theme.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

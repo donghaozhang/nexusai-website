@@ -22,6 +22,7 @@
         .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; }
         .theme-toggle:hover { background: var(--bg-secondary); }
     </style>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body class="antialiased">
     <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
@@ -70,9 +71,9 @@
             <div class="mb-16">
                 <h2 class="font-semibold mb-6">Our principles</h2>
                 <div class="grid md:grid-cols-3 gap-4">
-                    <div class="card rounded-xl p-5 text-center"><div class="text-2xl mb-2">🎁</div><h3 class="font-medium mb-1">100% Free</h3><p class="text-xs text-muted">No subscriptions</p></div>
-                    <div class="card rounded-xl p-5 text-center"><div class="text-2xl mb-2">🔒</div><h3 class="font-medium mb-1">Privacy First</h3><p class="text-xs text-muted">Local processing</p></div>
-                    <div class="card rounded-xl p-5 text-center"><div class="text-2xl mb-2">📖</div><h3 class="font-medium mb-1">Open Source</h3><p class="text-xs text-muted">MIT licensed</p></div>
+                    <div class="card rounded-xl p-5 text-center"><div class="w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center"><i data-lucide="gift" class="w-5 h-5 text-rose-600 dark:text-rose-400"></i></div><h3 class="font-medium mb-1">100% Free</h3><p class="text-xs text-muted">No subscriptions</p></div>
+                    <div class="card rounded-xl p-5 text-center"><div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i></div><h3 class="font-medium mb-1">Privacy First</h3><p class="text-xs text-muted">Local processing</p></div>
+                    <div class="card rounded-xl p-5 text-center"><div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center"><i data-lucide="book-open" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i></div><h3 class="font-medium mb-1">Open Source</h3><p class="text-xs text-muted">MIT licensed</p></div>
                 </div>
             </div>
 
@@ -105,5 +106,6 @@
         <div class="max-w-5xl mx-auto text-center text-sm text-muted">© 2026 QCut. MIT License.</div>
     </footer>
     <script src="theme.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

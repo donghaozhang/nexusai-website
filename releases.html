@@ -52,6 +52,7 @@
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         .auto-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--bg-secondary); color: var(--text-muted); }
     </style>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body class="antialiased">
     <!-- Navigation -->
@@ -274,8 +275,8 @@ async function fetchReleases() {
         const allNonDraft = releases.filter(r => !r.draft);
         const newest = allNonDraft[0]; // latest release (could be prerelease)
         let cards = '';
-        if (latest) cards += highlightCard(latest, '✅ Stable Release', 'badge-stable');
-        if (newest && newest !== latest) cards += highlightCard(newest, '🚀 Latest Release', 'badge-latest');
+        if (latest) cards += highlightCard(latest, 'Stable Release', 'badge-stable');
+        if (newest && newest !== latest) cards += highlightCard(newest, 'Latest Release', 'badge-latest');
         highlightEl.innerHTML = cards;
 
         // All releases — only recent 10
@@ -295,5 +296,6 @@ async function fetchReleases() {
 fetchReleases();
 autoRefreshInterval = setInterval(fetchReleases, 5 * 60 * 1000); // 5 min auto-refresh
 </script>
+<script>lucide.createIcons();</script>
 </body>
 </html>
