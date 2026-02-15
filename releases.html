@@ -263,17 +263,18 @@ async function fetchReleases() {
         const latest = stable[0];
         const latestPre = prerelease[0];
 
-        // Highlight cards
+        // Highlight cards: Stable + Latest (newest regardless of prerelease status)
         const highlightEl = document.getElementById('highlight-cards');
+        const allNonDraft = releases.filter(r => !r.draft);
+        const newest = allNonDraft[0]; // latest release (could be prerelease)
         let cards = '';
         if (latest) cards += highlightCard(latest, '✅ Stable Release', 'badge-stable');
-        if (latestPre) cards += highlightCard(latestPre, '🚀 Latest Pre-release', 'badge-latest');
-        else if (stable[1]) cards += highlightCard(stable[1], 'Previous Stable', 'badge-stable');
+        if (newest && newest !== latest) cards += highlightCard(newest, '🚀 Latest Release', 'badge-latest');
         highlightEl.innerHTML = cards;
 
-        // All releases
+        // All releases — only recent 10
         const allEl = document.getElementById('all-releases');
-        allEl.innerHTML = releases.filter(r => !r.draft).map(r => releaseRow(r)).join('');
+        allEl.innerHTML = allNonDraft.slice(0, 10).map(r => releaseRow(r)).join('');
 
         document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
     } catch (err) {
