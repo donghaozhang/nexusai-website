@@ -77,11 +77,63 @@
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .card:hover {
             border-color: var(--border-hover);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .card-feature {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card-feature:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+        .card-feature:hover::before {
+            opacity: 1;
+        }
+        .card-feature:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        .feature-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .mockup-glow {
+            position: relative;
+        }
+        .mockup-glow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2), rgba(236,72,153,0.2));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            filter: blur(20px);
+        }
+        .mockup-glow:hover::before {
+            opacity: 1;
         }
 
         .code-block {
@@ -220,8 +272,20 @@
         <!-- Product Screenshot -->
         <section class="pb-16 px-6">
             <div class="max-w-5xl mx-auto">
-                <div class="rounded-2xl overflow-hidden shadow-2xl border border-main" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center mb-6" data-aos="fade-up">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-secondary border border-main text-muted">
+                        <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+                        Editor Preview
+                    </span>
+                </div>
+                <div class="mockup-glow rounded-2xl overflow-hidden shadow-2xl border border-main" data-aos="fade-up" data-aos-delay="100">
                     <img src="assets/qcut-editor-mockup.png" alt="QCut Editor Interface" class="w-full h-auto">
+                </div>
+                <div class="mt-6 flex flex-wrap justify-center gap-6 text-sm text-muted" data-aos="fade-up" data-aos-delay="200">
+                    <span class="flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4"></i> Multi-track Timeline</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="eye" class="w-4 h-4"></i> Real-time Preview</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-4 h-4"></i> AI-Powered Effects</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="keyboard" class="w-4 h-4"></i> Keyboard Shortcuts</span>
                 </div>
             </div>
         </section>
@@ -251,43 +315,43 @@
                 <h2 class="text-2xl font-semibold mb-12" data-aos="fade-up" data-i18n="features.title">Everything you need</h2>
 
                 <div class="grid md:grid-cols-3 gap-4">
-                    <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="0">
-                        <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="0">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
                             <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
                         </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.privacy.title">Privacy First</h3>
                         <p class="text-sm text-muted" data-i18n="features.privacy.desc">All processing happens locally on your device.</p>
                     </div>
-                    <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="50">
-                        <div class="w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mb-3">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="50">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mb-3">
                             <i data-lucide="film" class="w-5 h-5 text-violet-600 dark:text-violet-400"></i>
                         </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.timeline.title">Timeline Editing</h3>
                         <p class="text-sm text-muted" data-i18n="features.timeline.desc">Multi-track timeline with drag-and-drop and real-time preview.</p>
                     </div>
-                    <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
                             <i data-lucide="wand-sparkles" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
                         </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.textToVideo.title">AI Text-to-Video</h3>
                         <p class="text-sm text-muted" data-i18n="features.textToVideo.desc">Generate videos from text with Sora 2, Veo 3, Kling Pro.</p>
                     </div>
-                    <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="150">
-                        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="150">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
                             <i data-lucide="paintbrush" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                         </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.imageGen.title">AI Image Generation</h3>
                         <p class="text-sm text-muted" data-i18n="features.imageGen.desc">Create images with FLUX, Imagen 4, Nano Banana Pro.</p>
                     </div>
-                    <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-3">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-3">
                             <i data-lucide="audio-lines" class="w-5 h-5 text-rose-600 dark:text-rose-400"></i>
                         </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.transcribe.title">AI Transcribe</h3>
                         <p class="text-sm text-muted" data-i18n="features.transcribe.desc">Convert speech to text with ElevenLabs Scribe.</p>
                     </div>
-                    <div class="card rounded-xl p-6" data-aos="fade-up" data-aos-delay="250">
-                        <div class="w-10 h-10 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center mb-3">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="250">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center mb-3">
                             <i data-lucide="user-round" class="w-5 h-5 text-cyan-600 dark:text-cyan-400"></i>
                         </div>
                         <h3 class="font-semibold mb-2" data-i18n="features.avatar.title">AI Avatar</h3>
@@ -304,7 +368,7 @@
                 <p class="text-muted mb-12" data-aos="fade-up" data-aos-delay="50" data-i18n="ai.subtitle">Powered by video-agent-skill - transparent pricing, no subscriptions.</p>
 
                 <div class="grid md:grid-cols-3 gap-4">
-                    <div class="card rounded-xl p-6">
+                    <div class="card-feature rounded-xl p-6">
                         <div class="text-xs text-muted uppercase tracking-wider mb-4" data-i18n="ai.textToImage">Text-to-Image</div>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between"><span>FLUX.1 Dev</span><span class="text-light">$0.003</span></div>
@@ -312,7 +376,7 @@
                             <div class="flex justify-between"><span>Nano Banana Pro</span><span class="text-light">$0.002</span></div>
                         </div>
                     </div>
-                    <div class="card rounded-xl p-6">
+                    <div class="card-feature rounded-xl p-6">
                         <div class="text-xs text-muted uppercase tracking-wider mb-4" data-i18n="ai.textToVideo">Text-to-Video</div>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between"><span>Sora 2</span><span class="text-light">$0.40-1.20</span></div>
@@ -320,7 +384,7 @@
                             <div class="flex justify-between"><span>Kling 2.6 Pro</span><span class="text-light">$0.35-1.40</span></div>
                         </div>
                     </div>
-                    <div class="card rounded-xl p-6">
+                    <div class="card-feature rounded-xl p-6">
                         <div class="text-xs text-muted uppercase tracking-wider mb-4" data-i18n="ai.aiAvatar">AI Avatar</div>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between"><span>OmniHuman v1.5</span><span class="text-light">$0.15</span></div>
@@ -401,6 +465,83 @@
                     <p data-i18n="why.p1"><span class="text-primary font-medium">CapCut's basic features are now paywalled.</span> What started as a free editing tool has become another subscription service.</p>
                     <p data-i18n="why.p2">QCut is our answer: a completely free AI video editor. Every feature CapCut locks behind a subscription, we offer for free.</p>
                     <p data-i18n="why.p3"><span class="text-primary font-medium">Privacy-first:</span> all processing happens locally. Your videos never leave your device.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plugin Ecosystem Section -->
+        <section class="py-24 px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex items-center gap-3 mb-4" data-aos="fade-up">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));">
+                        <i data-lucide="puzzle" class="w-5 h-5" style="color: #6366f1;"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold" data-i18n="plugins.title">Plugin Ecosystem</h2>
+                </div>
+                <p class="text-muted mb-12" data-aos="fade-up" data-aos-delay="50" data-i18n="plugins.subtitle">Extend QCut with powerful plugins — or build your own.</p>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="0">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="bot" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">Video Agent</h3>
+                        <p class="text-sm text-muted">AI-powered video editing assistant. Describe what you want, let the agent handle the rest.</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-secondary border border-main text-muted">Built-in</span>
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">Popular</span>
+                        </div>
+                    </div>
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="50">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="captions" class="w-5 h-5 text-orange-600 dark:text-orange-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">Auto Captions</h3>
+                        <p class="text-sm text-muted">Generate accurate subtitles in 90+ languages with one click using Whisper & Scribe.</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-secondary border border-main text-muted">Built-in</span>
+                        </div>
+                    </div>
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="image-plus" class="w-5 h-5 text-pink-600 dark:text-pink-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">Sticker & Overlay</h3>
+                        <p class="text-sm text-muted">Add stickers, overlays, and animated graphics to your timeline with drag-and-drop.</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-secondary border border-main text-muted">Built-in</span>
+                        </div>
+                    </div>
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="150">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="music" class="w-5 h-5 text-teal-600 dark:text-teal-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">AI Music</h3>
+                        <p class="text-sm text-muted">Generate royalty-free background music that matches your video's mood and pacing.</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">Coming Soon</span>
+                        </div>
+                    </div>
+                    <div class="card-feature rounded-xl p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center mb-3">
+                            <i data-lucide="languages" class="w-5 h-5 text-yellow-600 dark:text-yellow-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">AI Translate</h3>
+                        <p class="text-sm text-muted">Translate subtitles and voiceovers to any language while keeping lip sync.</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">Coming Soon</span>
+                        </div>
+                    </div>
+                    <div class="card-feature rounded-xl p-6 border-dashed" data-aos="fade-up" data-aos-delay="250" style="border-style: dashed;">
+                        <div class="feature-icon w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+                            <i data-lucide="plus" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2 text-muted">Build Your Own</h3>
+                        <p class="text-sm text-muted">QCut's plugin API lets you extend the editor with custom tools and AI integrations.</p>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-secondary border border-main text-muted">Open API</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
