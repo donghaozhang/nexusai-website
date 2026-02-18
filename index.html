@@ -85,31 +85,56 @@
             transform: translateY(-4px);
         }
 
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        @keyframes spin-border {
+            to { --angle: 360deg; }
+        }
+
         .card-feature {
+            position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            z-index: 1;
         }
-        .card-feature::before {
+        .card-feature::before,
+        .card-feature::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+            inset: -2px;
+            border-radius: inherit;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+        /* Rotating gradient border */
+        .card-feature::before {
+            background: conic-gradient(from var(--angle), #3b82f6, #8b5cf6, #ec4899, #f59e0b, #10b981, #3b82f6);
+            animation: spin-border 3s linear infinite;
+        }
+        /* Inner mask to keep card interior clean */
+        .card-feature::after {
+            inset: 0px;
+            background: var(--bg-card);
         }
         .card-feature:hover {
-            border-color: var(--border-hover);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-color: transparent;
             transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
         .card-feature:hover::before {
             opacity: 1;
+        }
+        .card-feature:hover::after {
+            opacity: 1;
+        }
+        .card-feature > * {
+            position: relative;
+            z-index: 2;
         }
         .card-feature:hover .feature-icon {
             transform: scale(1.1);
