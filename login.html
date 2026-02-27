@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - QCut</title>
+    <meta name="description" content="Sign in to QCut">
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="lang/en.js"></script>
+    <script src="lang/zh.js"></script>
+    <script src="lang/ja.js"></script>
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        :root { --bg-primary: #faf9f7; --bg-secondary: #f0eeeb; --bg-card: #fff; --text-primary: #1a1a1a; --text-muted: #666; --text-light: #999; --border-color: #e5e5e5; --border-hover: #ccc; }
+        .dark { --bg-primary: #0a0a0a; --bg-secondary: #111; --bg-card: #1a1a1a; --text-primary: #fff; --text-muted: #999; --text-light: #666; --border-color: #2a2a2a; --border-hover: #444; }
+        body { background: var(--bg-primary); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
+        .bg-primary { background: var(--bg-primary); } .bg-secondary { background: var(--bg-secondary); }
+        .bg-card { background: var(--bg-card); } .text-primary { color: var(--text-primary); }
+        .text-muted { color: var(--text-muted); } .text-light { color: var(--text-light); }
+        .border-main { border-color: var(--border-color); }
+        .btn-dark { background: var(--text-primary); color: var(--bg-primary); transition: all 0.2s ease; }
+        .btn-dark:hover { opacity: 0.8; }
+        .btn-outline { border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); transition: all 0.2s ease; }
+        .btn-outline:hover { border-color: var(--text-muted); }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card:hover { border-color: var(--border-hover); box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
+        .nav-border { border-bottom: 1px solid var(--border-color); }
+        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.2s; }
+        .theme-toggle:hover { background: var(--bg-secondary); }
+        .text-gradient { background: linear-gradient(135deg, #1a1a1a, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .dark .text-gradient { background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    </style>
+</head>
+<body>
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="/" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="index.html#features" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.features">Features</a>
+                        <a href="pricing.html" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.pricing">Pricing</a>
+                        <a href="releases.html" class="text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="blog.html" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.docs">Docs</a>
+                        <a href="index.html#contact" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div id="lang-selector" class="relative">
+                        <button id="lang-btn" onclick="toggleLangMenu()" class="theme-toggle flex items-center space-x-1" aria-label="Select language">
+                            <i data-lucide="globe" class="w-4 h-4"></i>
+                            <span class="text-sm" id="lang-label">EN</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="lang-menu" class="hidden absolute right-0 mt-2 w-32 card rounded-lg shadow-lg py-1 z-50">
+                            <button onclick="switchLanguage('en')" class="w-full px-4 py-2 text-left text-sm hover:bg-secondary flex items-center space-x-2"><span class="font-mono text-xs w-5 text-center">EN</span><span>English</span></button>
+                            <button onclick="switchLanguage('zh')" class="w-full px-4 py-2 text-left text-sm hover:bg-secondary flex items-center space-x-2"><span class="font-mono text-xs w-5 text-center">中</span><span>中文</span></button>
+                            <button onclick="switchLanguage('ja')" class="w-full px-4 py-2 text-left text-sm hover:bg-secondary flex items-center space-x-2"><span class="font-mono text-xs w-5 text-center">日</span><span>日本語</span></button>
+                        </div>
+                    </div>
+                    <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium" data-i18n="nav.download">Download</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="pt-32 pb-24 px-6 flex items-center justify-center min-h-screen">
+            <div class="w-full max-w-md" data-aos="fade-up">
+                <!-- Coming Soon Banner -->
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-6 text-center">
+                    <p class="font-semibold text-yellow-800 dark:text-yellow-200" data-i18n="login.comingSoon">Account system coming soon</p>
+                    <p class="text-sm text-yellow-600 dark:text-yellow-400 mt-1" data-i18n="login.comingSoonDesc">We're building a secure authentication system. Stay tuned!</p>
+                </div>
+
+                <div class="card rounded-2xl p-8 relative">
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-card/60 backdrop-blur-sm rounded-2xl z-10 flex items-center justify-center">
+                        <span class="text-lg font-semibold text-muted">Coming Soon</span>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="flex border-b border-main mb-6">
+                        <button id="tab-signin" onclick="showTab('signin')" class="pb-3 px-4 text-sm font-medium border-b-2 border-current" data-i18n="login.signIn">Sign In</button>
+                        <button id="tab-signup" onclick="showTab('signup')" class="pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent" data-i18n="login.signUp">Sign Up</button>
+                    </div>
+
+                    <!-- Sign In Form -->
+                    <form id="form-signin" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1" data-i18n="login.email">Email</label>
+                            <input type="email" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1" data-i18n="login.password">Password</label>
+                            <input type="password" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="••••••••">
+                        </div>
+                        <div class="text-right"><a href="#" class="text-xs text-muted hover:text-primary" data-i18n="login.forgotPassword">Forgot password?</a></div>
+                        <button type="submit" disabled class="w-full btn-dark py-2.5 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="login.submitSignIn">Sign In</button>
+                    </form>
+
+                    <!-- Sign Up Form -->
+                    <form id="form-signup" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium mb-1" data-i18n="login.name">Name</label>
+                            <input type="text" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="Your name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1" data-i18n="login.email">Email</label>
+                            <input type="email" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1" data-i18n="login.password">Password</label>
+                            <input type="password" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1" data-i18n="login.confirmPassword">Confirm Password</label>
+                            <input type="password" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="••••••••">
+                        </div>
+                        <button type="submit" disabled class="w-full btn-dark py-2.5 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="login.submitSignUp">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-12 px-6 border-t border-main">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-2">
+                <img src="assets/qcut-logo.png" alt="QCut" class="h-5 w-5">
+                <span class="text-sm text-muted" data-i18n="footer.tagline">QCut — Free AI video editor</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://x.com/peter6759" target="_blank" class="text-muted hover:text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/payment.js"></script>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 600, easing: 'ease-out', once: true, offset: 50 });
+    </script>
+    <script>
+        function showTab(tab) {
+            document.getElementById('form-signin').classList.toggle('hidden', tab !== 'signin');
+            document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
+            document.getElementById('tab-signin').className = tab === 'signin' ? 'pb-3 px-4 text-sm font-medium border-b-2 border-current' : 'pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent';
+            document.getElementById('tab-signup').className = tab === 'signup' ? 'pb-3 px-4 text-sm font-medium border-b-2 border-current' : 'pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent';
+        }
+    </script>
+</body>
+</html>

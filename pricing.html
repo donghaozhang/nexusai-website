@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - QCut</title>
+    <meta name="description" content="QCut pricing plans">
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="lang/en.js"></script>
+    <script src="lang/zh.js"></script>
+    <script src="lang/ja.js"></script>
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        :root { --bg-primary: #faf9f7; --bg-secondary: #f0eeeb; --bg-card: #fff; --text-primary: #1a1a1a; --text-muted: #666; --text-light: #999; --border-color: #e5e5e5; --border-hover: #ccc; }
+        .dark { --bg-primary: #0a0a0a; --bg-secondary: #111; --bg-card: #1a1a1a; --text-primary: #fff; --text-muted: #999; --text-light: #666; --border-color: #2a2a2a; --border-hover: #444; }
+        body { background: var(--bg-primary); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
+        .bg-primary { background: var(--bg-primary); } .bg-secondary { background: var(--bg-secondary); }
+        .bg-card { background: var(--bg-card); } .text-primary { color: var(--text-primary); }
+        .text-muted { color: var(--text-muted); } .text-light { color: var(--text-light); }
+        .border-main { border-color: var(--border-color); }
+        .btn-dark { background: var(--text-primary); color: var(--bg-primary); transition: all 0.2s ease; }
+        .btn-dark:hover { opacity: 0.8; }
+        .btn-outline { border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); transition: all 0.2s ease; }
+        .btn-outline:hover { border-color: var(--text-muted); }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card:hover { border-color: var(--border-hover); box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
+        .nav-border { border-bottom: 1px solid var(--border-color); }
+        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.2s; }
+        .theme-toggle:hover { background: var(--bg-secondary); }
+        .text-gradient { background: linear-gradient(135deg, #1a1a1a, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .dark .text-gradient { background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .pricing-card-pro { border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899); background-origin: border-box; background-clip: padding-box, border-box; }
+        .toggle-bg { background: var(--bg-secondary); border: 1px solid var(--border-color); }
+        .toggle-active { background: var(--text-primary); color: var(--bg-primary); }
+    </style>
+</head>
+<body>
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="/" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="index.html#features" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.features">Features</a>
+                        <a href="pricing.html" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.pricing">Pricing</a>
+                        <a href="releases.html" class="text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="blog.html" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.docs">Docs</a>
+                        <a href="index.html#contact" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div id="lang-selector" class="relative">
+                        <button id="lang-btn" onclick="toggleLangMenu()" class="theme-toggle flex items-center space-x-1" aria-label="Select language">
+                            <i data-lucide="globe" class="w-4 h-4"></i>
+                            <span class="text-sm" id="lang-label">EN</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="lang-menu" class="hidden absolute right-0 mt-2 w-32 card rounded-lg shadow-lg py-1 z-50">
+                            <button onclick="switchLanguage('en')" class="w-full px-4 py-2 text-left text-sm hover:bg-secondary flex items-center space-x-2"><span class="font-mono text-xs w-5 text-center">EN</span><span>English</span></button>
+                            <button onclick="switchLanguage('zh')" class="w-full px-4 py-2 text-left text-sm hover:bg-secondary flex items-center space-x-2"><span class="font-mono text-xs w-5 text-center">中</span><span>中文</span></button>
+                            <button onclick="switchLanguage('ja')" class="w-full px-4 py-2 text-left text-sm hover:bg-secondary flex items-center space-x-2"><span class="font-mono text-xs w-5 text-center">日</span><span>日本語</span></button>
+                        </div>
+                    </div>
+                    <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-4 py-2 rounded-full text-sm font-medium" data-i18n="nav.download">Download</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero -->
+        <section class="pt-32 pb-16 px-6 text-center" data-aos="fade-up">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" data-i18n="pricing.title">Choose your plan</h1>
+            <p class="text-lg text-muted max-w-xl mx-auto" data-i18n="pricing.subtitle">Start free, upgrade when you need more power.</p>
+
+            <!-- Toggle -->
+            <div class="flex items-center justify-center mt-8 space-x-2">
+                <div class="toggle-bg inline-flex rounded-full p-1">
+                    <button id="toggle-monthly" onclick="setPricing('monthly')" class="toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.monthly">Monthly</button>
+                    <button id="toggle-yearly" onclick="setPricing('yearly')" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.yearly">Yearly</button>
+                </div>
+                <span class="text-xs text-green-500 font-medium" data-i18n="pricing.save">Save 17%</span>
+            </div>
+        </section>
+
+        <!-- Cards -->
+        <section class="pb-20 px-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
+                <!-- Free -->
+                <div class="card rounded-2xl p-8 flex flex-col">
+                    <h3 class="text-lg font-semibold" data-i18n="pricing.free.name">Free</h3>
+                    <div class="mt-4 mb-2"><span class="text-4xl font-bold" data-i18n="pricing.free.price">$0</span></div>
+                    <p class="text-sm text-muted mb-6" data-i18n="pricing.free.desc">Perfect for getting started</p>
+                    <ul class="space-y-3 text-sm mb-8 flex-1">
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f1">5 AI videos/month</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f2">720p export</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f3">Basic templates</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f4">Bring your own API keys</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f5">Community support</span></li>
+                    </ul>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium" data-i18n="pricing.free.cta">Get Started</a>
+                </div>
+
+                <!-- Pro -->
+                <div class="pricing-card-pro rounded-2xl p-8 flex flex-col relative">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full" data-i18n="pricing.pro.badge">Most Popular</span>
+                    <h3 class="text-lg font-semibold" data-i18n="pricing.pro.name">Pro</h3>
+                    <div class="mt-4 mb-2">
+                        <span class="text-4xl font-bold pricing-price" data-monthly="$9.99" data-yearly="$99" data-i18n="pricing.pro.price">$9.99</span>
+                        <span class="text-sm text-muted pricing-period" data-monthly="/month" data-yearly="/year" data-i18n="pricing.pro.period">/month</span>
+                    </div>
+                    <p class="text-sm text-muted mb-6" data-i18n="pricing.pro.desc">For serious creators</p>
+                    <ul class="space-y-3 text-sm mb-8 flex-1">
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f1">Unlimited AI videos</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f2">4K export</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f3">No watermark</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f4">All templates</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f5">Priority rendering</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f6">Email support</span></li>
+                    </ul>
+                    <button disabled class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="pricing.pro.cta">Coming Soon</button>
+                </div>
+
+                <!-- Team -->
+                <div class="card rounded-2xl p-8 flex flex-col">
+                    <h3 class="text-lg font-semibold" data-i18n="pricing.team.name">Team</h3>
+                    <div class="mt-4 mb-2">
+                        <span class="text-4xl font-bold pricing-price" data-monthly="$29.99" data-yearly="$299" data-i18n="pricing.team.price">$29.99</span>
+                        <span class="text-sm text-muted pricing-period" data-monthly="/month" data-yearly="/year" data-i18n="pricing.team.period">/month</span>
+                    </div>
+                    <p class="text-sm text-muted mb-6" data-i18n="pricing.team.desc">For teams & businesses</p>
+                    <ul class="space-y-3 text-sm mb-8 flex-1">
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f1">Everything in Pro</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f2">Team collaboration</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f3">API access</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f4">Custom branding</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f5">Priority support</span></li>
+                    </ul>
+                    <button disabled class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="pricing.team.cta">Coming Soon</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="pb-24 px-6" data-aos="fade-up">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold text-center mb-10" data-i18n="pricing.faq.title">Pricing FAQ</h2>
+                <div class="space-y-6">
+                    <div class="card rounded-xl p-6">
+                        <h3 class="font-semibold mb-2" data-i18n="pricing.faq.q1">Can I switch plans anytime?</h3>
+                        <p class="text-sm text-muted" data-i18n="pricing.faq.a1">Yes! Upgrade or downgrade anytime. Changes take effect at the next billing cycle.</p>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <h3 class="font-semibold mb-2" data-i18n="pricing.faq.q2">What happens when I hit the free limit?</h3>
+                        <p class="text-sm text-muted" data-i18n="pricing.faq.a2">You can still use QCut for editing. AI generation pauses until next month or you upgrade.</p>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <h3 class="font-semibold mb-2" data-i18n="pricing.faq.q3">Do you offer refunds?</h3>
+                        <p class="text-sm text-muted" data-i18n="pricing.faq.a3">Yes, we offer a 14-day money-back guarantee. No questions asked.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-12 px-6 border-t border-main">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-2">
+                <img src="assets/qcut-logo.png" alt="QCut" class="h-5 w-5">
+                <span class="text-sm text-muted" data-i18n="footer.tagline">QCut — Free AI video editor</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://x.com/peter6759" target="_blank" class="text-muted hover:text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/payment.js"></script>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 600, easing: 'ease-out', once: true, offset: 50 });
+    </script>
+    <script>
+        function setPricing(mode) {
+            const monthly = mode === 'monthly';
+            document.getElementById('toggle-monthly').className = monthly ? 'toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all' : 'px-4 py-1.5 rounded-full text-sm font-medium transition-all';
+            document.getElementById('toggle-yearly').className = !monthly ? 'toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all' : 'px-4 py-1.5 rounded-full text-sm font-medium transition-all';
+            document.querySelectorAll('.pricing-price').forEach(el => { el.textContent = el.dataset[mode]; });
+            document.querySelectorAll('.pricing-period').forEach(el => { el.textContent = el.dataset[mode]; });
+        }
+    </script>
+</body>
+</html>
