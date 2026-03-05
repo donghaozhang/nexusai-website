@@ -79,26 +79,25 @@
     <main>
         <section class="pt-32 pb-24 px-6 flex items-center justify-center min-h-screen">
             <div class="w-full max-w-md" data-aos="fade-up">
-                <!-- Coming Soon Banner -->
-                <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-6 text-center">
-                    <p class="font-semibold text-yellow-800 dark:text-yellow-200" data-i18n="login.comingSoon">Account system coming soon</p>
-                    <p class="text-sm text-yellow-600 dark:text-yellow-400 mt-1" data-i18n="login.comingSoonDesc">We're building a secure authentication system. Stay tuned!</p>
+                <div id="auth-status-banner" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6 text-center">
+                    <p class="font-semibold text-blue-800 dark:text-blue-200">Google Sign-In</p>
+                    <p id="auth-status-message" class="text-sm text-blue-600 dark:text-blue-400 mt-1">Continue with Google to unlock billing and account features.</p>
                 </div>
 
-                <div class="card rounded-2xl p-8 relative">
-                    <!-- Overlay -->
-                    <div class="absolute inset-0 bg-card/60 backdrop-blur-sm rounded-2xl z-10 flex items-center justify-center">
-                        <span class="text-lg font-semibold text-muted">Coming Soon</span>
-                    </div>
-
+                <div class="card rounded-2xl p-8">
                     <!-- Tabs -->
                     <div class="flex border-b border-main mb-6">
-                        <button id="tab-signin" onclick="showTab('signin')" class="pb-3 px-4 text-sm font-medium border-b-2 border-current" data-i18n="login.signIn">Sign In</button>
-                        <button id="tab-signup" onclick="showTab('signup')" class="pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent" data-i18n="login.signUp">Sign Up</button>
+                        <button type="button" id="tab-signin" onclick="showTab('signin')" class="pb-3 px-4 text-sm font-medium border-b-2 border-current" data-i18n="login.signIn">Sign In</button>
+                        <button type="button" id="tab-signup" onclick="showTab('signup')" class="pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent" data-i18n="login.signUp">Sign Up</button>
                     </div>
 
                     <!-- Sign In Form -->
                     <form id="form-signin" class="space-y-4">
+                        <button id="google-login-button" type="button" onclick="startGoogleLogin()" class="w-full btn-dark py-2.5 rounded-full text-sm font-medium flex items-center justify-center gap-2">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true" focusable="false"><path fill="currentColor" d="M21.35 11.1H12v2.98h5.44c-.24 1.52-1.72 4.45-5.44 4.45-3.27 0-5.93-2.7-5.93-6.03s2.66-6.03 5.93-6.03c1.86 0 3.11.79 3.82 1.47l2.6-2.52C16.77 3.9 14.59 3 12 3 6.97 3 2.9 7.12 2.9 12.2S6.97 21.4 12 21.4c6.93 0 8.64-4.86 8.64-7.37 0-.49-.05-.86-.12-1.22z"/></svg>
+                            <span>Continue with Google</span>
+                        </button>
+                        <div class="text-center text-xs text-muted uppercase tracking-wide">or</div>
                         <div>
                             <label class="block text-sm font-medium mb-1" data-i18n="login.email">Email</label>
                             <input type="email" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="you@example.com">
@@ -108,7 +107,7 @@
                             <input type="password" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="••••••••">
                         </div>
                         <div class="text-right"><a href="#" class="text-xs text-muted hover:text-primary" data-i18n="login.forgotPassword">Forgot password?</a></div>
-                        <button type="submit" disabled class="w-full btn-dark py-2.5 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="login.submitSignIn">Sign In</button>
+                        <button type="button" disabled class="w-full btn-dark py-2.5 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="login.submitSignIn">Sign In</button>
                     </form>
 
                     <!-- Sign Up Form -->
@@ -129,7 +128,7 @@
                             <label class="block text-sm font-medium mb-1" data-i18n="login.confirmPassword">Confirm Password</label>
                             <input type="password" disabled class="w-full px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="••••••••">
                         </div>
-                        <button type="submit" disabled class="w-full btn-dark py-2.5 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="login.submitSignUp">Create Account</button>
+                        <button type="button" disabled class="w-full btn-dark py-2.5 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="login.submitSignUp">Create Account</button>
                     </form>
                 </div>
             </div>
@@ -164,6 +163,166 @@
             document.getElementById('tab-signin').className = tab === 'signin' ? 'pb-3 px-4 text-sm font-medium border-b-2 border-current' : 'pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent';
             document.getElementById('tab-signup').className = tab === 'signup' ? 'pb-3 px-4 text-sm font-medium border-b-2 border-current' : 'pb-3 px-4 text-sm font-medium text-muted border-b-2 border-transparent';
         }
+
+        function setAuthStatus({ text, isError }) {
+            try {
+                const bannerNode = document.getElementById("auth-status-banner");
+                const messageNode = document.getElementById("auth-status-message");
+                if (!bannerNode || !messageNode) {
+                    return;
+                }
+                messageNode.textContent = text;
+                if (isError) {
+                    bannerNode.className = "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-6 text-center";
+                    return;
+                }
+                bannerNode.className = "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6 text-center";
+            } catch {
+                // Non-blocking UI update failure.
+            }
+        }
+
+        function getQueryParam({ name }) {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const value = params.get(name);
+                if (typeof value !== "string") {
+                    return "";
+                }
+                return value.trim();
+            } catch {
+                return "";
+            }
+        }
+
+        function getSafeRedirectPath() {
+            try {
+                const candidate = getQueryParam({ name: "redirect" });
+                if (candidate.length === 0) {
+                    return "/account/dashboard.html";
+                }
+                if (!candidate.startsWith("/")) {
+                    return "/account/dashboard.html";
+                }
+                if (candidate.startsWith("//")) {
+                    return "/account/dashboard.html";
+                }
+                return candidate;
+            } catch {
+                return "/account/dashboard.html";
+            }
+        }
+
+        function resolveErrorMessage() {
+            try {
+                const authError = getQueryParam({ name: "auth_error" }) || getQueryParam({ name: "error" });
+                if (authError.length === 0) {
+                    return "";
+                }
+                if (authError === "no_session") {
+                    return "Login expired before callback. Please try Google sign-in again.";
+                }
+                if (authError === "access_denied") {
+                    return "Google sign-in was cancelled.";
+                }
+                return `Google sign-in failed: ${authError}`;
+            } catch {
+                return "Google sign-in failed";
+            }
+        }
+
+        function getLoginUrlWithRedirect({ path }) {
+            try {
+                const url = new URL(window.location.href);
+                url.search = "";
+                url.hash = "";
+                url.searchParams.set("redirect", path);
+                return url.toString();
+            } catch {
+                return window.location.href;
+            }
+        }
+
+        function setGoogleButtonLoading({ loading }) {
+            try {
+                const button = document.getElementById("google-login-button");
+                if (!button) {
+                    return;
+                }
+                button.disabled = loading;
+                button.style.opacity = loading ? "0.7" : "1";
+                button.style.cursor = loading ? "wait" : "pointer";
+                button.innerHTML = loading
+                    ? "<span>Redirecting to Google...</span>"
+                    : "<svg viewBox='0 0 24 24' class='w-4 h-4' aria-hidden='true' focusable='false'><path fill='currentColor' d='M21.35 11.1H12v2.98h5.44c-.24 1.52-1.72 4.45-5.44 4.45-3.27 0-5.93-2.7-5.93-6.03s2.66-6.03 5.93-6.03c1.86 0 3.11.79 3.82 1.47l2.6-2.52C16.77 3.9 14.59 3 12 3 6.97 3 2.9 7.12 2.9 12.2S6.97 21.4 12 21.4c6.93 0 8.64-4.86 8.64-7.37 0-.49-.05-.86-.12-1.22z'/></svg><span>Continue with Google</span>";
+            } catch {
+                // Non-blocking UI update failure.
+            }
+        }
+
+        function processAuthCallback() {
+            try {
+                const hasToken = PaymentAPI.captureAuthTokenFromUrl();
+                const redirectPath = getSafeRedirectPath();
+                if (hasToken) {
+                    setAuthStatus({
+                        text: "Google login succeeded. Redirecting...",
+                        isError: false,
+                    });
+                    window.setTimeout(() => {
+                        window.location.replace(redirectPath);
+                    }, 400);
+                    return;
+                }
+
+                const errorMessage = resolveErrorMessage();
+                if (errorMessage.length > 0) {
+                    setAuthStatus({
+                        text: errorMessage,
+                        isError: true,
+                    });
+                    return;
+                }
+
+                if (PaymentAPI.isAuthenticated()) {
+                    setAuthStatus({
+                        text: "You are already signed in.",
+                        isError: false,
+                    });
+                    return;
+                }
+            } catch {
+                setAuthStatus({
+                    text: "Failed to process authentication callback.",
+                    isError: true,
+                });
+            }
+        }
+
+        function startGoogleLogin() {
+            try {
+                setGoogleButtonLoading({ loading: true });
+                const apiBaseUrl = PaymentAPI.getApiBaseUrl();
+                const redirectPath = getSafeRedirectPath();
+                const errorRedirectUrl = getLoginUrlWithRedirect({ path: redirectPath });
+                const startUrl = new URL("/api/auth/google/start", apiBaseUrl);
+                const dashboardUrl = new URL(redirectPath, window.location.origin);
+                startUrl.searchParams.set("redirect_url", dashboardUrl.toString());
+                startUrl.searchParams.set("error_redirect_url", errorRedirectUrl);
+                window.location.assign(startUrl.toString());
+            } catch (error) {
+                setGoogleButtonLoading({ loading: false });
+                setAuthStatus({
+                    text:
+                        error instanceof Error
+                            ? `Unable to start Google login: ${error.message}`
+                            : "Unable to start Google login.",
+                    isError: true,
+                });
+            }
+        }
+
+        processAuthCallback();
     </script>
 </body>
 </html>
