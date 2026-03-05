@@ -100,11 +100,13 @@
                     <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 </div>
                 <h1 class="text-3xl font-bold mb-2" data-i18n="success.title">Payment Successful!</h1>
-                <p class="text-lg text-muted mb-2" data-i18n="success.subtitle">Your Pro plan is now active.</p>
-                <p class="text-sm text-muted mb-8" data-i18n="success.desc">You can now enjoy unlimited AI videos, 4K export, and all premium features.</p>
+                <p id="success-subtitle" class="text-lg text-muted mb-2" data-i18n="success.subtitle">Your Pro plan is now active.</p>
+                <p id="success-description" class="text-sm text-muted mb-8" data-i18n="success.desc">You can now enjoy unlimited AI videos, 4K export, and all premium features.</p>
                 <div class="space-y-3">
-                    <a href="qcut://activate?token=xxx" class="btn-dark inline-block px-8 py-3 rounded-full text-sm font-medium" data-i18n="success.openApp">Open QCut</a>
+                    <a id="success-open-app-link" href="qcut://activate" class="btn-dark inline-block px-8 py-3 rounded-full text-sm font-medium" data-i18n="success.openApp">Open QCut</a>
+                    <div><a href="dashboard.html" class="text-sm text-muted hover:text-primary">Open Account Dashboard</a></div>
                     <div><a href="../index.html" class="text-sm text-muted hover:text-primary" data-i18n="success.backHome">Back to Home</a></div>
+                    <p id="success-status" class="text-xs text-muted"></p>
                 </div>
             </div>
         </section>
@@ -130,6 +132,96 @@
     <script>
         lucide.createIcons();
         AOS.init({ duration: 600, easing: 'ease-out', once: true, offset: 50 });
+    </script>
+    <script>
+        function getQueryParam({ name }) {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const value = params.get(name);
+                if (typeof value !== "string") {
+                    return "";
+                }
+                return value.trim();
+            } catch {
+                return "";
+            }
+        }
+
+        function setSuccessCopy() {
+            try {
+                const subtitleNode = document.getElementById("success-subtitle");
+                const descriptionNode = document.getElementById("success-description");
+                if (!subtitleNode || !descriptionNode) {
+                    return;
+                }
+                const paymentType = getQueryParam({ name: "type" });
+                if (paymentType === "topup") {
+                    subtitleNode.textContent = "Credits added successfully.";
+                    descriptionNode.textContent = "Your top-up payment completed. Open QCut to refresh your latest balance.";
+                    return;
+                }
+                subtitleNode.textContent = "Your Pro plan is now active.";
+                descriptionNode.textContent = "You can now enjoy unlimited AI videos, 4K export, and all premium features.";
+            } catch {
+                // Non-blocking content update failure.
+            }
+        }
+
+        function buildDeepLink() {
+            try {
+                const token = PaymentAPI.getAuthToken();
+                const sessionId = getQueryParam({ name: "session_id" });
+                const params = new URLSearchParams();
+                if (token.length > 0) {
+                    params.set("token", token);
+                }
+                if (sessionId.length > 0) {
+                    params.set("session_id", sessionId);
+                }
+                const query = params.toString();
+                if (query.length === 0) {
+                    return "qcut://activate";
+                }
+                return `qcut://activate?${query}`;
+            } catch {
+                return "qcut://activate";
+            }
+        }
+
+        async function refreshPostCheckoutStatus() {
+            const statusNode = document.getElementById("success-status");
+            if (!statusNode) {
+                return;
+            }
+            try {
+                const token = PaymentAPI.getAuthToken();
+                if (token.length === 0) {
+                    statusNode.textContent = "No auth token detected. Add token on pricing page if account refresh is needed.";
+                    return;
+                }
+                const licensePayload = await PaymentAPI.getLicense();
+                const credits = licensePayload?.license?.credits;
+                if (!credits) {
+                    statusNode.textContent = "Payment succeeded. License sync pending.";
+                    return;
+                }
+                statusNode.textContent = `Account synced. Current credits: ${credits.totalCredits}.`;
+            } catch (error) {
+                statusNode.textContent = error instanceof Error ? error.message : "License sync pending.";
+            }
+        }
+
+        try {
+            const openAppLinkNode = document.getElementById("success-open-app-link");
+            if (openAppLinkNode) {
+                openAppLinkNode.setAttribute("href", buildDeepLink());
+            }
+        } catch {
+            // Non-blocking deep-link update failure.
+        }
+
+        setSuccessCopy();
+        refreshPostCheckoutStatus();
     </script>
 
 </body>

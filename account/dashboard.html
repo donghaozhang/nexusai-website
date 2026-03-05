@@ -81,10 +81,9 @@
             <div class="max-w-3xl mx-auto" data-aos="fade-up">
                 <h1 class="text-3xl font-bold mb-2" data-i18n="account.title">My Account</h1>
 
-                <!-- Coming Soon Banner -->
-                <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-8">
-                    <p class="font-semibold text-yellow-800 dark:text-yellow-200" data-i18n="account.comingSoon">Account dashboard coming soon</p>
-                    <p class="text-sm text-yellow-600 dark:text-yellow-400 mt-1" data-i18n="account.comingSoonDesc">This is a preview of what your account dashboard will look like.</p>
+                <div id="account-status-banner" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8">
+                    <p class="font-semibold text-blue-800 dark:text-blue-200">Account data sync</p>
+                    <p id="account-status-message" class="text-sm text-blue-600 dark:text-blue-400 mt-1">Loading billing profile from license server...</p>
                 </div>
 
                 <div class="space-y-6">
@@ -94,8 +93,8 @@
                         <div class="flex items-center space-x-4">
                             <div class="w-16 h-16 rounded-full bg-secondary flex items-center justify-center"><i data-lucide="user" class="w-8 h-8 text-muted"></i></div>
                             <div>
-                                <p class="font-medium">Demo User</p>
-                                <p class="text-sm text-muted">demo@example.com</p>
+                                <p id="account-user-name" class="font-medium">QCut User</p>
+                                <p id="account-user-token-state" class="text-sm text-muted">No auth token detected</p>
                             </div>
                         </div>
                     </div>
@@ -105,8 +104,8 @@
                         <h2 class="text-lg font-semibold mb-4" data-i18n="account.plan">Current Plan</h2>
                         <div class="flex items-center justify-between">
                             <div>
-                                <span class="text-2xl font-bold">Free</span>
-                                <p class="text-sm text-muted mt-1">Basic features included</p>
+                                <span id="account-plan-name" class="text-2xl font-bold">Free</span>
+                                <p id="account-plan-status" class="text-sm text-muted mt-1">Basic features included</p>
                             </div>
                             <a href="pricing.html" class="btn-dark px-5 py-2 rounded-full text-sm font-medium" data-i18n="account.upgrade">Upgrade Plan</a>
                         </div>
@@ -118,10 +117,10 @@
                         <div>
                             <div class="flex justify-between text-sm mb-2">
                                 <span data-i18n="account.aiGenerations">AI Generations</span>
-                                <span>2 / 5</span>
+                                <span id="account-usage-ai">0 / 5</span>
                             </div>
                             <div class="w-full bg-secondary rounded-full h-2.5">
-                                <div class="bg-blue-500 h-2.5 rounded-full" style="width: 40%"></div>
+                                <div id="account-usage-bar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
@@ -129,7 +128,7 @@
                     <!-- Devices -->
                     <div class="card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="150">
                         <h2 class="text-lg font-semibold mb-4" data-i18n="account.devices">Active Devices</h2>
-                        <div class="flex items-center justify-between py-3">
+                        <div id="account-devices-list" class="flex items-center justify-between py-3">
                             <div class="flex items-center space-x-3">
                                 <i data-lucide="monitor" class="w-5 h-5 text-muted"></i>
                                 <div>
@@ -144,7 +143,7 @@
                     <!-- Billing -->
                     <div class="card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
                         <h2 class="text-lg font-semibold mb-4" data-i18n="account.billing">Billing</h2>
-                        <button disabled class="btn-outline px-5 py-2 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="account.manageBilling">Manage Billing</button>
+                        <button id="manage-billing-button" type="button" class="btn-outline px-5 py-2 rounded-full text-sm font-medium" data-i18n="account.manageBilling">Manage Billing</button>
                     </div>
                 </div>
             </div>
@@ -171,6 +170,183 @@
     <script>
         lucide.createIcons();
         AOS.init({ duration: 600, easing: 'ease-out', once: true, offset: 50 });
+    </script>
+    <script>
+        function setAccountStatus({ text, isError }) {
+            try {
+                const statusNode = document.getElementById("account-status-message");
+                const bannerNode = document.getElementById("account-status-banner");
+                if (!statusNode || !bannerNode) {
+                    return;
+                }
+                statusNode.textContent = text;
+                if (isError) {
+                    bannerNode.className = "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-8";
+                    return;
+                }
+                bannerNode.className = "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8";
+            } catch {
+                // Non-blocking UI update failure.
+            }
+        }
+
+        function renderDeviceRows({ devices }) {
+            try {
+                const devicesNode = document.getElementById("account-devices-list");
+                if (!devicesNode) {
+                    return;
+                }
+                devicesNode.innerHTML = "";
+                if (!Array.isArray(devices) || devices.length === 0) {
+                    const emptyNode = document.createElement("p");
+                    emptyNode.className = "text-sm text-muted";
+                    emptyNode.textContent = "No active devices.";
+                    devicesNode.append(emptyNode);
+                    return;
+                }
+
+                const [latestDevice] = devices;
+                const name = typeof latestDevice?.deviceName === "string" ? latestDevice.deviceName : "Unknown device";
+                const lastSeen = typeof latestDevice?.lastSeenAt === "string" ? latestDevice.lastSeenAt : "Unknown";
+
+                const leftWrapper = document.createElement("div");
+                leftWrapper.className = "flex items-center space-x-3";
+
+                const iconNode = document.createElement("i");
+                iconNode.setAttribute("data-lucide", "monitor");
+                iconNode.className = "w-5 h-5 text-muted";
+                leftWrapper.append(iconNode);
+
+                const textWrapper = document.createElement("div");
+                const nameNode = document.createElement("p");
+                nameNode.className = "text-sm font-medium";
+                nameNode.textContent = name;
+                const lastSeenNode = document.createElement("p");
+                lastSeenNode.className = "text-xs text-muted";
+                lastSeenNode.textContent = `Last active: ${lastSeen}`;
+                textWrapper.append(nameNode);
+                textWrapper.append(lastSeenNode);
+                leftWrapper.append(textWrapper);
+
+                const badgeNode = document.createElement("span");
+                badgeNode.className = "text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full";
+                badgeNode.textContent = "Active";
+
+                devicesNode.append(leftWrapper);
+                devicesNode.append(badgeNode);
+                lucide.createIcons();
+            } catch (error) {
+                setAccountStatus({
+                    text: error instanceof Error ? error.message : "Failed to render device list",
+                    isError: true,
+                });
+            }
+        }
+
+        function normalizePlanStatus({ plan, status }) {
+            try {
+                const planText = typeof plan === "string" ? plan.toUpperCase() : "FREE";
+                const statusText = typeof status === "string" ? status : "active";
+                return `${planText} · ${statusText}`;
+            } catch {
+                return "FREE · active";
+            }
+        }
+
+        function updateUsageUi({ plan, usage }) {
+            try {
+                const usageNode = document.getElementById("account-usage-ai");
+                const usageBarNode = document.getElementById("account-usage-bar");
+                if (!usageNode || !usageBarNode) {
+                    return;
+                }
+                const aiCount = Number(usage?.ai_generation || 0);
+                const limit = plan === "free" ? 5 : Number.POSITIVE_INFINITY;
+                if (!Number.isFinite(limit)) {
+                    usageNode.textContent = `${aiCount} / unlimited`;
+                    usageBarNode.style.width = "100%";
+                    return;
+                }
+                const width = Math.max(0, Math.min(100, (aiCount / limit) * 100));
+                usageNode.textContent = `${aiCount} / ${limit}`;
+                usageBarNode.style.width = `${width}%`;
+            } catch (error) {
+                setAccountStatus({
+                    text: error instanceof Error ? error.message : "Failed to render usage",
+                    isError: true,
+                });
+            }
+        }
+
+        async function loadAccountData() {
+            try {
+                const token = PaymentAPI.getAuthToken();
+                const tokenStateNode = document.getElementById("account-user-token-state");
+                if (tokenStateNode) {
+                    tokenStateNode.textContent = token.length > 0
+                        ? `Auth token ready (${token.length} chars)`
+                        : "No auth token detected";
+                }
+
+                const licensePayload = await PaymentAPI.getLicense();
+                const usagePayload = await PaymentAPI.getUsage();
+
+                const planNameNode = document.getElementById("account-plan-name");
+                const planStatusNode = document.getElementById("account-plan-status");
+                if (planNameNode && planStatusNode) {
+                    const plan = licensePayload?.license?.plan || "free";
+                    const status = licensePayload?.license?.status || "active";
+                    planNameNode.textContent = typeof plan === "string" ? plan.toUpperCase() : "FREE";
+                    planStatusNode.textContent = normalizePlanStatus({ plan, status });
+                    updateUsageUi({
+                        plan,
+                        usage: usagePayload?.usage || {},
+                    });
+                }
+
+                renderDeviceRows({ devices: licensePayload?.devices || [] });
+
+                const credits = licensePayload?.license?.credits;
+                if (credits && planStatusNode) {
+                    planStatusNode.textContent = `${planStatusNode.textContent} · Credits: ${credits.totalCredits}`;
+                }
+
+                setAccountStatus({
+                    text: "Account synced successfully.",
+                    isError: false,
+                });
+            } catch (error) {
+                setAccountStatus({
+                    text: error instanceof Error ? error.message : "Failed to sync account data",
+                    isError: true,
+                });
+            }
+        }
+
+        async function openBillingPortal() {
+            try {
+                setAccountStatus({
+                    text: "Opening Stripe billing portal...",
+                    isError: false,
+                });
+                const session = await PaymentAPI.createPortalSession();
+                window.location.href = session.url;
+            } catch (error) {
+                setAccountStatus({
+                    text: error instanceof Error ? error.message : "Failed to open billing portal",
+                    isError: true,
+                });
+            }
+        }
+
+        const billingButton = document.getElementById("manage-billing-button");
+        if (billingButton) {
+            billingButton.addEventListener("click", () => {
+                openBillingPortal();
+            });
+        }
+
+        loadAccountData();
     </script>
 
 </body>

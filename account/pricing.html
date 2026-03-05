@@ -88,10 +88,24 @@
             <!-- Toggle -->
             <div class="flex items-center justify-center mt-8 space-x-2">
                 <div class="toggle-bg inline-flex rounded-full p-1">
-                    <button id="toggle-monthly" onclick="setPricing('monthly')" class="toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.monthly">Monthly</button>
-                    <button id="toggle-yearly" onclick="setPricing('yearly')" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.yearly">Yearly</button>
+                    <button id="toggle-monthly" type="button" onclick="setPricing({ mode: 'monthly' })" class="toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.monthly">Monthly</button>
+                    <button id="toggle-yearly" type="button" onclick="setPricing({ mode: 'yearly' })" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.yearly">Yearly</button>
                 </div>
                 <span class="text-xs text-green-500 font-medium" data-i18n="pricing.save">Save 17%</span>
+            </div>
+        </section>
+
+        <section class="pb-8 px-6" data-aos="fade-up" data-aos-delay="75">
+            <div class="max-w-3xl mx-auto card rounded-2xl p-6">
+                <h2 class="text-lg font-semibold">Payment session</h2>
+                <p class="text-sm text-muted mt-2">Enter your QCut auth token to enable checkout from this page.</p>
+                <div class="mt-4 flex flex-col md:flex-row gap-3">
+                    <input id="auth-token-input" type="password" class="flex-1 px-4 py-2.5 rounded-lg border border-main bg-secondary text-sm" placeholder="Paste auth token">
+                    <button id="save-auth-token-button" type="button" class="btn-dark px-5 py-2.5 rounded-full text-sm font-medium">Save token</button>
+                    <button id="clear-auth-token-button" type="button" class="btn-outline px-5 py-2.5 rounded-full text-sm font-medium">Clear</button>
+                </div>
+                <p id="auth-token-status" class="text-xs text-muted mt-3">No auth token saved yet.</p>
+                <p class="text-xs text-muted mt-2">License server: <span id="payment-api-base-url"></span></p>
             </div>
         </section>
 
@@ -130,7 +144,8 @@
                         <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f5">Priority rendering</span></li>
                         <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f6">Email support</span></li>
                     </ul>
-                    <button disabled class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="pricing.pro.cta">Coming Soon</button>
+                    <button id="pro-checkout-button" type="button" class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium">Upgrade to Pro</button>
+                    <p class="text-xs text-muted mt-3">Stripe checkout. Requires valid QCut auth token.</p>
                 </div>
 
                 <!-- Team -->
@@ -148,8 +163,40 @@
                         <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f4">Custom branding</span></li>
                         <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f5">Priority support</span></li>
                     </ul>
-                    <button disabled class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="pricing.team.cta">Coming Soon</button>
+                    <button disabled type="button" class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="pricing.team.cta">Coming Soon</button>
                 </div>
+            </div>
+        </section>
+
+        <section id="credits" class="pb-20 px-6" data-aos="fade-up">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold">Need more credits?</h2>
+                    <p class="text-sm text-muted mt-2">One-time credit packs for extra generations.</p>
+                </div>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-semibold">Starter</h3>
+                        <p class="text-sm text-muted mt-1">50 credits</p>
+                        <button type="button" class="topup-button btn-outline w-full mt-4 px-4 py-2 rounded-full text-sm font-medium" data-pack="starter">Buy Starter</button>
+                    </div>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-semibold">Standard</h3>
+                        <p class="text-sm text-muted mt-1">120 credits</p>
+                        <button type="button" class="topup-button btn-outline w-full mt-4 px-4 py-2 rounded-full text-sm font-medium" data-pack="standard">Buy Standard</button>
+                    </div>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-semibold">Pro Pack</h3>
+                        <p class="text-sm text-muted mt-1">350 credits</p>
+                        <button type="button" class="topup-button btn-outline w-full mt-4 px-4 py-2 rounded-full text-sm font-medium" data-pack="pro">Buy Pro Pack</button>
+                    </div>
+                    <div class="card rounded-xl p-5">
+                        <h3 class="font-semibold">Mega</h3>
+                        <p class="text-sm text-muted mt-1">800 credits</p>
+                        <button type="button" class="topup-button btn-outline w-full mt-4 px-4 py-2 rounded-full text-sm font-medium" data-pack="mega">Buy Mega</button>
+                    </div>
+                </div>
+                <p id="payment-action-status" class="text-sm text-muted mt-5 text-center"></p>
             </div>
         </section>
 
@@ -197,13 +244,176 @@
         AOS.init({ duration: 600, easing: 'ease-out', once: true, offset: 50 });
     </script>
     <script>
-        function setPricing(mode) {
-            const monthly = mode === 'monthly';
-            document.getElementById('toggle-monthly').className = monthly ? 'toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all' : 'px-4 py-1.5 rounded-full text-sm font-medium transition-all';
-            document.getElementById('toggle-yearly').className = !monthly ? 'toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all' : 'px-4 py-1.5 rounded-full text-sm font-medium transition-all';
-            document.querySelectorAll('.pricing-price').forEach(el => { el.textContent = el.dataset[mode]; });
-            document.querySelectorAll('.pricing-period').forEach(el => { el.textContent = el.dataset[mode]; });
+        let selectedInterval = "month";
+
+        function setPricing({ mode }) {
+            try {
+                const monthly = mode === "monthly";
+                selectedInterval = monthly ? "month" : "year";
+                document.getElementById("toggle-monthly").className = monthly ? "toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all" : "px-4 py-1.5 rounded-full text-sm font-medium transition-all";
+                document.getElementById("toggle-yearly").className = !monthly ? "toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all" : "px-4 py-1.5 rounded-full text-sm font-medium transition-all";
+                document.querySelectorAll(".pricing-price").forEach((element) => {
+                    element.textContent = element.dataset[mode];
+                });
+                document.querySelectorAll(".pricing-period").forEach((element) => {
+                    element.textContent = element.dataset[mode];
+                });
+            } catch (error) {
+                setStatusText({
+                    text: error instanceof Error ? error.message : "Failed to update pricing mode",
+                    isError: true,
+                });
+            }
         }
+
+        function setStatusText({ text, isError }) {
+            try {
+                const statusNode = document.getElementById("payment-action-status");
+                if (!statusNode) {
+                    return;
+                }
+                statusNode.textContent = text;
+                statusNode.className = isError
+                    ? "text-sm mt-5 text-center text-red-500"
+                    : "text-sm mt-5 text-center text-muted";
+            } catch {
+                // Non-blocking UI update failure.
+            }
+        }
+
+        function updateTokenStatus() {
+            try {
+                const statusNode = document.getElementById("auth-token-status");
+                const inputNode = document.getElementById("auth-token-input");
+                if (!statusNode || !inputNode) {
+                    return;
+                }
+                const token = PaymentAPI.getAuthToken();
+                if (token.length > 0) {
+                    statusNode.textContent = `Auth token saved (${token.length} chars).`;
+                    inputNode.value = token;
+                    return;
+                }
+                statusNode.textContent = "No auth token saved yet.";
+                inputNode.value = "";
+            } catch (error) {
+                setStatusText({
+                    text: error instanceof Error ? error.message : "Failed to read auth token state",
+                    isError: true,
+                });
+            }
+        }
+
+        async function handleProCheckout() {
+            try {
+                setStatusText({
+                    text: "Creating Stripe checkout session...",
+                    isError: false,
+                });
+                const session = await PaymentAPI.createCheckout({
+                    planId: PaymentAPI.PLAN.PRO,
+                    interval: selectedInterval,
+                });
+                window.location.href = session.url;
+            } catch (error) {
+                setStatusText({
+                    text: error instanceof Error ? error.message : "Failed to create checkout session",
+                    isError: true,
+                });
+            }
+        }
+
+        async function handleTopUpCheckout({ pack }) {
+            try {
+                setStatusText({
+                    text: `Creating ${pack} top-up checkout session...`,
+                    isError: false,
+                });
+                const session = await PaymentAPI.createTopUpCheckout({ pack });
+                window.location.href = session.url;
+            } catch (error) {
+                setStatusText({
+                    text: error instanceof Error ? error.message : "Failed to create top-up checkout session",
+                    isError: true,
+                });
+            }
+        }
+
+        function setupPaymentUi() {
+            try {
+                const apiBaseNode = document.getElementById("payment-api-base-url");
+                if (apiBaseNode) {
+                    apiBaseNode.textContent = PaymentAPI.getApiBaseUrl();
+                }
+
+                const saveTokenButton = document.getElementById("save-auth-token-button");
+                const clearTokenButton = document.getElementById("clear-auth-token-button");
+                const tokenInput = document.getElementById("auth-token-input");
+                const proCheckoutButton = document.getElementById("pro-checkout-button");
+
+                if (saveTokenButton && tokenInput) {
+                    saveTokenButton.addEventListener("click", () => {
+                        const saved = PaymentAPI.setAuthToken({ token: tokenInput.value });
+                        if (!saved) {
+                            setStatusText({
+                                text: "Token save failed. Paste a non-empty token.",
+                                isError: true,
+                            });
+                            return;
+                        }
+                        updateTokenStatus();
+                        setStatusText({
+                            text: "Token saved. You can start checkout now.",
+                            isError: false,
+                        });
+                    });
+                }
+
+                if (clearTokenButton) {
+                    clearTokenButton.addEventListener("click", () => {
+                        PaymentAPI.clearAuthToken();
+                        updateTokenStatus();
+                        setStatusText({
+                            text: "Token cleared.",
+                            isError: false,
+                        });
+                    });
+                }
+
+                if (proCheckoutButton) {
+                    proCheckoutButton.addEventListener("click", () => {
+                        handleProCheckout();
+                    });
+                }
+
+                document.querySelectorAll(".topup-button").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const pack = button.dataset.pack;
+                        if (typeof pack !== "string" || pack.length === 0) {
+                            setStatusText({
+                                text: "Invalid top-up pack selected.",
+                                isError: true,
+                            });
+                            return;
+                        }
+                        handleTopUpCheckout({ pack });
+                    });
+                });
+
+                updateTokenStatus();
+                setStatusText({
+                    text: "Select a plan or top-up pack to continue to Stripe Checkout.",
+                    isError: false,
+                });
+            } catch (error) {
+                setStatusText({
+                    text: error instanceof Error ? error.message : "Failed to initialize payment UI",
+                    isError: true,
+                });
+            }
+        }
+
+        setupPaymentUi();
     </script>
 </body>
 </html>
