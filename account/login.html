@@ -197,19 +197,20 @@
 
         function getSafeRedirectPath() {
             try {
+                const defaultPath = getDefaultAccountPath({ page: "dashboard" });
                 const candidate = getQueryParam({ name: "redirect" });
                 if (candidate.length === 0) {
-                    return "/account/dashboard.html";
+                    return defaultPath;
                 }
                 if (!candidate.startsWith("/")) {
-                    return "/account/dashboard.html";
+                    return defaultPath;
                 }
                 if (candidate.startsWith("//")) {
-                    return "/account/dashboard.html";
+                    return defaultPath;
                 }
                 return candidate;
             } catch {
-                return "/account/dashboard.html";
+                return getDefaultAccountPath({ page: "dashboard" });
             }
         }
 
@@ -240,6 +241,33 @@
                 return url.toString();
             } catch {
                 return window.location.href;
+            }
+        }
+
+        function getSiteBasePath() {
+            try {
+                const pathname = window.location.pathname;
+                const accountMarker = "/account/";
+                const markerIndex = pathname.indexOf(accountMarker);
+                if (markerIndex <= 0) {
+                    return "";
+                }
+                return pathname.slice(0, markerIndex);
+            } catch {
+                return "";
+            }
+        }
+
+        function getDefaultAccountPath({ page }) {
+            try {
+                const normalizedPage = typeof page === "string" ? page.trim() : "";
+                if (normalizedPage.length === 0) {
+                    return "/account/dashboard.html";
+                }
+                const basePath = getSiteBasePath();
+                return `${basePath}/account/${normalizedPage}.html`;
+            } catch {
+                return "/account/dashboard.html";
             }
         }
 
@@ -309,6 +337,13 @@
                 const dashboardUrl = new URL(redirectPath, window.location.origin);
                 startUrl.searchParams.set("redirect_url", dashboardUrl.toString());
                 startUrl.searchParams.set("error_redirect_url", errorRedirectUrl);
+                window.setTimeout(() => {
+                    setGoogleButtonLoading({ loading: false });
+                    setAuthStatus({
+                        text: "Unable to reach Google login endpoint. Check license server URL and deployment.",
+                        isError: true,
+                    });
+                }, 6000);
                 window.location.assign(startUrl.toString());
             } catch (error) {
                 setGoogleButtonLoading({ loading: false });
