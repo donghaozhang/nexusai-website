@@ -24,7 +24,7 @@ const STORAGE_KEY = {
 };
 
 const DEFAULT_LICENSE_SERVER_URL =
-	"https://qcut-license-server.workers.dev";
+	"https://qcut-license-server.zdhpeter.workers.dev";
 
 function getRuntimeGlobal() {
 	try {
