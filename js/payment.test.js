@@ -98,10 +98,15 @@ test("createCheckout posts to /api/stripe/checkout with auth + idempotency key",
 	assert.match(requestUrl, /\/api\/stripe\/checkout$/);
 	assert.equal(requestInit.method, "POST");
 	assert.equal(requestInit.headers.Authorization, "Bearer query-auth-token");
-	assert.ok(requestInit.headers["Idempotency-Key"].startsWith("qcut-checkout-"));
+	assert.ok(
+		requestInit.headers["Idempotency-Key"].startsWith("qcut-checkout-")
+	);
 	assert.equal(
 		requestInit.body,
-		JSON.stringify({ plan: PaymentAPI.PLAN.PRO, interval: PaymentAPI.BILLING_INTERVAL.MONTHLY })
+		JSON.stringify({
+			plan: PaymentAPI.PLAN.PRO,
+			interval: PaymentAPI.BILLING_INTERVAL.MONTHLY,
+		})
 	);
 });
 

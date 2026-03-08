@@ -322,7 +322,10 @@ function resolveAuthToken() {
 
 		const fromQueryToken = readSearchParam({ name: "token" });
 		if (fromQueryToken.length > 0) {
-			writeToLocalStorage({ key: STORAGE_KEY.AUTH_TOKEN, value: fromQueryToken });
+			writeToLocalStorage({
+				key: STORAGE_KEY.AUTH_TOKEN,
+				value: fromQueryToken,
+			});
 			return fromQueryToken;
 		}
 
@@ -487,7 +490,9 @@ const PaymentAPI = {
 
 	captureAuthTokenFromUrl() {
 		try {
-			const token = readSearchParam({ name: "token" }) || readSearchParam({ name: "auth_token" });
+			const token =
+				readSearchParam({ name: "token" }) ||
+				readSearchParam({ name: "auth_token" });
 			if (token.length === 0) {
 				return false;
 			}
