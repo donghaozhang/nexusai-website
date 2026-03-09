@@ -7,21 +7,7 @@
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        :root { --bg-primary: #faf9f7; --bg-secondary: #f0eeeb; --bg-card: #fff; --text-primary: #1a1a1a; --text-muted: #666; --border-color: #e5e5e5; --border-hover: #ccc; }
-        .dark { --bg-primary: #0a0a0a; --bg-secondary: #111; --bg-card: #1a1a1a; --text-primary: #fff; --text-muted: #999; --border-color: #2a2a2a; --border-hover: #444; }
-        body { background: var(--bg-primary); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
-        .bg-primary { background: var(--bg-primary); }
-        .text-muted { color: var(--text-muted); }
-        .btn-dark { background: var(--text-primary); color: var(--bg-primary); }
-        .btn-outline { border: 1px solid var(--border-color); }
-        .btn-outline:hover { border-color: var(--text-muted); }
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); }
-        .nav-border { border-bottom: 1px solid var(--border-color); }
-        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; }
-        .theme-toggle:hover { background: var(--bg-secondary); }
-    </style>
+    <link rel="stylesheet" href="main.css">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body class="antialiased">
@@ -103,7 +89,7 @@
     </main>
 
     <footer class="py-8 px-6 border-t" style="border-color: var(--border-color)">
-        <div class="max-w-5xl mx-auto text-center text-sm text-muted">© 2026 QCut. MIT License.</div>
+        <div class="max-w-5xl mx-auto text-center text-sm text-muted">© 2026 QCut by Quriosity. MIT License.</div>
     </footer>
     <script src="theme.js"></script>
 <script>lucide.createIcons();</script>

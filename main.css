@@ -1,0 +1,91 @@
+/* QCut Website — Shared Styles */
+
+* { font-family: 'Inter', system-ui, sans-serif; }
+
+/* Light Mode (default) */
+:root {
+    --bg-primary: #faf9f7;
+    --bg-secondary: #f0eeeb;
+    --bg-card: #fff;
+    --text-primary: #1a1a1a;
+    --text-muted: #666;
+    --text-light: #999;
+    --border-color: #e5e5e5;
+    --border-hover: #ccc;
+    --code-bg: #1a1a1a;
+    --code-text: #e5e5e5;
+}
+
+/* Dark Mode */
+.dark {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111;
+    --bg-card: #1a1a1a;
+    --text-primary: #fff;
+    --text-muted: #999;
+    --text-light: #666;
+    --border-color: #2a2a2a;
+    --border-hover: #444;
+    --code-bg: #000;
+    --code-text: #e5e5e5;
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Utility classes */
+.bg-primary { background: var(--bg-primary); }
+.bg-secondary { background: var(--bg-secondary); }
+.bg-card { background: var(--bg-card); }
+.text-primary { color: var(--text-primary); }
+.text-muted { color: var(--text-muted); }
+.text-light { color: var(--text-light); }
+.border-main { border-color: var(--border-color); }
+
+/* Buttons */
+.btn-dark {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    transition: all 0.2s ease;
+}
+.btn-dark:hover { opacity: 0.8; }
+
+.btn-outline {
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+.btn-outline:hover { border-color: var(--text-muted); }
+
+/* Cards */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+.card:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Code blocks */
+.code-block {
+    background: var(--code-bg);
+    color: var(--code-text);
+}
+
+/* Navigation */
+.nav-border { border-bottom: 1px solid var(--border-color); }
+
+/* Theme toggle */
+.theme-toggle {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+.theme-toggle:hover { background: var(--bg-secondary); }

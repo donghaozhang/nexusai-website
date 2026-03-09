@@ -11,36 +11,8 @@
     <script src="lang/en.js"></script>
     <script src="lang/zh.js"></script>
     <script src="lang/ja.js"></script>
+    <link rel="stylesheet" href="main.css">
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        :root {
-            --bg-primary: #faf9f7; --bg-secondary: #f0eeeb; --bg-card: #fff;
-            --text-primary: #1a1a1a; --text-muted: #666; --text-light: #999;
-            --border-color: #e5e5e5; --border-hover: #ccc;
-        }
-        .dark {
-            --bg-primary: #0a0a0a; --bg-secondary: #111; --bg-card: #1a1a1a;
-            --text-primary: #fff; --text-muted: #999; --text-light: #666;
-            --border-color: #2a2a2a; --border-hover: #444;
-        }
-        body { background: var(--bg-primary); color: var(--text-primary); transition: background 0.3s, color 0.3s; }
-        .bg-primary { background: var(--bg-primary); }
-        .bg-secondary { background: var(--bg-secondary); }
-        .bg-card { background: var(--bg-card); }
-        .text-primary { color: var(--text-primary); }
-        .text-muted { color: var(--text-muted); }
-        .text-light { color: var(--text-light); }
-        .border-main { border-color: var(--border-color); }
-        .nav-border { border-bottom: 1px solid var(--border-color); }
-        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.2s; }
-        .theme-toggle:hover { background: var(--bg-secondary); }
-        .btn-dark { background: var(--text-primary); color: var(--bg-primary); transition: all 0.2s ease; }
-        .btn-dark:hover { opacity: 0.8; }
-        .btn-outline { border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); transition: all 0.2s ease; }
-        .btn-outline:hover { border-color: var(--text-muted); }
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); transition: all 0.2s ease; }
-        .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
         .badge-stable { background: #22c55e; color: #fff; }
         .badge-latest { background: #3b82f6; color: #fff; }
         .badge-prerelease { background: #f59e0b; color: #000; }
@@ -116,7 +88,7 @@
 
     <footer class="border-t border-main py-8">
         <div class="max-w-5xl mx-auto px-6 text-center text-sm text-muted">
-            © 2026 QCut by Quriosity. All rights reserved.
+            © 2026 QCut by Quriosity. MIT License.
         </div>
     </footer>
 
@@ -127,11 +99,12 @@ let autoRefreshInterval;
 
 // === Theme ===
 function toggleTheme() {
-    document.body.classList.toggle('dark');
-    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    const html = document.documentElement;
+    const isDark = html.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.body.classList.add('dark');
+    document.documentElement.classList.add('dark');
 }
 
 // === Helpers ===

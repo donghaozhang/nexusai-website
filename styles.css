@@ -1,14 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 body {
 	font-family: "Inter", sans-serif;
 	background-color: #0a0a0a;
 	color: #e5e5e5;
 	overflow-x: hidden;
-}
-
-.orbitron {
-	font-family: "Orbitron", sans-serif;
 }
 
 .gradient-text {
@@ -84,10 +80,6 @@ body {
 	}
 }
 
-html.light {
-	filter: invert(1) hue-rotate(180deg);
-}
-
 .fade-in {
 	opacity: 0;
 	transform: translateY(20px);
@@ -106,10 +98,6 @@ html.light {
 
 .animate-fadeIn {
 	animation: fadeInUp 0.8s forwards;
-}
-
-html.light img {
-	filter: invert(1) hue-rotate(180deg);
 }
 
 /* Skip link for accessibility */
