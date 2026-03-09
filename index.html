@@ -20,7 +20,7 @@
     <style>
         /* index.html overrides — card hover is more dramatic on landing page */
         .card:hover {
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 30px oklch(0.2 0.01 30 / 0.1);
             transform: translateY(-4px);
         }
 
@@ -37,7 +37,7 @@
             position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            transition: transform 0.3s var(--ease-out-quart), box-shadow 0.3s var(--ease-out-quart), border-color 0.3s var(--ease-out-quart);
             z-index: 1;
         }
         .card-feature::before,
@@ -47,15 +47,13 @@
             inset: -2px;
             border-radius: inherit;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s var(--ease-out-quart);
             z-index: -1;
         }
-        /* Rotating gradient border */
         .card-feature::before {
             background: conic-gradient(from var(--angle), var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-primary));
             animation: spin-border 3s linear infinite;
         }
-        /* Inner mask to keep card interior clean */
         .card-feature::after {
             inset: 0px;
             background: var(--bg-card);
@@ -63,23 +61,19 @@
         .card-feature:hover {
             border-color: transparent;
             transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 30px oklch(0.2 0.01 30 / 0.1);
         }
-        .card-feature:hover::before {
-            opacity: 1;
-        }
-        .card-feature:hover::after {
-            opacity: 1;
-        }
+        .card-feature:hover::before { opacity: 1; }
+        .card-feature:hover::after { opacity: 1; }
         .card-feature > * {
             position: relative;
             z-index: 2;
         }
         .card-feature:hover .feature-icon {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
         .feature-icon {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s var(--ease-out-quart);
         }
 
         .mockup-glow {
@@ -93,7 +87,7 @@
             background: linear-gradient(135deg, oklch(0.62 0.17 25 / 0.2), oklch(0.50 0.08 195 / 0.2), oklch(0.78 0.12 75 / 0.2));
             z-index: -1;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s var(--ease-out-quart);
             filter: blur(20px);
         }
         .mockup-glow:hover::before {
@@ -118,12 +112,12 @@
                         <span class="text-lg font-semibold">QCut</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="#features" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.features">Features</a>
-                        <a href="#ai" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.aiModels">AI Models</a>
-                        <a href="account/pricing.html" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.pricing">Pricing</a>
-                        <a href="releases.html" class="text-sm text-muted hover:text-primary transition-colors">Releases</a>
-                        <a href="blog.html" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.docs">Docs</a>
-                        <a href="#contact" class="text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
+                        <a href="#features" class="nav-link text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.features">Features</a>
+                        <a href="#ai" class="nav-link text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.aiModels">AI Models</a>
+                        <a href="account/pricing.html" class="nav-link text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.pricing">Pricing</a>
+                        <a href="releases.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="blog.html" class="nav-link text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.docs">Docs</a>
+                        <a href="#contact" class="nav-link text-sm text-muted hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -483,40 +477,56 @@
                     <details class="card rounded-xl group" data-aos="fade-up" data-aos-delay="0">
                         <summary class="p-5 cursor-pointer flex justify-between items-center font-medium">
                             <span data-i18n="faq.q1">Is QCut really free?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 transition-transform duration-300 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a1">
-                            Yes! QCut is 100% free. No subscriptions, no watermarks, no hidden fees. You only pay for AI API usage if you use features like Sora or FLUX.
+                        <div class="faq-content">
+                            <div>
+                                <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a1">
+                                    Yes! QCut is 100% free. No subscriptions, no watermarks, no hidden fees. You only pay for AI API usage if you use features like Sora or FLUX.
+                                </div>
+                            </div>
                         </div>
                     </details>
 
                     <details class="card rounded-xl group" data-aos="fade-up" data-aos-delay="50">
                         <summary class="p-5 cursor-pointer flex justify-between items-center font-medium">
                             <span data-i18n="faq.q2">How does the AI pricing work?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 transition-transform duration-300 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a2">
-                            You bring your own API keys (FAL AI, ElevenLabs, etc.) and pay only for what you use. No markup - you pay the same rates as direct API access. A typical video generation costs $0.40-2.00.
+                        <div class="faq-content">
+                            <div>
+                                <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a2">
+                                    You bring your own API keys (FAL AI, ElevenLabs, etc.) and pay only for what you use. No markup - you pay the same rates as direct API access. A typical video generation costs $0.40-2.00.
+                                </div>
+                            </div>
                         </div>
                     </details>
 
                     <details class="card rounded-xl group" data-aos="fade-up" data-aos-delay="100">
                         <summary class="p-5 cursor-pointer flex justify-between items-center font-medium">
                             <span data-i18n="faq.q3">Is my data private?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 transition-transform duration-300 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a3">
-                            Yes. All video editing happens locally on your device using FFmpeg WebAssembly. Your videos never leave your computer. AI features communicate directly with API providers - QCut never sees your content.
+                        <div class="faq-content">
+                            <div>
+                                <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a3">
+                                    Yes. All video editing happens locally on your device using FFmpeg WebAssembly. Your videos never leave your computer. AI features communicate directly with API providers - QCut never sees your content.
+                                </div>
+                            </div>
                         </div>
                     </details>
 
                     <details class="card rounded-xl group" data-aos="fade-up" data-aos-delay="150">
                         <summary class="p-5 cursor-pointer flex justify-between items-center font-medium">
                             <span data-i18n="faq.q4">What platforms are supported?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 transition-transform duration-300 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a4">
-                            Currently Windows. macOS and Linux builds are planned. QCut is built with Electron, so cross-platform support is on the roadmap.
+                        <div class="faq-content">
+                            <div>
+                                <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a4">
+                                    Currently Windows. macOS and Linux builds are planned. QCut is built with Electron, so cross-platform support is on the roadmap.
+                                </div>
+                            </div>
                         </div>
                     </details>
 
@@ -524,7 +534,7 @@
                     <details class="card rounded-xl group" data-aos="fade-up" data-aos-delay="200">
                         <summary class="p-5 cursor-pointer flex justify-between items-center font-medium">
                             <span data-i18n="faq.q5">Can I contribute to QCut?</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 transition-transform duration-300 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
                         <div class="px-5 pb-5 text-muted text-sm" data-i18n="faq.a5">
                             Absolutely! Check out our <a href="https://github.com/donghaozhang/qcut" class="text-primary underline">GitHub repository</a> to report bugs, suggest features, or submit pull requests.
@@ -769,18 +779,33 @@
     </script>
     <script src="i18n.js"></script>
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
 
-        // Initialize AOS animations
+        // AOS — use quart easing for natural deceleration
         AOS.init({
             duration: 600,
-            easing: 'ease-out',
+            easing: 'ease-out-quart',
             once: true,
             offset: 50
         });
 
-        // Contact Form Handler
+        // Nav scroll shadow
+        (function() {
+            const nav = document.querySelector('nav');
+            if (!nav) return;
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        nav.classList.toggle('nav-scrolled', window.scrollY > 10);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
+
+        // Contact form with loading state
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
         const successMessage = document.getElementById('success-message');
@@ -788,10 +813,10 @@
         if (contactForm) {
             contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-
-                // Update button state
+                const originalText = submitBtn.textContent;
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Sending...';
+                submitBtn.classList.add('btn-loading');
+                submitBtn.textContent = 'Sending';
 
                 try {
                     const formData = new FormData(contactForm);
@@ -799,11 +824,8 @@
                         method: 'POST',
                         body: formData
                     });
-
                     const result = await response.json();
-
                     if (result.success) {
-                        // Hide form, show success message
                         contactForm.style.display = 'none';
                         successMessage.classList.remove('hidden');
                     } else {
@@ -812,7 +834,8 @@
                 } catch (error) {
                     alert('Failed to send message. Please try again or email us directly.');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send Message';
+                    submitBtn.classList.remove('btn-loading');
+                    submitBtn.textContent = originalText;
                 }
             });
         }

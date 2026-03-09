@@ -39,10 +39,10 @@
                         <span class="text-lg font-semibold">QCut</span>
                     </a>
                     <div class="hidden md:flex items-center space-x-6">
-                        <a href="index.html#features" class="text-sm text-muted hover:text-primary transition-colors">Features</a>
-                        <a href="index.html#ai" class="text-sm text-muted hover:text-primary transition-colors">AI Models</a>
+                        <a href="index.html#features" class="nav-link text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="index.html#ai" class="nav-link text-sm text-muted hover:text-primary transition-colors">AI Models</a>
                         <a href="releases.html" class="text-sm font-medium transition-colors" style="color: var(--text-primary);">Releases</a>
-                        <a href="blog.html" class="text-sm text-muted hover:text-primary transition-colors">Docs</a>
+                        <a href="blog.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Docs</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -292,5 +292,6 @@ document.addEventListener('visibilitychange', () => {
 });
 </script>
 <script>lucide.createIcons();</script>
+<script>(function(){var n=document.querySelector("nav");if(!n)return;var t=false;window.addEventListener("scroll",function(){if(!t){requestAnimationFrame(function(){n.classList.toggle("nav-scrolled",window.scrollY>10);t=false});t=true}},{passive:true})})()</script>
 </body>
 </html>

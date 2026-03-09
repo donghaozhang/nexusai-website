@@ -40,6 +40,10 @@
     --color-warning-light: oklch(0.94 0.04 65);
     --color-info: oklch(0.58 0.12 245);
     --color-info-light: oklch(0.93 0.03 245);
+
+    /* Easing curves */
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Dark Mode */
@@ -74,10 +78,15 @@
     --color-info-light: oklch(0.22 0.03 245);
 }
 
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background: var(--bg-primary);
     color: var(--text-primary);
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.3s var(--ease-out-quart), color 0.3s var(--ease-out-quart);
 }
 
 /* Utility classes */
@@ -98,34 +107,49 @@ body {
 .bg-brand-secondary-light { background: var(--color-secondary-light); }
 .bg-brand-accent-light { background: var(--color-accent-light); }
 
-/* Buttons */
+/* ── Buttons ── */
 .btn-primary {
     background: var(--color-primary);
     color: oklch(0.99 0 0);
-    transition: all 0.2s ease;
+    transition: background 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart);
 }
-.btn-primary:hover { background: var(--color-primary-hover); }
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px oklch(0.62 0.17 25 / 0.25);
+}
+.btn-primary:active { transform: translateY(0) scale(0.98); }
 
 .btn-dark {
     background: var(--text-primary);
     color: var(--bg-primary);
-    transition: all 0.2s ease;
+    transition: opacity 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart);
 }
-.btn-dark:hover { opacity: 0.8; }
+.btn-dark:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px oklch(0.2 0.01 30 / 0.15);
+}
+.btn-dark:active { transform: translateY(0) scale(0.98); opacity: 1; }
 
 .btn-outline {
     border: 1px solid var(--border-color);
     background: transparent;
     color: var(--text-primary);
-    transition: all 0.2s ease;
+    transition: border-color 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart);
 }
-.btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.btn-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-1px);
+}
+.btn-outline:active { transform: translateY(0) scale(0.98); }
 
-/* Cards */
+/* ── Cards ── */
 .card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    transition: all 0.2s ease;
+    transition: border-color 0.25s var(--ease-out-quart), box-shadow 0.25s var(--ease-out-quart);
 }
 .card:hover {
     border-color: var(--border-hover);
@@ -138,15 +162,42 @@ body {
     color: var(--code-text);
 }
 
-/* Navigation */
-.nav-border { border-bottom: 1px solid var(--border-color); }
+/* ── Navigation ── */
+.nav-border {
+    border-bottom: 1px solid var(--border-color);
+    transition: box-shadow 0.3s var(--ease-out-quart);
+}
+.nav-scrolled {
+    box-shadow: 0 1px 8px oklch(0.2 0.01 30 / 0.06);
+}
+
+/* Nav link hover underline */
+.nav-link {
+    position: relative;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1.5px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.25s var(--ease-out-quart);
+}
+.nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
 
 /* Theme toggle */
 .theme-toggle {
     cursor: pointer;
     padding: 8px;
     border-radius: 8px;
-    transition: background 0.2s;
+    transition: background 0.2s var(--ease-out-quart);
 }
 .theme-toggle:hover { background: var(--bg-secondary); }
 
@@ -161,8 +212,43 @@ textarea:focus-visible,
     outline-offset: 2px;
 }
 
-/* Reduced motion */
+/* ── FAQ Accordion ── */
+details .faq-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s var(--ease-out-quart);
+}
+details[open] .faq-content {
+    grid-template-rows: 1fr;
+}
+details .faq-content > div {
+    overflow: hidden;
+}
+
+/* ── Contact form submit animation ── */
+.btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+.btn-loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    margin-left: 8px;
+    vertical-align: middle;
+    animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
