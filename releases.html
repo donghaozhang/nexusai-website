@@ -44,6 +44,9 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('open')" class="hamburger items-center justify-center theme-toggle md:hidden" aria-label="Open menu">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
                     <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
                         <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
@@ -53,6 +56,15 @@
             </div>
         </div>
     </nav>
+
+    <div id="mobile-menu" class="mobile-menu fixed top-14 left-0 w-full z-40 bg-primary border-b border-main md:hidden">
+        <div class="px-6 py-4 space-y-3">
+            <a href="solutions.html" class="block text-sm text-muted">Features</a>
+            <a href="index.html#ai" class="block text-sm text-muted">AI Models</a>
+            <a href="about.html" class="block text-sm text-muted">About</a>
+            <a href="blog.html" class="block text-sm text-muted">Docs</a>
+        </div>
+    </div>
 
     <main class="max-w-5xl mx-auto px-6 pt-24 pb-16">
         <!-- Header -->
@@ -267,7 +279,15 @@ async function fetchReleases() {
 
 // Init
 fetchReleases();
-autoRefreshInterval = setInterval(fetchReleases, 5 * 60 * 1000); // 5 min auto-refresh
+autoRefreshInterval = setInterval(fetchReleases, 5 * 60 * 1000);
+// Pause auto-refresh when tab is hidden
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        clearInterval(autoRefreshInterval);
+    } else {
+        autoRefreshInterval = setInterval(fetchReleases, 5 * 60 * 1000);
+    }
+});
 </script>
 <script>lucide.createIcons();</script>
 </body>

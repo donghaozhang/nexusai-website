@@ -37,7 +37,7 @@ function applyTranslations(lang) {
 			if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
 				el.placeholder = t[key];
 			} else {
-				el.innerHTML = t[key];
+				el.textContent = t[key];
 			}
 		}
 	});

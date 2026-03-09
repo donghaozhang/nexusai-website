@@ -89,3 +89,39 @@ body {
     transition: background 0.2s;
 }
 .theme-toggle:hover { background: var(--bg-secondary); }
+
+/* Focus indicators */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Text overflow utilities */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Mobile nav */
+.mobile-menu { display: none; }
+.mobile-menu.open { display: block; }
+.hamburger { display: none; }
+@media (max-width: 767px) {
+    .hamburger { display: flex; }
+}

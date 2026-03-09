@@ -133,6 +133,10 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
+                    <!-- Hamburger (mobile) -->
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('open')" class="hamburger items-center justify-center theme-toggle md:hidden" aria-label="Open menu">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
                     <!-- Language Selector -->
                     <div id="lang-selector" class="relative">
                         <button id="lang-btn" onclick="toggleLangMenu()" class="theme-toggle flex items-center space-x-1" aria-label="Select language">
@@ -163,6 +167,17 @@
             </div>
         </div>
     </nav>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-14 left-0 w-full z-40 bg-primary border-b border-main md:hidden">
+        <div class="px-6 py-4 space-y-3">
+            <a href="#features" class="block text-sm text-muted" data-i18n="nav.features">Features</a>
+            <a href="#ai" class="block text-sm text-muted" data-i18n="nav.aiModels">AI Models</a>
+            <a href="account/pricing.html" class="block text-sm text-muted" data-i18n="nav.pricing">Pricing</a>
+            <a href="releases.html" class="block text-sm text-muted">Releases</a>
+            <a href="blog.html" class="block text-sm text-muted" data-i18n="nav.docs">Docs</a>
+            <a href="#contact" class="block text-sm text-muted" data-i18n="nav.contact">Contact</a>
+        </div>
+    </div>
 
     <main>
         <!-- Hero Section -->
@@ -350,8 +365,8 @@
                 <h2 class="text-2xl font-semibold mb-4 text-center" data-aos="fade-up" data-i18n="comparison.title">QCut vs CapCut</h2>
                 <p class="text-muted mb-12 text-center" data-aos="fade-up" data-aos-delay="50" data-i18n="comparison.subtitle">See why creators are switching to QCut</p>
 
-                <div class="card rounded-2xl overflow-hidden" data-aos="fade-up" data-aos-delay="100">
-                    <div class="grid grid-cols-3 text-center">
+                <div class="card rounded-2xl overflow-x-auto" data-aos="fade-up" data-aos-delay="100">
+                    <div class="grid grid-cols-3 text-center" style="min-width: 480px;">
                         <!-- Header -->
                         <div class="p-4 font-medium border-b border-main" data-i18n="comparison.feature">Feature</div>
                         <div class="p-4 font-medium border-b border-l border-main bg-gray-100 dark:bg-gray-800">
