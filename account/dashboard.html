@@ -16,7 +16,7 @@
     <script src="../lang/zh.js"></script>
     <script src="../lang/ja.js"></script>
     <style>
-        .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
+        .card:hover { box-shadow: 0 8px 30px oklch(0.2 0.01 30 / 0.1); transform: translateY(-4px); }
         .text-highlight { color: var(--color-primary); font-weight: 600; }
     </style>
 </head>
@@ -141,7 +141,7 @@
                 <span class="text-sm text-muted" data-i18n="footer.tagline">QCut — Free AI video editor</span>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="https://x.com/peter6759" target="_blank" class="text-muted hover:text-primary transition-colors">
+                <a href="https://x.com/peter6759" target="_blank" class="text-muted hover:text-primary transition-colors" aria-label="Follow us on X">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </a>
             </div>

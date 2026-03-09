@@ -7,7 +7,7 @@ const zh = {
     "nav.download": "下载",
 
     // Hero
-    "hero.title": "为追求<span class="text-highlight">专业视频剪辑</span>的<br>创作者打造，完全免费。",
+    "hero.title": "为追求专业视频剪辑的创作者打造，完全免费。",
     "hero.subtitle": "QCut 是用 AI 剪辑视频的最佳方式。时间轴编辑、40+ AI 模型、完全隐私保护 - 无需订阅，无水印。",
     "hero.betaVersion": "Beta v0.3.53 - 免费开源",
     "hero.downloadWindows": "Windows",
@@ -59,9 +59,9 @@ const zh = {
 
     // Why QCut
     "why.title": "为什么选择 QCut？",
-    "why.p1": "<span class=\"text-primary font-medium\">CapCut 的基础功能现在需要付费了。</span>曾经免费的剪辑工具变成了又一个订阅服务。",
+    "why.p1": "CapCut 的基础功能现在需要付费了。曾经免费的剪辑工具变成了又一个订阅服务。",
     "why.p2": "QCut 是我们的答案：一款完全免费的 AI 视频编辑器。CapCut 放在付费墙后面的每个功能，我们都免费提供。",
-    "why.p3": "<span class=\"text-primary font-medium\">隐私优先：</span>所有处理都在本地完成。你的视频永远不会离开你的设备。",
+    "why.p3": "隐私优先：所有处理都在本地完成。你的视频永远不会离开你的设备。",
 
     // FAQ
     "faq.title": "常见问题",

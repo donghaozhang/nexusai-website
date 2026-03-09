@@ -7,7 +7,7 @@ const en = {
     "nav.download": "Download",
 
     // Hero
-    "hero.title": "Built for creators who want<br><span class="text-highlight">professional video editing</span>, free.",
+    "hero.title": "Built for creators who want professional video editing, free.",
     "hero.subtitle": "QCut is the best way to edit videos with AI. Timeline editing, 40+ AI models, and complete privacy - all without subscriptions or watermarks.",
     "hero.betaVersion": "Beta v0.3.53 - Free & Open Source",
     "hero.downloadWindows": "Windows",
@@ -59,9 +59,9 @@ const en = {
 
     // Why QCut
     "why.title": "Why QCut?",
-    "why.p1": "<span class=\"text-primary font-medium\">CapCut's basic features are now paywalled.</span> What started as a free editing tool has become another subscription service.",
+    "why.p1": "CapCut's basic features are now paywalled. What started as a free editing tool has become another subscription service.",
     "why.p2": "QCut is our answer: a completely free AI video editor. Every feature CapCut locks behind a subscription, we offer for free.",
-    "why.p3": "<span class=\"text-primary font-medium\">Privacy-first:</span> all processing happens locally. Your videos never leave your device.",
+    "why.p3": "Privacy-first: all processing happens locally. Your videos never leave your device.",
 
     // FAQ
     "faq.title": "Frequently Asked Questions",
@@ -74,7 +74,7 @@ const en = {
     "faq.q4": "What platforms are supported?",
     "faq.a4": "Currently Windows. macOS and Linux builds are planned. QCut is built with Electron, so cross-platform support is on the roadmap.",
     "faq.q5": "Can I contribute to QCut?",
-    "faq.a5": "Absolutely! Check out our <a href=\"https://github.com/donghaozhang/qcut\" class=\"text-primary underline\">GitHub repository</a> to report bugs, suggest features, or submit pull requests.",
+    "faq.a5": "Absolutely! Check out our GitHub repository to report bugs, suggest features, or submit pull requests.",
 
     // Contact
     "contact.title": "Contact Us",

@@ -7,7 +7,7 @@ const ja = {
     "nav.download": "ダウンロード",
 
     // Hero
-    "hero.title": "<span class="text-highlight">プロ品質の動画編集</span>を<br>無料で、すべてのクリエイターへ。",
+    "hero.title": "プロ品質の動画編集を無料で、すべてのクリエイターへ。",
     "hero.subtitle": "QCutはAIで動画を編集する最良の方法です。タイムライン編集、40以上のAIモデル、完全なプライバシー - サブスクも透かしも不要。",
     "hero.betaVersion": "Beta v0.3.53 - 無料・オープンソース",
     "hero.downloadWindows": "Windows",
@@ -59,9 +59,9 @@ const ja = {
 
     // Why QCut
     "why.title": "なぜQCut？",
-    "why.p1": "<span class=\"text-primary font-medium\">CapCutの基本機能が有料化されました。</span>無料の編集ツールだったものが、また別のサブスクサービスになりました。",
+    "why.p1": "CapCutの基本機能が有料化されました。無料の編集ツールだったものが、また別のサブスクサービスになりました。",
     "why.p2": "QCutは私たちの答えです：完全無料のAI動画エディター。CapCutが有料にした機能を、すべて無料で提供します。",
-    "why.p3": "<span class=\"text-primary font-medium\">プライバシー第一：</span>すべての処理はローカルで実行。動画がデバイスから出ることはありません。",
+    "why.p3": "プライバシー第一：すべての処理はローカルで実行。動画がデバイスから出ることはありません。",
 
     // FAQ
     "faq.title": "よくある質問",
