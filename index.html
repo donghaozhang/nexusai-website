@@ -6,12 +6,14 @@
     <title>QCut - The AI Video Editor</title>
     <meta name="description" content="QCut is a free AI video editor with superpowers." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="main.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js" defer></script>
     <script src="lang/en.js"></script>
     <script src="lang/zh.js"></script>
     <script src="lang/ja.js"></script>
@@ -242,7 +244,7 @@
                     </span>
                 </div>
                 <div class="mockup-glow rounded-2xl overflow-hidden shadow-2xl border border-main" data-aos="fade-up" data-aos-delay="100">
-                    <img src="assets/qcut-editor-mockup.png" alt="QCut Editor Interface" class="w-full h-auto">
+                    <img src="assets/qcut-editor-mockup.png" alt="QCut Editor Interface" class="w-full h-auto" loading="lazy">
                 </div>
                 <div class="mt-6 flex flex-wrap justify-center gap-6 text-sm text-muted" data-aos="fade-up" data-aos-delay="200">
                     <span class="flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4"></i> Multi-track Timeline</span>
@@ -259,12 +261,13 @@
                 <h2 class="text-2xl font-semibold mb-8 text-center" data-aos="fade-up" data-i18n="video.title">See QCut in Action</h2>
                 <div class="rounded-2xl overflow-hidden shadow-2xl border border-main" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative w-full" style="padding-bottom: 56.25%;">
-                        <iframe 
+                        <iframe
                             class="absolute top-0 left-0 w-full h-full"
-                            src="https://www.youtube.com/embed/MMeXigK0MoQ" 
+                            src="https://www.youtube.com/embed/MMeXigK0MoQ"
                             title="QCut Video Agent Update"
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            frameborder="0"
+                            loading="lazy"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen>
                         </iframe>
                     </div>
