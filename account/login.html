@@ -17,8 +17,7 @@
     <script src="../lang/ja.js"></script>
     <style>
         .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
-        .text-gradient { background: linear-gradient(135deg, #1a1a1a, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .dark .text-gradient { background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-highlight { color: var(--color-primary); font-weight: 600; }
     </style>
 </head>
 <body>
@@ -64,9 +63,9 @@
     <main>
         <section class="pt-32 pb-24 px-6 flex items-center justify-center min-h-screen">
             <div class="w-full max-w-md" data-aos="fade-up">
-                <div id="auth-status-banner" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6 text-center">
-                    <p class="font-semibold text-blue-800 dark:text-blue-200">Google Sign-In</p>
-                    <p id="auth-status-message" class="text-sm text-blue-600 dark:text-blue-400 mt-1">Continue with Google to unlock billing and account features.</p>
+                <div id="auth-status-banner" class="rounded-xl p-4 mb-6 text-center" style="background: var(--color-info-light); border: 1px solid var(--color-info);">
+                    <p class="font-semibold" style="color: var(--color-info);">Google Sign-In</p>
+                    <p id="auth-status-message" class="text-sm mt-1" style="color: var(--color-info);">Continue with Google to unlock billing and account features.</p>
                 </div>
 
                 <div class="card rounded-2xl p-8">
@@ -158,10 +157,14 @@
                 }
                 messageNode.textContent = text;
                 if (isError) {
-                    bannerNode.className = "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-6 text-center";
+                    bannerNode.className = "rounded-xl p-4 mb-6 text-center";
+                    bannerNode.style.background = "var(--color-error-light)";
+                    bannerNode.style.border = "1px solid var(--color-error)";
                     return;
                 }
-                bannerNode.className = "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6 text-center";
+                bannerNode.className = "rounded-xl p-4 mb-6 text-center";
+                bannerNode.style.background = "var(--color-info-light)";
+                bannerNode.style.border = "1px solid var(--color-info)";
             } catch {
                 // Non-blocking UI update failure.
             }

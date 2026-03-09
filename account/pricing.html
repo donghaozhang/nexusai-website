@@ -17,9 +17,8 @@
     <script src="../lang/ja.js"></script>
     <style>
         .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
-        .text-gradient { background: linear-gradient(135deg, #1a1a1a, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .dark .text-gradient { background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .pricing-card-pro { border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899); background-origin: border-box; background-clip: padding-box, border-box; }
+        .text-highlight { color: var(--color-primary); font-weight: 600; }
+        .pricing-card-pro { border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-accent)); background-origin: border-box; background-clip: padding-box, border-box; }
         .toggle-bg { background: var(--bg-secondary); border: 1px solid var(--border-color); }
         .toggle-active { background: var(--text-primary); color: var(--bg-primary); }
     </style>
@@ -76,7 +75,7 @@
                     <button id="toggle-monthly" type="button" onclick="setPricing({ mode: 'monthly' })" class="toggle-active px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.monthly">Monthly</button>
                     <button id="toggle-yearly" type="button" onclick="setPricing({ mode: 'yearly' })" class="px-4 py-1.5 rounded-full text-sm font-medium transition-all" data-i18n="pricing.yearly">Yearly</button>
                 </div>
-                <span class="text-xs text-green-500 font-medium" data-i18n="pricing.save">Save 17%</span>
+                <span class="text-xs font-medium" style="color: var(--color-success);" data-i18n="pricing.save">Save 17%</span>
             </div>
         </section>
 
@@ -103,18 +102,18 @@
                     <div class="mt-4 mb-2"><span class="text-4xl font-bold" data-i18n="pricing.free.price">$0</span></div>
                     <p class="text-sm text-muted mb-6" data-i18n="pricing.free.desc">Perfect for getting started</p>
                     <ul class="space-y-3 text-sm mb-8 flex-1">
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f1">5 AI videos/month</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f2">720p export</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f3">Basic templates</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f4">Bring your own API keys</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.free.f5">Community support</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.free.f1">5 AI videos/month</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.free.f2">720p export</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.free.f3">Basic templates</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.free.f4">Bring your own API keys</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.free.f5">Community support</span></li>
                     </ul>
                     <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium" data-i18n="pricing.free.cta">Get Started</a>
                 </div>
 
                 <!-- Pro -->
                 <div class="pricing-card-pro rounded-2xl p-8 flex flex-col relative">
-                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full" data-i18n="pricing.pro.badge">Most Popular</span>
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-3 py-1 rounded-full" style="background: linear-gradient(to right, var(--color-primary), var(--color-secondary));" data-i18n="pricing.pro.badge">Most Popular</span>
                     <h3 class="text-lg font-semibold" data-i18n="pricing.pro.name">Pro</h3>
                     <div class="mt-4 mb-2">
                         <span class="text-4xl font-bold pricing-price" data-monthly="$9.99" data-yearly="$99" data-i18n="pricing.pro.price">$9.99</span>
@@ -122,12 +121,12 @@
                     </div>
                     <p class="text-sm text-muted mb-6" data-i18n="pricing.pro.desc">For serious creators</p>
                     <ul class="space-y-3 text-sm mb-8 flex-1">
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f1">Unlimited AI videos</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f2">4K export</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f3">No watermark</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f4">All templates</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f5">Priority rendering</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.pro.f6">Email support</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.pro.f1">Unlimited AI videos</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.pro.f2">4K export</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.pro.f3">No watermark</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.pro.f4">All templates</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.pro.f5">Priority rendering</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.pro.f6">Email support</span></li>
                     </ul>
                     <button id="pro-checkout-button" type="button" class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium">Upgrade to Pro</button>
                     <p class="text-xs text-muted mt-3">Stripe checkout. Requires valid QCut auth token.</p>
@@ -142,11 +141,11 @@
                     </div>
                     <p class="text-sm text-muted mb-6" data-i18n="pricing.team.desc">For teams & businesses</p>
                     <ul class="space-y-3 text-sm mb-8 flex-1">
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f1">Everything in Pro</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f2">Team collaboration</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f3">API access</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f4">Custom branding</span></li>
-                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i><span data-i18n="pricing.team.f5">Priority support</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.team.f1">Everything in Pro</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.team.f2">Team collaboration</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.team.f3">API access</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.team.f4">Custom branding</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4" style="color: var(--color-success);"></i><span data-i18n="pricing.team.f5">Priority support</span></li>
                     </ul>
                     <button disabled type="button" class="btn-dark text-center px-6 py-3 rounded-full text-sm font-medium opacity-50 cursor-not-allowed" data-i18n="pricing.team.cta">Coming Soon</button>
                 </div>
@@ -258,9 +257,8 @@
                     return;
                 }
                 statusNode.textContent = text;
-                statusNode.className = isError
-                    ? "text-sm mt-5 text-center text-red-500"
-                    : "text-sm mt-5 text-center text-muted";
+                statusNode.className = "text-sm mt-5 text-center";
+                statusNode.style.color = isError ? "var(--color-error)" : "var(--text-muted)";
             } catch {
                 // Non-blocking UI update failure.
             }

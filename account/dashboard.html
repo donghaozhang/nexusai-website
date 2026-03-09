@@ -17,8 +17,7 @@
     <script src="../lang/ja.js"></script>
     <style>
         .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
-        .text-gradient { background: linear-gradient(135deg, #1a1a1a, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .dark .text-gradient { background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-highlight { color: var(--color-primary); font-weight: 600; }
     </style>
 </head>
 <body>
@@ -66,9 +65,9 @@
             <div class="max-w-3xl mx-auto" data-aos="fade-up">
                 <h1 class="text-3xl font-bold mb-2" data-i18n="account.title">My Account</h1>
 
-                <div id="account-status-banner" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8">
-                    <p class="font-semibold text-blue-800 dark:text-blue-200">Account data sync</p>
-                    <p id="account-status-message" class="text-sm text-blue-600 dark:text-blue-400 mt-1">Loading billing profile from license server...</p>
+                <div id="account-status-banner" class="rounded-xl p-4 mb-8" style="background: var(--color-info-light); border: 1px solid var(--color-info);">
+                    <p class="font-semibold" style="color: var(--color-info);">Account data sync</p>
+                    <p id="account-status-message" class="text-sm mt-1" style="color: var(--color-info);">Loading billing profile from license server...</p>
                 </div>
 
                 <div class="space-y-6">
@@ -105,7 +104,7 @@
                                 <span id="account-usage-ai">0 / 5</span>
                             </div>
                             <div class="w-full bg-secondary rounded-full h-2.5">
-                                <div id="account-usage-bar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+                                <div id="account-usage-bar" class="h-2.5 rounded-full" style="width: 0%; background: var(--color-primary);"></div>
                             </div>
                         </div>
                     </div>
@@ -121,7 +120,7 @@
                                     <p class="text-xs text-muted">Last active: Today</p>
                                 </div>
                             </div>
-                            <span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full">Active</span>
+                            <span class="text-xs px-2 py-1 rounded-full" style="background: var(--color-success-light); color: var(--color-success);">Active</span>
                         </div>
                     </div>
 
@@ -166,10 +165,14 @@
                 }
                 statusNode.textContent = text;
                 if (isError) {
-                    bannerNode.className = "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-8";
+                    bannerNode.className = "rounded-xl p-4 mb-8";
+                    bannerNode.style.background = "var(--color-error-light)";
+                    bannerNode.style.border = "1px solid var(--color-error)";
                     return;
                 }
-                bannerNode.className = "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8";
+                bannerNode.className = "rounded-xl p-4 mb-8";
+                bannerNode.style.background = "var(--color-info-light)";
+                bannerNode.style.border = "1px solid var(--color-info)";
             } catch {
                 // Non-blocking UI update failure.
             }
@@ -214,7 +217,9 @@
                 leftWrapper.append(textWrapper);
 
                 const badgeNode = document.createElement("span");
-                badgeNode.className = "text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full";
+                badgeNode.className = "text-xs px-2 py-1 rounded-full";
+                badgeNode.style.background = "var(--color-success-light)";
+                badgeNode.style.color = "var(--color-success)";
                 badgeNode.textContent = "Active";
 
                 devicesNode.append(leftWrapper);

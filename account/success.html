@@ -17,8 +17,7 @@
     <script src="../lang/ja.js"></script>
     <style>
         .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
-        .text-gradient { background: linear-gradient(135deg, #1a1a1a, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .dark .text-gradient { background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-highlight { color: var(--color-primary); font-weight: 600; }
         @keyframes checkmark { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
         @keyframes confetti-fall { 0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         .check-animate { animation: checkmark 0.6s ease-out 0.3s both; }
@@ -68,21 +67,21 @@
     <main>
         <!-- Confetti -->
         <div aria-hidden="true">
-            <div class="confetti-piece" style="left:10%;background:#3b82f6;animation-duration:3s;animation-delay:0s;border-radius:50%;"></div>
-            <div class="confetti-piece" style="left:20%;background:#ec4899;animation-duration:3.5s;animation-delay:0.2s;"></div>
-            <div class="confetti-piece" style="left:35%;background:#f59e0b;animation-duration:2.8s;animation-delay:0.4s;border-radius:50%;"></div>
-            <div class="confetti-piece" style="left:50%;background:#8b5cf6;animation-duration:3.2s;animation-delay:0.1s;"></div>
-            <div class="confetti-piece" style="left:65%;background:#10b981;animation-duration:3.4s;animation-delay:0.3s;border-radius:50%;"></div>
-            <div class="confetti-piece" style="left:80%;background:#3b82f6;animation-duration:2.9s;animation-delay:0.5s;"></div>
-            <div class="confetti-piece" style="left:90%;background:#ec4899;animation-duration:3.1s;animation-delay:0.15s;border-radius:50%;"></div>
-            <div class="confetti-piece" style="left:45%;background:#f59e0b;animation-duration:3.3s;animation-delay:0.6s;"></div>
+            <div class="confetti-piece" style="left:10%;background:var(--color-primary);animation-duration:3s;animation-delay:0s;border-radius:50%;"></div>
+            <div class="confetti-piece" style="left:20%;background:var(--color-accent);animation-duration:3.5s;animation-delay:0.2s;"></div>
+            <div class="confetti-piece" style="left:35%;background:var(--color-accent);animation-duration:2.8s;animation-delay:0.4s;border-radius:50%;"></div>
+            <div class="confetti-piece" style="left:50%;background:var(--color-secondary);animation-duration:3.2s;animation-delay:0.1s;"></div>
+            <div class="confetti-piece" style="left:65%;background:var(--color-success);animation-duration:3.4s;animation-delay:0.3s;border-radius:50%;"></div>
+            <div class="confetti-piece" style="left:80%;background:var(--color-primary);animation-duration:2.9s;animation-delay:0.5s;"></div>
+            <div class="confetti-piece" style="left:90%;background:var(--color-accent);animation-duration:3.1s;animation-delay:0.15s;border-radius:50%;"></div>
+            <div class="confetti-piece" style="left:45%;background:var(--color-accent);animation-duration:3.3s;animation-delay:0.6s;"></div>
         </div>
 
         <section class="pt-32 pb-24 px-6 flex items-center justify-center min-h-screen relative z-10">
             <div class="text-center max-w-md" data-aos="fade-up">
                 <!-- Checkmark -->
-                <div class="check-animate inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 mb-6">
-                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <div class="check-animate inline-flex items-center justify-center w-20 h-20 rounded-full mb-6" style="background: var(--color-success-light);">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" style="color: var(--color-success);"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 </div>
                 <h1 class="text-3xl font-bold mb-2" data-i18n="success.title">Payment Successful!</h1>
                 <p id="success-subtitle" class="text-lg text-muted mb-2" data-i18n="success.subtitle">Your Pro plan is now active.</p>

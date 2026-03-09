@@ -2,32 +2,76 @@
 
 * { font-family: 'Inter', system-ui, sans-serif; }
 
+/* ── Color Palette ──
+   Primary:   Warm terracotta/coral — creative energy
+   Secondary: Deep teal — trust and depth
+   Accent:    Soft amber/gold — premium highlights
+   Neutrals:  Warm-tinted toward terracotta hue
+*/
+
 /* Light Mode (default) */
 :root {
-    --bg-primary: #faf9f7;
-    --bg-secondary: #f0eeeb;
-    --bg-card: #fff;
-    --text-primary: #1a1a1a;
-    --text-muted: #666;
-    --text-light: #999;
-    --border-color: #e5e5e5;
-    --border-hover: #ccc;
-    --code-bg: #1a1a1a;
-    --code-text: #e5e5e5;
+    --bg-primary: oklch(0.975 0.005 60);
+    --bg-secondary: oklch(0.95 0.008 55);
+    --bg-card: oklch(0.993 0.003 60);
+    --text-primary: oklch(0.18 0.01 30);
+    --text-muted: oklch(0.45 0.015 30);
+    --text-light: oklch(0.6 0.01 30);
+    --border-color: oklch(0.88 0.008 55);
+    --border-hover: oklch(0.78 0.01 55);
+    --code-bg: oklch(0.18 0.01 30);
+    --code-text: oklch(0.9 0.005 60);
+
+    /* Brand colors */
+    --color-primary: oklch(0.62 0.17 25);
+    --color-primary-light: oklch(0.92 0.04 25);
+    --color-primary-hover: oklch(0.55 0.17 25);
+    --color-secondary: oklch(0.50 0.08 195);
+    --color-secondary-light: oklch(0.92 0.03 195);
+    --color-accent: oklch(0.78 0.12 75);
+    --color-accent-light: oklch(0.94 0.04 75);
+
+    /* Semantic */
+    --color-success: oklch(0.60 0.15 155);
+    --color-success-light: oklch(0.93 0.04 155);
+    --color-error: oklch(0.58 0.18 18);
+    --color-error-light: oklch(0.93 0.04 18);
+    --color-warning: oklch(0.75 0.14 65);
+    --color-warning-light: oklch(0.94 0.04 65);
+    --color-info: oklch(0.58 0.12 245);
+    --color-info-light: oklch(0.93 0.03 245);
 }
 
 /* Dark Mode */
 .dark {
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #111;
-    --bg-card: #1a1a1a;
-    --text-primary: #fff;
-    --text-muted: #999;
-    --text-light: #666;
-    --border-color: #2a2a2a;
-    --border-hover: #444;
-    --code-bg: #000;
-    --code-text: #e5e5e5;
+    --bg-primary: oklch(0.13 0.01 30);
+    --bg-secondary: oklch(0.17 0.008 30);
+    --bg-card: oklch(0.20 0.01 30);
+    --text-primary: oklch(0.95 0.005 60);
+    --text-muted: oklch(0.65 0.01 30);
+    --text-light: oklch(0.45 0.01 30);
+    --border-color: oklch(0.28 0.01 30);
+    --border-hover: oklch(0.40 0.01 30);
+    --code-bg: oklch(0.10 0.01 30);
+    --code-text: oklch(0.9 0.005 60);
+
+    /* Brand colors — slightly brighter for dark bg */
+    --color-primary: oklch(0.68 0.16 25);
+    --color-primary-light: oklch(0.25 0.04 25);
+    --color-primary-hover: oklch(0.75 0.15 25);
+    --color-secondary: oklch(0.60 0.08 195);
+    --color-secondary-light: oklch(0.22 0.03 195);
+    --color-accent: oklch(0.80 0.12 75);
+    --color-accent-light: oklch(0.25 0.04 75);
+
+    --color-success: oklch(0.68 0.14 155);
+    --color-success-light: oklch(0.22 0.04 155);
+    --color-error: oklch(0.65 0.16 18);
+    --color-error-light: oklch(0.22 0.04 18);
+    --color-warning: oklch(0.78 0.12 65);
+    --color-warning-light: oklch(0.22 0.03 65);
+    --color-info: oklch(0.65 0.10 245);
+    --color-info-light: oklch(0.22 0.03 245);
 }
 
 body {
@@ -45,7 +89,23 @@ body {
 .text-light { color: var(--text-light); }
 .border-main { border-color: var(--border-color); }
 
+/* Brand color utilities */
+.text-brand { color: var(--color-primary); }
+.text-brand-secondary { color: var(--color-secondary); }
+.text-brand-accent { color: var(--color-accent); }
+.bg-brand { background: var(--color-primary); color: oklch(0.99 0 0); }
+.bg-brand-light { background: var(--color-primary-light); }
+.bg-brand-secondary-light { background: var(--color-secondary-light); }
+.bg-brand-accent-light { background: var(--color-accent-light); }
+
 /* Buttons */
+.btn-primary {
+    background: var(--color-primary);
+    color: oklch(0.99 0 0);
+    transition: all 0.2s ease;
+}
+.btn-primary:hover { background: var(--color-primary-hover); }
+
 .btn-dark {
     background: var(--text-primary);
     color: var(--bg-primary);
@@ -59,7 +119,7 @@ body {
     color: var(--text-primary);
     transition: all 0.2s ease;
 }
-.btn-outline:hover { border-color: var(--text-muted); }
+.btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
 /* Cards */
 .card {
@@ -69,7 +129,7 @@ body {
 }
 .card:hover {
     border-color: var(--border-hover);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px oklch(0.2 0.01 30 / 0.08);
 }
 
 /* Code blocks */
@@ -90,14 +150,14 @@ body {
 }
 .theme-toggle:hover { background: var(--bg-secondary); }
 
-/* Focus indicators */
+/* Focus indicators — uses brand primary */
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-    outline: 2px solid var(--text-primary);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
 
