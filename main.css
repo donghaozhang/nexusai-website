@@ -160,6 +160,7 @@ body {
 .code-block {
     background: var(--code-bg);
     color: var(--code-text);
+    overflow-x: auto;
 }
 
 /* ── Navigation ── */
@@ -192,10 +193,10 @@ body {
     transform-origin: left;
 }
 
-/* Theme toggle */
+/* Theme toggle — 44px minimum touch target */
 .theme-toggle {
     cursor: pointer;
-    padding: 8px;
+    padding: 12px;
     border-radius: 8px;
     transition: background 0.2s var(--ease-out-quart);
 }
@@ -267,6 +268,12 @@ details .faq-content > div {
 /* Mobile nav */
 .mobile-menu { display: none; }
 .mobile-menu.open { display: block; }
+.mobile-menu a {
+    padding: 12px 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
 .hamburger { display: none; }
 @media (max-width: 767px) {
     .hamburger { display: flex; }
