@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QCut - The AI Video Editor</title>
-    <meta name="description" content="QCut is a free AI video editor with superpowers." />
+    <title>QCut - Your Video OS</title>
+    <meta name="description" content="QCut is the AI-native Video OS for film, TV series, and commercial production." />
     <link rel="icon" type="image/png" href="assets/qcut-logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,6 +98,19 @@
             color: var(--color-primary);
             font-weight: 600;
         }
+
+        /* Typewriter effect */
+        .typewriter-cursor {
+            color: var(--color-primary);
+            font-weight: 300;
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .typewriter-text {
+            border-right: none;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -171,11 +184,11 @@
         <!-- Hero Section -->
         <section class="pt-32 pb-24 px-6">
             <div class="max-w-3xl mx-auto">
-                <h1 class="text-4xl sm:text-5xl font-semibold leading-tight mb-6" data-aos="fade-up" data-i18n="hero.title">
-                    Built for creators who want<br><span class="text-highlight">professional video editing</span>, free.
+                <h1 class="text-4xl sm:text-5xl font-semibold leading-tight mb-6" data-aos="fade-up">
+                    Your Video OS for<br><span class="typewriter-text text-highlight"></span><span class="typewriter-cursor">|</span>
                 </h1>
                 <p class="text-xl text-muted mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="100" data-i18n="hero.subtitle">
-                    QCut is the best way to edit videos with AI. Timeline editing, 40+ AI models, and complete privacy - all without subscriptions or watermarks.
+                    The AI-native platform for professional video production. Timeline editing, 40+ AI models, and complete privacy — no subscriptions, no watermarks.
                 </p>
 
                 <!-- Beta Badge -->
@@ -230,7 +243,7 @@
                     </span>
                 </div>
                 <div class="mockup-glow rounded-2xl overflow-hidden shadow-2xl border border-main" data-aos="fade-up" data-aos-delay="100">
-                    <img src="assets/qcut-editor-mockup.png" alt="QCut Editor Interface" class="w-full h-auto" loading="lazy">
+                    <img src="assets/qcut-editor-real.png" alt="QCut Editor Interface" class="w-full h-auto" loading="lazy">
                 </div>
                 <div class="mt-6 flex flex-wrap justify-center gap-6 text-sm text-muted" data-aos="fade-up" data-aos-delay="200">
                     <span class="flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4"></i> Multi-track Timeline</span>
@@ -653,8 +666,8 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6" style="background: var(--color-primary-light);">
                     <i data-lucide="play" class="w-7 h-7" style="color: var(--color-primary);"></i>
                 </div>
-                <h2 class="text-3xl font-semibold mb-4" data-i18n="cta.title">Start creating today</h2>
-                <p class="text-muted mb-10 text-lg" data-i18n="cta.subtitle">Download QCut and experience the future of video editing.</p>
+                <h2 class="text-3xl font-semibold mb-4" data-i18n="cta.title">Start producing today</h2>
+                <p class="text-muted mb-10 text-lg" data-i18n="cta.subtitle">Download QCut and experience the AI-native Video OS.</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a href="https://github.com/donghaozhang/qcut/releases" class="btn-dark px-8 py-3.5 rounded-full text-base font-medium inline-flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow" data-i18n="hero.downloadWindows">Download for Windows</a>
                     <!-- GitHub link hidden temporarily
@@ -670,7 +683,7 @@
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-2">
                 <img src="assets/qcut-logo.png" alt="QCut" class="h-5 w-5">
-                <span class="text-sm text-muted" data-i18n="footer.tagline">QCut — Free AI video editor</span>
+                <span class="text-sm text-muted" data-i18n="footer.tagline">QCut — Your Video OS</span>
             </div>
             <div class="flex items-center space-x-4">
                 <a href="https://x.com/peter6759" target="_blank" class="text-muted hover:text-primary transition-colors" aria-label="Follow us on X">
@@ -780,6 +793,39 @@
     <script src="i18n.js"></script>
     <script>
         lucide.createIcons();
+
+        // Typewriter effect
+        (function() {
+            const words = ['Film', 'TV Series', 'Commercial', 'Music Video', 'Short Film', 'Documentary'];
+            const el = document.querySelector('.typewriter-text');
+            if (!el) return;
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function tick() {
+                const current = words[wordIndex];
+                if (isDeleting) {
+                    el.textContent = current.substring(0, charIndex--);
+                    if (charIndex < 0) {
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length;
+                        setTimeout(tick, 400);
+                        return;
+                    }
+                    setTimeout(tick, 40);
+                } else {
+                    el.textContent = current.substring(0, ++charIndex);
+                    if (charIndex === current.length) {
+                        isDeleting = true;
+                        setTimeout(tick, 2000);
+                        return;
+                    }
+                    setTimeout(tick, 80);
+                }
+            }
+            setTimeout(tick, 600);
+        })();
 
         // AOS — use quart easing for natural deceleration
         AOS.init({

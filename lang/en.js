@@ -7,8 +7,7 @@ const en = {
     "nav.download": "Download",
 
     // Hero
-    "hero.title": "Built for creators who want professional video editing, free.",
-    "hero.subtitle": "QCut is the best way to edit videos with AI. Timeline editing, 40+ AI models, and complete privacy - all without subscriptions or watermarks.",
+    "hero.subtitle": "The AI-native platform for professional video production. Timeline editing, 40+ AI models, and complete privacy — no subscriptions, no watermarks.",
     "hero.betaVersion": "Beta v0.3.53 - Free & Open Source",
     "hero.downloadWindows": "Windows",
     "hero.downloadMac": "macOS",
@@ -94,12 +93,12 @@ const en = {
     "contact.emailUs": "Or email us directly:",
 
     // CTA
-    "cta.title": "Start creating today",
-    "cta.subtitle": "Download QCut and experience the future of video editing.",
+    "cta.title": "Start producing today",
+    "cta.subtitle": "Download QCut and experience the AI-native Video OS.",
     "cta.viewOnGithub": "View on GitHub",
 
     // Footer
-    "footer.tagline": "QCut — Free AI video editor",
+    "footer.tagline": "QCut — Your Video OS",
     // Pricing
     "nav.pricing": "Pricing",
     "pricing.title": "Choose your plan",

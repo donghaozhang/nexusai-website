@@ -7,8 +7,7 @@ const zh = {
     "nav.download": "下载",
 
     // Hero
-    "hero.title": "为追求专业视频剪辑的创作者打造，完全免费。",
-    "hero.subtitle": "QCut 是用 AI 剪辑视频的最佳方式。时间轴编辑、40+ AI 模型、完全隐私保护 - 无需订阅，无水印。",
+    "hero.subtitle": "AI 原生的专业视频制作平台。时间轴编辑、40+ AI 模型、完全隐私保护 — 无需订阅，无水印。",
     "hero.betaVersion": "Beta v0.3.53 - 免费开源",
     "hero.downloadWindows": "Windows",
     "hero.downloadMac": "macOS",
@@ -94,12 +93,12 @@ const zh = {
     "contact.emailUs": "或直接发邮件给我们：",
 
     // CTA
-    "cta.title": "今天就开始创作",
-    "cta.subtitle": "下载 QCut，体验视频剪辑的未来。",
+    "cta.title": "今天就开始制作",
+    "cta.subtitle": "下载 QCut，体验 AI 原生 Video OS。",
     "cta.viewOnGithub": "在 GitHub 查看",
 
     // Footer
-    "footer.tagline": "QCut — 免费 AI 视频编辑器",
+    "footer.tagline": "QCut — Your Video OS",
     // Pricing
     "nav.pricing": "定价",
     "pricing.title": "选择你的方案",

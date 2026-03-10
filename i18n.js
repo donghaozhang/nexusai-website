@@ -43,7 +43,7 @@ function applyTranslations(lang) {
 	});
 
 	// Update page title
-	document.title = `QCut - ${lang === "zh" ? "AI 视频编辑器" : lang === "ja" ? "AIビデオエディター" : "The AI Video Editor"}`;
+	document.title = `QCut - ${lang === "zh" ? "Your Video OS" : lang === "ja" ? "Your Video OS" : "Your Video OS"}`;
 
 	// Update language selector display
 	updateLanguageSelector();

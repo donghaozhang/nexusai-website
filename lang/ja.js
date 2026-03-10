@@ -7,8 +7,7 @@ const ja = {
     "nav.download": "ダウンロード",
 
     // Hero
-    "hero.title": "プロ品質の動画編集を無料で、すべてのクリエイターへ。",
-    "hero.subtitle": "QCutはAIで動画を編集する最良の方法です。タイムライン編集、40以上のAIモデル、完全なプライバシー - サブスクも透かしも不要。",
+    "hero.subtitle": "プロの映像制作のためのAIネイティブプラットフォーム。タイムライン編集、40以上のAIモデル、完全なプライバシー — サブスクも透かしも不要。",
     "hero.betaVersion": "Beta v0.3.53 - 無料・オープンソース",
     "hero.downloadWindows": "Windows",
     "hero.downloadMac": "macOS",
@@ -94,12 +93,12 @@ const ja = {
     "contact.emailUs": "またはメールでお問い合わせ：",
 
     // CTA
-    "cta.title": "今日から始めよう",
-    "cta.subtitle": "QCutをダウンロードして、動画編集の未来を体験。",
+    "cta.title": "今日からプロダクションを始めよう",
+    "cta.subtitle": "QCutをダウンロードして、AIネイティブVideo OSを体験。",
     "cta.viewOnGithub": "GitHubで見る",
 
     // Footer
-    "footer.tagline": "QCut — 無料AIビデオエディター",
+    "footer.tagline": "QCut — Your Video OS",
     // Pricing
     "nav.pricing": "料金プラン",
     "pricing.title": "プランを選ぶ",
