@@ -194,7 +194,7 @@
                 <!-- Beta Badge -->
                 <div class="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-secondary border border-main" data-aos="fade-up" data-aos-delay="150">
                     <span class="w-2 h-2 rounded-full animate-pulse" style="background: var(--color-success);"></span>
-                    <span class="text-sm font-medium" data-i18n="hero.betaVersion">Beta v2026.2.1-8.2 - Free & Open Source</span>
+                    <span class="text-sm font-medium" id="hero-version">Beta - Free & Open Source</span>
                 </div>
 
                 <!-- Download Buttons -->
@@ -734,6 +734,14 @@
             const releases = await res.json();
             const stable = releases.filter(r => !r.prerelease && !r.draft);
             const pre = releases.filter(r => r.prerelease && !r.draft);
+
+            // Update hero version badge with latest release
+            const latest = stable[0] || pre[0];
+            const versionEl = document.getElementById('hero-version');
+            if (latest && versionEl) {
+                versionEl.textContent = (latest.prerelease ? 'Beta ' : '') + latest.tag_name + ' - Free & Open Source';
+            }
+
             const el = document.getElementById('home-release-cards');
             if (!el) return;
 
