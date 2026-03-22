@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCut - CLI Reference</title>
+    <meta name="description" content="QCut Pipeline CLI — complete command reference for AI content generation, video analysis, transcription, and agentic video production." />
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+    <style>
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .cmd-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: border-color 0.25s var(--ease-out-quart), box-shadow 0.25s var(--ease-out-quart);
+        }
+        .cmd-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 4px 16px oklch(0.2 0.01 30 / 0.08);
+        }
+        .cmd-code {
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .flag-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .flag-table th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .flag-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .flag-table tr:last-child td { border-bottom: none; }
+        .flag-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--color-primary);
+            white-space: nowrap;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-required { background: var(--color-error-light); color: var(--color-error); }
+        .badge-category {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+        .sidebar-link {
+            display: block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: background 0.15s, color 0.15s;
+            text-decoration: none;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        .sidebar-heading {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-light);
+            padding: 16px 12px 6px;
+        }
+        .search-input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px 8px 36px;
+            width: 100%;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+        .search-input::placeholder { color: var(--text-light); }
+        @media (max-width: 1023px) {
+            .sidebar-desktop { display: none; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="index.html#features" class="nav-link text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="index.html#ai" class="nav-link text-sm text-muted hover:text-primary transition-colors">AI Models</a>
+                        <a href="releases.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="cli.html" class="text-sm font-medium transition-colors" style="color: var(--text-primary);">CLI</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('open')" class="hamburger items-center justify-center theme-toggle md:hidden" aria-label="Open menu">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="mobile-menu fixed top-14 left-0 w-full z-40 bg-primary border-b border-main md:hidden">
+        <div class="px-6 py-2 space-y-1">
+            <a href="index.html#features" class="block text-sm text-muted">Features</a>
+            <a href="index.html#ai" class="block text-sm text-muted">AI Models</a>
+            <a href="releases.html" class="block text-sm text-muted">Releases</a>
+            <a href="cli.html" class="block text-sm font-medium" style="color: var(--text-primary);">CLI</a>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-20 pb-16 flex gap-8">
+        <!-- Sidebar -->
+        <aside class="sidebar-desktop w-56 flex-shrink-0 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+            <div class="relative mb-4">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style="color: var(--text-light);"></i>
+                <input type="text" id="cmd-search" class="search-input" placeholder="Search commands..." oninput="filterCommands(this.value)">
+            </div>
+
+            <div class="sidebar-heading">Getting Started</div>
+            <a href="#installation" class="sidebar-link">Installation</a>
+            <a href="#quick-start" class="sidebar-link">Quick Start</a>
+
+            <div class="sidebar-heading">Generation</div>
+            <a href="#generate-image" class="sidebar-link">generate-image</a>
+            <a href="#create-video" class="sidebar-link">create-video</a>
+            <a href="#generate-avatar" class="sidebar-link">generate-avatar</a>
+            <a href="#transfer-motion" class="sidebar-link">transfer-motion</a>
+            <a href="#generate-grid" class="sidebar-link">generate-grid</a>
+            <a href="#upscale-image" class="sidebar-link">upscale-image</a>
+
+            <div class="sidebar-heading">Analysis</div>
+            <a href="#analyze-video" class="sidebar-link">analyze-video</a>
+            <a href="#transcribe" class="sidebar-link">transcribe</a>
+            <a href="#query-video" class="sidebar-link">query-video</a>
+            <a href="#autoclip" class="sidebar-link">autoclip</a>
+            <a href="#translate-video" class="sidebar-link">translate-video</a>
+
+            <div class="sidebar-heading">Pipelines</div>
+            <a href="#run-pipeline" class="sidebar-link">run-pipeline</a>
+            <a href="#pipeline-yaml" class="sidebar-link">YAML Schema</a>
+
+            <div class="sidebar-heading">ViMax</div>
+            <a href="#vimax-idea2video" class="sidebar-link">idea2video</a>
+            <a href="#vimax-script2video" class="sidebar-link">script2video</a>
+            <a href="#vimax-novel2movie" class="sidebar-link">novel2movie</a>
+            <a href="#vimax-portraits" class="sidebar-link">Portraits</a>
+
+            <div class="sidebar-heading">Utilities</div>
+            <a href="#list-models" class="sidebar-link">list-models</a>
+            <a href="#api-keys" class="sidebar-link">API Keys</a>
+            <a href="#project-management" class="sidebar-link">Project Management</a>
+            <a href="#youtube-upload" class="sidebar-link">YouTube Upload</a>
+            <a href="#global-options" class="sidebar-link">Global Options</a>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 min-w-0">
+            <!-- Hero -->
+            <div class="mb-12">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="badge badge-category">CLI v1.0</span>
+                </div>
+                <h1 class="text-4xl font-bold mb-3">Pipeline CLI Reference</h1>
+                <p class="text-lg" style="color: var(--text-muted);">
+                    AI content generation, video analysis, transcription, YAML pipelines, and agentic video production — all from the command line.
+                </p>
+                <div class="cmd-code mt-6 p-4">
+                    <span style="color: oklch(0.7 0.1 155);">$</span> bun run pipeline &lt;command&gt; [options]
+                </div>
+            </div>
+
+            <!-- Installation -->
+            <section id="installation" class="cmd-section mb-12">
+                <h2 class="text-2xl font-bold mb-4">Installation</h2>
+                <div class="cmd-card p-6">
+                    <p class="mb-4" style="color: var(--text-muted);">The CLI is bundled with QCut. Three ways to run it:</p>
+                    <div class="cmd-code p-4 space-y-2">
+                        <div><span style="color: oklch(0.6 0.08 195);"># Dev (recommended)</span></div>
+                        <div>bun run pipeline &lt;command&gt; [options]</div>
+                        <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Direct source</span></div>
+                        <div>bun run electron/native-pipeline/cli/cli.ts &lt;command&gt; [options]</div>
+                        <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Production binary</span></div>
+                        <div>qcut-pipeline &lt;command&gt; [options]</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start -->
+            <section id="quick-start" class="cmd-section mb-12">
+                <h2 class="text-2xl font-bold mb-4">Quick Start</h2>
+                <div class="cmd-card p-6">
+                    <div class="cmd-code p-4 space-y-1">
+                        <div><span style="color: oklch(0.6 0.08 195);"># Generate an image</span></div>
+                        <div>bun run pipeline generate-image -t "A cinematic portrait at golden hour"</div>
+                        <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Create a video</span></div>
+                        <div>bun run pipeline create-video -m kling_2_6_pro -t "Ocean waves at sunset" -d 5s</div>
+                        <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Transcribe audio</span></div>
+                        <div>bun run pipeline transcribe -i audio.mp3 --srt</div>
+                        <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Run a YAML pipeline</span></div>
+                        <div>bun run pipeline run-pipeline -c pipeline.yaml -i "A sunset" --no-confirm</div>
+                        <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Full video from an idea (ViMax)</span></div>
+                        <div>bun run pipeline vimax:idea2video --idea "A detective in 1920s Paris" -d 120</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── GENERATION ── -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold">Generation Commands</h2>
+                <p class="text-sm mt-1" style="color: var(--text-muted);">Create images, videos, avatars, and more with AI models.</p>
+            </div>
+
+            <!-- generate-image -->
+            <section id="generate-image" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">generate-image</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Generate an image from a text prompt.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline generate-image -t "A cat in space" -m flux_dev --aspect-ratio 16:9</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Text prompt <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key (default: <code class="mono text-sm">nano_banana_pro</code>)</td></tr>
+                        <tr><td class="flag-name">--aspect-ratio</td><td></td><td>string</td><td>e.g. <code class="mono text-sm">16:9</code>, <code class="mono text-sm">9:16</code>, <code class="mono text-sm">1:1</code></td></tr>
+                        <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>e.g. <code class="mono text-sm">1080p</code>, <code class="mono text-sm">720p</code></td></tr>
+                        <tr><td class="flag-name">--negative-prompt</td><td></td><td>string</td><td>Negative prompt</td></tr>
+                        <tr><td class="flag-name">--output-dir</td><td class="mono text-sm">-o</td><td>string</td><td>Output directory</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- create-video -->
+            <section id="create-video" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">create-video</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Create a video from text or image input.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline create-video -m kling_2_6_pro -t "Ocean waves" -d 5s</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Text prompt</td></tr>
+                        <tr><td class="flag-name">--image-url</td><td></td><td>string</td><td>Input image (for image-to-video)</td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Duration, e.g. <code class="mono text-sm">5s</code></td></tr>
+                        <tr><td class="flag-name">--aspect-ratio</td><td></td><td>string</td><td>Aspect ratio</td></tr>
+                        <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>Resolution</td></tr>
+                        <tr><td class="flag-name">--negative-prompt</td><td></td><td>string</td><td>Negative prompt</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- generate-avatar -->
+            <section id="generate-avatar" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">generate-avatar</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Generate a talking avatar video.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline generate-avatar -t "Hello world" --image-url avatar.png</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Script text</td></tr>
+                        <tr><td class="flag-name">--image-url</td><td></td><td>string</td><td>Avatar image</td></tr>
+                        <tr><td class="flag-name">--audio-url</td><td></td><td>string</td><td>Input audio URL</td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key</td></tr>
+                        <tr><td class="flag-name">--voice-id</td><td></td><td>string</td><td>Voice ID for TTS</td></tr>
+                        <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Duration</td></tr>
+                        <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>Resolution</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- transfer-motion -->
+            <section id="transfer-motion" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">transfer-motion</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Transfer motion from a reference video onto an image.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline transfer-motion --image-url photo.png --video-url dance.mp4</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--image-url</td><td></td><td>string</td><td>Source image <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--video-url</td><td></td><td>string</td><td>Reference motion video <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key (default: <code class="mono text-sm">kling_motion_control</code>)</td></tr>
+                        <tr><td class="flag-name">--no-sound</td><td></td><td>boolean</td><td>Strip audio</td></tr>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Motion prompt</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- generate-grid -->
+            <section id="generate-grid" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">generate-grid</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Generate a grid of images from a prompt.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline generate-grid -t "Futuristic cityscape" --layout 3x3</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Prompt <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Image model (default: <code class="mono text-sm">flux_dev</code>)</td></tr>
+                        <tr><td class="flag-name">--layout</td><td></td><td>string</td><td>Grid: <code class="mono text-sm">2x2</code>, <code class="mono text-sm">3x3</code>, <code class="mono text-sm">2x3</code>, etc.</td></tr>
+                        <tr><td class="flag-name">--style</td><td></td><td>string</td><td>Style prefix prepended to prompt</td></tr>
+                        <tr><td class="flag-name">--grid-upscale</td><td></td><td>float</td><td>Upscale factor after compositing</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- upscale-image -->
+            <section id="upscale-image" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">upscale-image</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Upscale an image to higher resolution.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline upscale-image -i photo.png --target 2160p</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Image path or URL</td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Upscaling model (default: <code class="mono text-sm">topaz</code>)</td></tr>
+                        <tr><td class="flag-name">--target</td><td></td><td>string</td><td><code class="mono text-sm">720p</code>(1x), <code class="mono text-sm">1080p</code>(2x), <code class="mono text-sm">1440p</code>(3x), <code class="mono text-sm">2160p</code>(4x)</td></tr>
+                        <tr><td class="flag-name">--output-format</td><td class="mono text-sm">-f</td><td>string</td><td>Output format (default: <code class="mono text-sm">png</code>)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── ANALYSIS ── -->
+            <div class="mb-6 mt-12">
+                <h2 class="text-2xl font-bold">Analysis Commands</h2>
+                <p class="text-sm mt-1" style="color: var(--text-muted);">Analyze, transcribe, query, and clip videos with AI.</p>
+            </div>
+
+            <!-- analyze-video -->
+            <section id="analyze-video" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">analyze-video</h3>
+                    <span class="badge badge-category">Analysis</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Analyze a video with AI vision.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline analyze-video -i video.mp4 --analysis-type summary</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Video file or URL <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Vision model (default: <code class="mono text-sm">gemini_qa</code>)</td></tr>
+                        <tr><td class="flag-name">--analysis-type</td><td></td><td>string</td><td><code class="mono text-sm">timeline</code>, <code class="mono text-sm">summary</code>, <code class="mono text-sm">description</code>, <code class="mono text-sm">transcript</code></td></tr>
+                        <tr><td class="flag-name">--prompt</td><td></td><td>string</td><td>Custom prompt (overrides analysis-type)</td></tr>
+                        <tr><td class="flag-name">--output-format</td><td class="mono text-sm">-f</td><td>string</td><td><code class="mono text-sm">md</code>, <code class="mono text-sm">json</code>, <code class="mono text-sm">both</code></td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- transcribe -->
+            <section id="transcribe" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">transcribe</h3>
+                    <span class="badge badge-category">Analysis</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Transcribe audio to text with optional SRT subtitle output.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline transcribe -i audio.mp3 --srt --language en</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Audio file or URL <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>STT model (default: <code class="mono text-sm">scribe_v2</code>)</td></tr>
+                        <tr><td class="flag-name">--language</td><td></td><td>string</td><td>Language code (e.g. <code class="mono text-sm">en</code>, <code class="mono text-sm">fr</code>)</td></tr>
+                        <tr><td class="flag-name">--srt</td><td></td><td>boolean</td><td>Generate <code class="mono text-sm">.srt</code> subtitle file</td></tr>
+                        <tr><td class="flag-name">--srt-max-words</td><td></td><td>integer</td><td>Max words per SRT block</td></tr>
+                        <tr><td class="flag-name">--no-diarize</td><td></td><td>boolean</td><td>Disable speaker diarization</td></tr>
+                        <tr><td class="flag-name">--keyterms</td><td></td><td>string[]</td><td>Domain keywords (repeatable)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- query-video -->
+            <section id="query-video" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">query-video</h3>
+                    <span class="badge badge-category">Analysis</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Query video segments for keep/cut analysis.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline query-video -i video.mp4 -t "Find all action scenes"</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Video file or URL <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--prompt</td><td></td><td>string</td><td>Query prompt</td></tr>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Alias for prompt</td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Vision model (default: <code class="mono text-sm">gemini_qa</code>)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- autoclip -->
+            <section id="autoclip" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">autoclip</h3>
+                    <span class="badge badge-category">Analysis</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Extract highlight clips from a video using subtitle-based LLM analysis. 4-step pipeline: outline &rarr; timeline &rarr; scoring &rarr; ffmpeg cutting.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline autoclip -i video.mp4 -s subs.srt -o /tmp/clips --min-score 0.8</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Input video file <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--srt-file</td><td class="mono text-sm">-s</td><td>string</td><td>SRT/VTT subtitle file (auto-detects if omitted)</td></tr>
+                        <tr><td class="flag-name">--output</td><td class="mono text-sm">-o</td><td>string</td><td>Output directory for clips</td></tr>
+                        <tr><td class="flag-name">--min-score</td><td></td><td>number</td><td>Minimum score threshold 0-1 (default: <code class="mono text-sm">0.7</code>)</td></tr>
+                        <tr><td class="flag-name">--step</td><td></td><td>number</td><td>Run only a specific step (1-4)</td></tr>
+                        <tr><td class="flag-name">--dry-run</td><td></td><td>boolean</td><td>Run analysis only, skip cutting</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- translate-video -->
+            <section id="translate-video" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">translate-video</h3>
+                    <span class="badge badge-category">Analysis</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Translate a video's speech into another language using HeyGen Translate.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline translate-video -i video.mp4 -l Spanish</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Video file or URL <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--language</td><td class="mono text-sm">-l</td><td>string</td><td>Target language <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--output</td><td class="mono text-sm">-o</td><td>string</td><td>Output directory</td></tr>
+                        <tr><td class="flag-name">--audio-only</td><td></td><td>boolean</td><td>Translate audio only (keep original video)</td></tr>
+                        <tr><td class="flag-name">--speakers</td><td></td><td>number</td><td>Number of speakers in the video</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── PIPELINES ── -->
+            <div class="mb-6 mt-12">
+                <h2 class="text-2xl font-bold">YAML Pipelines</h2>
+                <p class="text-sm mt-1" style="color: var(--text-muted);">Chain multiple AI steps into automated workflows.</p>
+            </div>
+
+            <!-- run-pipeline -->
+            <section id="run-pipeline" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">run-pipeline</h3>
+                    <span class="badge badge-category">Pipeline</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Run a multi-step YAML pipeline.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline run-pipeline -c pipeline.yaml -i "A sunset" --no-confirm</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--config</td><td class="mono text-sm">-c</td><td>string</td><td>YAML pipeline file <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Input text, file, or <code class="mono text-sm">-</code> for stdin</td></tr>
+                        <tr><td class="flag-name">--save-intermediates</td><td></td><td>boolean</td><td>Save each step's output</td></tr>
+                        <tr><td class="flag-name">--parallel</td><td></td><td>boolean</td><td>Parallel step execution</td></tr>
+                        <tr><td class="flag-name">--max-workers</td><td></td><td>integer</td><td>Max concurrent workers (default: <code class="mono text-sm">8</code>)</td></tr>
+                        <tr><td class="flag-name">--no-confirm</td><td></td><td>boolean</td><td>Skip cost confirmation</td></tr>
+                        <tr><td class="flag-name">--stream</td><td></td><td>boolean</td><td>JSONL progress on stderr</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Pipeline YAML Schema -->
+            <section id="pipeline-yaml" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Pipeline YAML Schema</h3>
+                </div>
+                <div class="cmd-code p-4 text-sm">
+<pre>name: my-pipeline
+steps:
+  - type: text_to_image
+    model: flux_dev
+    params:
+      image_size: landscape_16_9
+    enabled: true
+    retry_count: 0
+
+  - type: parallel_group
+    merge_strategy: COLLECT_ALL
+    steps:
+      - type: text_to_image
+        model: flux_schnell
+
+config:
+  output_dir: ./output
+  save_intermediates: true
+  parallel: false
+  max_workers: 8</pre>
+                </div>
+                <p class="mt-4 text-sm" style="color: var(--text-muted);">
+                    <strong>Step types:</strong>
+                    <code class="mono text-xs">text_to_image</code>,
+                    <code class="mono text-xs">image_to_image</code>,
+                    <code class="mono text-xs">text_to_video</code>,
+                    <code class="mono text-xs">image_to_video</code>,
+                    <code class="mono text-xs">video_to_video</code>,
+                    <code class="mono text-xs">avatar</code>,
+                    <code class="mono text-xs">motion_transfer</code>,
+                    <code class="mono text-xs">upscale</code>,
+                    <code class="mono text-xs">upscale_video</code>,
+                    <code class="mono text-xs">add_audio</code>,
+                    <code class="mono text-xs">text_to_speech</code>,
+                    <code class="mono text-xs">speech_to_text</code>,
+                    <code class="mono text-xs">image_understanding</code>,
+                    <code class="mono text-xs">prompt_generation</code>
+                </p>
+            </section>
+
+            <!-- ── VIMAX ── -->
+            <div class="mb-6 mt-12">
+                <h2 class="text-2xl font-bold">ViMax &mdash; Agentic Video Production</h2>
+                <p class="text-sm mt-1" style="color: var(--text-muted);">End-to-end AI video production: from idea to finished film.</p>
+            </div>
+
+            <!-- vimax:idea2video -->
+            <section id="vimax-idea2video" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">vimax:idea2video</h3>
+                    <span class="badge badge-category">ViMax</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Full pipeline: idea &rarr; screenplay &rarr; characters &rarr; portraits &rarr; storyboard &rarr; video.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline vimax:idea2video --idea "A detective in 1920s Paris" -d 120</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--idea</td><td></td><td>string</td><td>Story idea <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Target duration (seconds)</td></tr>
+                        <tr><td class="flag-name">--no-portraits</td><td></td><td>boolean</td><td>Skip portrait generation</td></tr>
+                        <tr><td class="flag-name">--no-references</td><td></td><td>boolean</td><td>Disable character references</td></tr>
+                        <tr><td class="flag-name">--config</td><td class="mono text-sm">-c</td><td>string</td><td>YAML config overrides</td></tr>
+                        <tr><td class="flag-name">--llm-model</td><td></td><td>string</td><td>Override LLM agent model</td></tr>
+                        <tr><td class="flag-name">--image-model</td><td></td><td>string</td><td>Override image model</td></tr>
+                        <tr><td class="flag-name">--video-model</td><td></td><td>string</td><td>Override video model</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- vimax:script2video -->
+            <section id="vimax-script2video" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">vimax:script2video</h3>
+                    <span class="badge badge-category">ViMax</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Script &rarr; storyboard &rarr; video (from existing script.json).</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline vimax:script2video --script script.json --portraits registry.json</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--script</td><td></td><td>string</td><td>Script JSON path <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--portraits</td><td class="mono text-sm">-p</td><td>string</td><td>Portrait registry JSON path</td></tr>
+                        <tr><td class="flag-name">--no-references</td><td></td><td>boolean</td><td>Disable character references</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- vimax:novel2movie -->
+            <section id="vimax-novel2movie" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">vimax:novel2movie</h3>
+                    <span class="badge badge-category">ViMax</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Novel text file &rarr; chapter extraction &rarr; screenplay &rarr; video.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline vimax:novel2movie --novel book.txt --max-scenes 20</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--novel</td><td></td><td>string</td><td>Novel text file <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--title</td><td></td><td>string</td><td>Override title</td></tr>
+                        <tr><td class="flag-name">--max-scenes</td><td></td><td>integer</td><td>Cap total scenes</td></tr>
+                        <tr><td class="flag-name">--no-portraits</td><td></td><td>boolean</td><td>Skip portraits</td></tr>
+                        <tr><td class="flag-name">--scripts-only</td><td></td><td>boolean</td><td>Stop after scripts</td></tr>
+                        <tr><td class="flag-name">--storyboard-only</td><td></td><td>boolean</td><td>Stop after storyboard</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- vimax portraits -->
+            <section id="vimax-portraits" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">ViMax Portrait & Script Commands</h3>
+                    <span class="badge badge-category">ViMax</span>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:generate-script</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">Generate screenplay from an idea. Flags: <code class="mono text-xs">--idea</code>, <code class="mono text-xs">--duration</code>, <code class="mono text-xs">--llm-model</code></p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:extract-characters</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">Extract character descriptions from text. Flags: <code class="mono text-xs">--text</code>, <code class="mono text-xs">--llm-model</code></p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:generate-portraits</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">Generate character portraits. Flags: <code class="mono text-xs">--text</code>, <code class="mono text-xs">--max-characters</code>, <code class="mono text-xs">--views</code>, <code class="mono text-xs">--image-model</code></p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:generate-storyboard</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">Generate storyboard images from script. Flags: <code class="mono text-xs">--script</code>, <code class="mono text-xs">--portraits</code>, <code class="mono text-xs">--style</code></p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:create-registry</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">Build portrait registry from directory. Flags: <code class="mono text-xs">--input</code>, <code class="mono text-xs">--project-id</code></p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:show-registry</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">Display registry contents. Flags: <code class="mono text-xs">--input</code></p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium mono text-sm mb-1">vimax:list-models</h4>
+                        <p class="text-sm" style="color: var(--text-muted);">List ViMax-relevant models (image, video, image-to-video).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── UTILITIES ── -->
+            <div class="mb-6 mt-12">
+                <h2 class="text-2xl font-bold">Utilities</h2>
+                <p class="text-sm mt-1" style="color: var(--text-muted);">Model discovery, API keys, project management, and more.</p>
+            </div>
+
+            <!-- list-models -->
+            <section id="list-models" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">list-models</h3>
+                    <span class="badge badge-category">Discovery</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">List all available AI models. Filter by category.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline list-models --category text_to_video --json</div>
+                <p class="text-sm" style="color: var(--text-muted);">
+                    <strong>Specialized lists:</strong>
+                    <code class="mono text-xs">list-avatar-models</code>,
+                    <code class="mono text-xs">list-video-models</code>,
+                    <code class="mono text-xs">list-motion-models</code>,
+                    <code class="mono text-xs">list-speech-models</code>
+                </p>
+                <div class="mt-4">
+                    <h4 class="font-medium text-sm mb-2">estimate-cost</h4>
+                    <div class="cmd-code p-3">bun run pipeline estimate-cost -m veo3 -d 8s</div>
+                </div>
+            </section>
+
+            <!-- API Keys -->
+            <section id="api-keys" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">API Key Management</h3>
+                    <span class="badge badge-category">Config</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Keys stored in <code class="mono text-sm">~/.qcut/.env</code> (mode 0600).</p>
+                <div class="cmd-code p-4 space-y-1 text-sm">
+                    <div><span style="color: oklch(0.6 0.08 195);"># Create .env template</span></div>
+                    <div>bun run pipeline setup</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Set a key</span></div>
+                    <div>bun run pipeline set-key --name FAL_KEY --value &lt;key&gt;</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check all keys</span></div>
+                    <div>bun run pipeline check-keys</div>
+                </div>
+                <p class="mt-4 text-sm" style="color: var(--text-muted);">
+                    <strong>Supported keys:</strong>
+                    <code class="mono text-xs">FAL_KEY</code>,
+                    <code class="mono text-xs">GEMINI_API_KEY</code>,
+                    <code class="mono text-xs">OPENROUTER_API_KEY</code>,
+                    <code class="mono text-xs">ELEVENLABS_API_KEY</code>,
+                    <code class="mono text-xs">OPENAI_API_KEY</code>,
+                    <code class="mono text-xs">RUNWAY_API_KEY</code>,
+                    <code class="mono text-xs">HEYGEN_API_KEY</code>,
+                    <code class="mono text-xs">DID_API_KEY</code>,
+                    <code class="mono text-xs">SYNTHESIA_API_KEY</code>
+                </p>
+            </section>
+
+            <!-- Project Management -->
+            <section id="project-management" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Project Management</h3>
+                    <span class="badge badge-category">Config</span>
+                </div>
+                <div class="cmd-code p-4 space-y-1 text-sm">
+                    <div><span style="color: oklch(0.6 0.08 195);"># Initialize project structure</span></div>
+                    <div>bun run pipeline init-project --directory ./my-project</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Preview file organization</span></div>
+                    <div>bun run pipeline organize-project --directory ./my-project --source ./incoming --dry-run</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Execute organization</span></div>
+                    <div>bun run pipeline organize-project --directory ./my-project --source ./incoming --recursive</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check structure</span></div>
+                    <div>bun run pipeline structure-info --directory ./my-project --json</div>
+                </div>
+            </section>
+
+            <!-- YouTube Upload -->
+            <section id="youtube-upload" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">youtube:upload</h3>
+                    <span class="badge badge-category">Upload</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Upload videos to YouTube via Google OAuth.</p>
+                <div class="cmd-code p-3 mb-4">bun run pipeline youtube:upload -i video.mp4 --title "My Video" --mode unlisted</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Path to video file <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--title</td><td></td><td>string</td><td>Video title <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--text</td><td></td><td>string</td><td>Video description</td></tr>
+                        <tr><td class="flag-name">--data</td><td></td><td>string</td><td>Comma-separated tags</td></tr>
+                        <tr><td class="flag-name">--mode</td><td></td><td>string</td><td><code class="mono text-sm">public</code>, <code class="mono text-sm">unlisted</code>, <code class="mono text-sm">private</code></td></tr>
+                        <tr><td class="flag-name">--category</td><td></td><td>number</td><td>YouTube category ID (default: <code class="mono text-sm">22</code>)</td></tr>
+                        <tr><td class="flag-name">--image</td><td></td><td>string</td><td>Path to thumbnail image</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Global Options -->
+            <section id="global-options" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Global Options</h3>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">These flags work with all commands.</p>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--output-dir</td><td class="mono text-sm">-o</td><td>Output directory (default: <code class="mono text-sm">./output</code>)</td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>Model key</td></tr>
+                        <tr><td class="flag-name">--json</td><td></td><td>JSON output with <code class="mono text-sm">command_id</code> and <code class="mono text-sm">duration_ms</code></td></tr>
+                        <tr><td class="flag-name">--quiet</td><td class="mono text-sm">-q</td><td>Suppress progress and exit metadata</td></tr>
+                        <tr><td class="flag-name">--verbose</td><td class="mono text-sm">-v</td><td>Debug logging + JSONL events on stderr</td></tr>
+                        <tr><td class="flag-name">--stream</td><td></td><td>JSONL progress events on stderr</td></tr>
+                        <tr><td class="flag-name">--help</td><td class="mono text-sm">-h</td><td>Print help</td></tr>
+                    </tbody>
+                </table>
+                <div class="mt-6">
+                    <h4 class="font-medium text-sm mb-3">JSON Output Envelope</h4>
+                    <div class="cmd-code p-4 text-sm">
+<pre>{
+  "status": "ok",
+  "command_id": "cmd-1741830000-a1b2c3",
+  "duration_ms": 8300,
+  "data": {
+    "command": "generate-image",
+    "success": true,
+    "outputPath": "./output/cli-1234/output_1234.png",
+    "cost": 0.005
+  }
+}</pre>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h4 class="font-medium text-sm mb-3">Exit Codes</h4>
+                    <table class="flag-table">
+                        <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+                        <tbody>
+                            <tr><td class="mono font-medium">0</td><td>Success</td></tr>
+                            <tr><td class="mono font-medium">1</td><td>General error</td></tr>
+                            <tr><td class="mono font-medium">2</td><td>Invalid arguments / unknown command</td></tr>
+                            <tr><td class="mono font-medium">3</td><td>Model not found</td></tr>
+                            <tr><td class="mono font-medium">4</td><td>API key missing</td></tr>
+                            <tr><td class="mono font-medium">5</td><td>API call failed</td></tr>
+                            <tr><td class="mono font-medium">6</td><td>Pipeline failed</td></tr>
+                            <tr><td class="mono font-medium">7</td><td>File not found</td></tr>
+                            <tr><td class="mono font-medium">8</td><td>Permission denied</td></tr>
+                            <tr><td class="mono font-medium">9</td><td>Timeout</td></tr>
+                            <tr><td class="mono font-medium">10</td><td>Cancelled</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 3-Level Help -->
+            <section class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Progressive Help System</h3>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">3-level structured help available with <code class="mono text-sm">--help --json</code>.</p>
+                <div class="cmd-code p-4 space-y-1 text-sm">
+                    <div><span style="color: oklch(0.6 0.08 195);"># Level 1: All commands</span></div>
+                    <div>bun run pipeline --help --json</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Level 2: Command detail</span></div>
+                    <div>bun run pipeline generate-image --help --json</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Level 3: Parameter detail</span></div>
+                    <div>bun run pipeline generate-image --help model --json</div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <img src="assets/qcut-logo.png" alt="QCut" class="h-6 w-6">
+                    <span class="text-sm" style="color: var(--text-muted);">QCut Pipeline CLI</span>
+                </div>
+                <p class="text-sm" style="color: var(--text-light);">Your Video OS</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Sidebar active link tracking
+        const sections = document.querySelectorAll('.cmd-section[id]');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        const observer = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    for (const link of sidebarLinks) {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                    }
+                }
+            }
+        }, { rootMargin: '-80px 0px -70% 0px' });
+
+        for (const section of sections) {
+            observer.observe(section);
+        }
+
+        // Search/filter commands
+        function filterCommands(query) {
+            const q = query.toLowerCase().trim();
+            const cards = document.querySelectorAll('.cmd-section');
+            for (const card of cards) {
+                if (!q) {
+                    card.style.display = '';
+                    continue;
+                }
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(q) ? '' : 'none';
+            }
+        }
+
+        // Nav scroll shadow
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            nav.classList.toggle('nav-scrolled', window.scrollY > 10);
+        });
+    </script>
+</body>
+</html>
