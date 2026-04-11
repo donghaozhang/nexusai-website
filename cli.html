@@ -170,7 +170,6 @@
             <a href="#generate-image" class="sidebar-link">gen image</a>
             <a href="#create-video" class="sidebar-link">gen video</a>
             <a href="#generate-avatar" class="sidebar-link">gen avatar</a>
-            <a href="#generate-grid" class="sidebar-link">gen grid</a>
 
             <div class="sidebar-heading">edit</div>
             <a href="#autoclip" class="sidebar-link">edit autoclip</a>
@@ -275,7 +274,7 @@
                     <h3 class="text-lg font-semibold mono">gen image</h3>
                     <span class="badge badge-category">Generation</span>
                 </div>
-                <p class="mb-4" style="color: var(--text-muted);">Generate an image from a text prompt.</p>
+                <p class="mb-4" style="color: var(--text-muted);">Generate an image from a text prompt. Use <code class="mono text-sm">--grid</code> to produce a composite grid of images.</p>
                 <div class="cmd-code p-3 mb-4">qcut gen image -t "A cat in space" -m flux_dev --aspect-ratio 16:9</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
@@ -285,9 +284,13 @@
                         <tr><td class="flag-name">--aspect-ratio</td><td></td><td>string</td><td>e.g. <code class="mono text-sm">16:9</code>, <code class="mono text-sm">9:16</code>, <code class="mono text-sm">1:1</code></td></tr>
                         <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>e.g. <code class="mono text-sm">1080p</code>, <code class="mono text-sm">720p</code></td></tr>
                         <tr><td class="flag-name">--negative-prompt</td><td></td><td>string</td><td>Negative prompt</td></tr>
+                        <tr><td class="flag-name">--grid</td><td></td><td>string</td><td>Grid layout: <code class="mono text-sm">2x2</code>, <code class="mono text-sm">3x3</code>, <code class="mono text-sm">2x3</code>, etc.</td></tr>
+                        <tr><td class="flag-name">--grid-upscale</td><td></td><td>float</td><td>Upscale factor after grid compositing</td></tr>
+                        <tr><td class="flag-name">--style</td><td></td><td>string</td><td>Style prefix prepended to prompt</td></tr>
                         <tr><td class="flag-name">--output-dir</td><td class="mono text-sm">-o</td><td>string</td><td>Output directory</td></tr>
                     </tbody>
                 </table>
+                <div class="cmd-code p-3 mb-4">qcut gen image -t "Seasons of a tree" --grid 2x2</div>
             </section>
 
             <!-- create-video -->
@@ -330,26 +333,6 @@
                         <tr><td class="flag-name">--voice-id</td><td></td><td>string</td><td>Voice ID for TTS</td></tr>
                         <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Duration</td></tr>
                         <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>Resolution</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- generate-grid -->
-            <section id="generate-grid" class="cmd-section cmd-card p-6 mb-6">
-                <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold mono">gen grid</h3>
-                    <span class="badge badge-category">Generation</span>
-                </div>
-                <p class="mb-4" style="color: var(--text-muted);">Generate a grid of images from a prompt.</p>
-                <div class="cmd-code p-3 mb-4">qcut gen grid -t "Futuristic cityscape" --layout 3x3</div>
-                <table class="flag-table">
-                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
-                    <tbody>
-                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Prompt <span class="badge badge-required">required</span></td></tr>
-                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Image model (default: <code class="mono text-sm">flux_dev</code>)</td></tr>
-                        <tr><td class="flag-name">--layout</td><td></td><td>string</td><td>Grid: <code class="mono text-sm">2x2</code>, <code class="mono text-sm">3x3</code>, <code class="mono text-sm">2x3</code>, etc.</td></tr>
-                        <tr><td class="flag-name">--style</td><td></td><td>string</td><td>Style prefix prepended to prompt</td></tr>
-                        <tr><td class="flag-name">--grid-upscale</td><td></td><td>float</td><td>Upscale factor after compositing</td></tr>
                     </tbody>
                 </table>
             </section>
