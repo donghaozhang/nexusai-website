@@ -222,7 +222,7 @@
                     AI content generation, video analysis, transcription, YAML pipelines, and agentic video production — all from the command line.
                 </p>
                 <div class="cmd-code mt-6 p-4">
-                    <span style="color: oklch(0.7 0.1 155);">$</span> bun run pipeline &lt;group&gt; &lt;action&gt; [options]
+                    <span style="color: oklch(0.7 0.1 155);">$</span> qcut &lt;group&gt; &lt;action&gt; [options]
                 </div>
             </div>
 
@@ -233,11 +233,11 @@
                     <p class="mb-4" style="color: var(--text-muted);">The CLI is bundled with QCut. Commands use a <code class="mono text-sm">&lt;group&gt; &lt;action&gt;</code> syntax:</p>
                     <div class="cmd-code p-4 space-y-2">
                         <div><span style="color: oklch(0.6 0.08 195);"># Group syntax (recommended)</span></div>
-                        <div>bun run pipeline &lt;group&gt; &lt;action&gt; [options]</div>
+                        <div>qcut &lt;group&gt; &lt;action&gt; [options]</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Groups: gen, analyze, audio, edit, flow, system</span></div>
-                        <div>bun run pipeline gen image -t "A cat in space"</div>
+                        <div>qcut gen image -t "A cat in space"</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Production binary</span></div>
-                        <div>qcut-pipeline &lt;group&gt; &lt;action&gt; [options]</div>
+                        <div>qcut &lt;group&gt; &lt;action&gt; [options]</div>
                     </div>
                 </div>
             </section>
@@ -248,15 +248,15 @@
                 <div class="cmd-card p-6">
                     <div class="cmd-code p-4 space-y-1">
                         <div><span style="color: oklch(0.6 0.08 195);"># Generate an image</span></div>
-                        <div>bun run pipeline gen image -t "A cinematic portrait at golden hour"</div>
+                        <div>qcut gen image -t "A cinematic portrait at golden hour"</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Create a video</span></div>
-                        <div>bun run pipeline gen video -m kling_2_6_pro -t "Ocean waves at sunset" -d 5s</div>
+                        <div>qcut gen video -m kling_2_6_pro -t "Ocean waves at sunset" -d 5s</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Transcribe audio</span></div>
-                        <div>bun run pipeline audio transcribe -i audio.mp3 --srt</div>
+                        <div>qcut audio transcribe -i audio.mp3 --srt</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Run a YAML pipeline</span></div>
-                        <div>bun run pipeline flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
+                        <div>qcut flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Full video from an idea (ViMax)</span></div>
-                        <div>bun run pipeline flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
+                        <div>qcut flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
                     </div>
                 </div>
             </section>
@@ -274,7 +274,7 @@
                     <span class="badge badge-category">Generation</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Generate an image from a text prompt.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline gen image -t "A cat in space" -m flux_dev --aspect-ratio 16:9</div>
+                <div class="cmd-code p-3 mb-4">qcut gen image -t "A cat in space" -m flux_dev --aspect-ratio 16:9</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -295,7 +295,7 @@
                     <span class="badge badge-category">Generation</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Create a video from text or image input.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline gen video -m kling_2_6_pro -t "Ocean waves" -d 5s</div>
+                <div class="cmd-code p-3 mb-4">qcut gen video -m kling_2_6_pro -t "Ocean waves" -d 5s</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -317,7 +317,7 @@
                     <span class="badge badge-category">Generation</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Generate a talking avatar video.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline gen avatar -t "Hello world" --image-url avatar.png</div>
+                <div class="cmd-code p-3 mb-4">qcut gen avatar -t "Hello world" --image-url avatar.png</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -339,7 +339,7 @@
                     <span class="badge badge-category">Generation</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Transfer motion from a reference video onto an image.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline edit motion --image-url photo.png --video-url dance.mp4</div>
+                <div class="cmd-code p-3 mb-4">qcut edit motion --image-url photo.png --video-url dance.mp4</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -359,7 +359,7 @@
                     <span class="badge badge-category">Generation</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Generate a grid of images from a prompt.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline gen grid -t "Futuristic cityscape" --layout 3x3</div>
+                <div class="cmd-code p-3 mb-4">qcut gen grid -t "Futuristic cityscape" --layout 3x3</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -379,7 +379,7 @@
                     <span class="badge badge-category">Generation</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Upscale an image to higher resolution.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline edit upscale -i photo.png --target 2160p</div>
+                <div class="cmd-code p-3 mb-4">qcut edit upscale -i photo.png --target 2160p</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -404,7 +404,7 @@
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Analyze a video with AI vision.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline analyze video -i video.mp4 --analysis-type summary</div>
+                <div class="cmd-code p-3 mb-4">qcut analyze video -i video.mp4 --analysis-type summary</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -424,7 +424,7 @@
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Transcribe audio to text with optional SRT subtitle output.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline audio transcribe -i audio.mp3 --srt --language en</div>
+                <div class="cmd-code p-3 mb-4">qcut audio transcribe -i audio.mp3 --srt --language en</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -446,7 +446,7 @@
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Query video segments for keep/cut analysis.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline analyze query -i video.mp4 -t "Find all action scenes"</div>
+                <div class="cmd-code p-3 mb-4">qcut analyze query -i video.mp4 -t "Find all action scenes"</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -465,7 +465,7 @@
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Extract highlight clips from a video using subtitle-based LLM analysis. 4-step pipeline: outline &rarr; timeline &rarr; scoring &rarr; ffmpeg cutting.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline edit autoclip -i video.mp4 -s subs.srt -o /tmp/clips --min-score 0.8</div>
+                <div class="cmd-code p-3 mb-4">qcut edit autoclip -i video.mp4 -s subs.srt -o /tmp/clips --min-score 0.8</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -486,7 +486,7 @@
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Translate a video's speech into another language using HeyGen Translate.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline audio translate -i video.mp4 -l Spanish</div>
+                <div class="cmd-code p-3 mb-4">qcut audio translate -i video.mp4 -l Spanish</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -512,7 +512,7 @@
                     <span class="badge badge-category">Pipeline</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Run a multi-step YAML pipeline.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
+                <div class="cmd-code p-3 mb-4">qcut flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -586,7 +586,7 @@ config:
                     <span class="badge badge-category">Flow</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Full pipeline: idea &rarr; screenplay &rarr; characters &rarr; portraits &rarr; storyboard &rarr; video.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
+                <div class="cmd-code p-3 mb-4">qcut flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -609,7 +609,7 @@ config:
                     <span class="badge badge-category">Flow</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Script &rarr; storyboard &rarr; video (from existing script.json).</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline flow script2video --script script.json --portraits registry.json</div>
+                <div class="cmd-code p-3 mb-4">qcut flow script2video --script script.json --portraits registry.json</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -627,7 +627,7 @@ config:
                     <span class="badge badge-category">Flow</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Novel text file &rarr; chapter extraction &rarr; screenplay &rarr; video.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline flow novel2movie --novel book.txt --max-scenes 20</div>
+                <div class="cmd-code p-3 mb-4">qcut flow novel2movie --novel book.txt --max-scenes 20</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -692,7 +692,7 @@ config:
                     <span class="badge badge-category">Discovery</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">List all available AI models. Filter by category.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline system models --category text_to_video --json</div>
+                <div class="cmd-code p-3 mb-4">qcut system models --category text_to_video --json</div>
                 <p class="text-sm" style="color: var(--text-muted);">
                     <strong>Specialized lists:</strong>
                     <code class="mono text-xs">system models-avatar</code>,
@@ -702,7 +702,7 @@ config:
                 </p>
                 <div class="mt-4">
                     <h4 class="font-medium text-sm mb-2">system cost</h4>
-                    <div class="cmd-code p-3">bun run pipeline system cost -m veo3 -d 8s</div>
+                    <div class="cmd-code p-3">qcut system cost -m veo3 -d 8s</div>
                 </div>
             </section>
 
@@ -715,11 +715,11 @@ config:
                 <p class="mb-4" style="color: var(--text-muted);">Keys stored in <code class="mono text-sm">~/.qcut/.env</code> (mode 0600).</p>
                 <div class="cmd-code p-4 space-y-1 text-sm">
                     <div><span style="color: oklch(0.6 0.08 195);"># Create .env template</span></div>
-                    <div>bun run pipeline system setup</div>
+                    <div>qcut system setup</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Set a key</span></div>
-                    <div>bun run pipeline system set-key --name FAL_KEY --value &lt;key&gt;</div>
+                    <div>qcut system set-key --name FAL_KEY --value &lt;key&gt;</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check all keys</span></div>
-                    <div>bun run pipeline system check-keys</div>
+                    <div>qcut system check-keys</div>
                 </div>
                 <p class="mt-4 text-sm" style="color: var(--text-muted);">
                     <strong>Supported keys:</strong>
@@ -743,13 +743,13 @@ config:
                 </div>
                 <div class="cmd-code p-4 space-y-1 text-sm">
                     <div><span style="color: oklch(0.6 0.08 195);"># Initialize project structure</span></div>
-                    <div>bun run pipeline system project-init --directory ./my-project</div>
+                    <div>qcut system project-init --directory ./my-project</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Preview file organization</span></div>
-                    <div>bun run pipeline system project-organize --directory ./my-project --source ./incoming --dry-run</div>
+                    <div>qcut system project-organize --directory ./my-project --source ./incoming --dry-run</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Execute organization</span></div>
-                    <div>bun run pipeline system project-organize --directory ./my-project --source ./incoming --recursive</div>
+                    <div>qcut system project-organize --directory ./my-project --source ./incoming --recursive</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check structure</span></div>
-                    <div>bun run pipeline system project-info --directory ./my-project --json</div>
+                    <div>qcut system project-info --directory ./my-project --json</div>
                 </div>
             </section>
 
@@ -760,7 +760,7 @@ config:
                     <span class="badge badge-category">Upload</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Upload videos to YouTube via Google OAuth.</p>
-                <div class="cmd-code p-3 mb-4">bun run pipeline youtube:upload -i video.mp4 --title "My Video" --mode unlisted</div>
+                <div class="cmd-code p-3 mb-4">qcut youtube:upload -i video.mp4 --title "My Video" --mode unlisted</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -845,13 +845,13 @@ config:
                 <p class="mb-4" style="color: var(--text-muted);">Editor commands use the <code class="mono text-sm">editor:</code> prefix and communicate with QCut over HTTP (default: <code class="mono text-sm">127.0.0.1:8765</code>).</p>
                 <div class="cmd-code p-4 space-y-1 text-sm">
                     <div><span style="color: oklch(0.6 0.08 195);"># Check editor connectivity</span></div>
-                    <div>bun run pipeline editor:health --json</div>
+                    <div>qcut editor:health --json</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># List projects and pick one</span></div>
-                    <div>bun run pipeline editor:navigator:projects --json</div>
+                    <div>qcut editor:navigator:projects --json</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Use --project-id for most commands</span></div>
-                    <div>bun run pipeline editor:timeline:info --project-id &lt;id&gt; --json</div>
+                    <div>qcut editor:timeline:info --project-id &lt;id&gt; --json</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Or use --resume for sticky sessions</span></div>
-                    <div>bun run pipeline editor:timeline:info --resume my-session --json</div>
+                    <div>qcut editor:timeline:info --resume my-session --json</div>
                 </div>
                 <div class="mt-4 space-y-2">
                     <div>
@@ -1192,11 +1192,11 @@ config:
                 <p class="mb-4" style="color: var(--text-muted);">3-level structured help available with <code class="mono text-sm">--help --json</code>.</p>
                 <div class="cmd-code p-4 space-y-1 text-sm">
                     <div><span style="color: oklch(0.6 0.08 195);"># Level 1: All groups and commands</span></div>
-                    <div>bun run pipeline --help --json</div>
+                    <div>qcut --help --json</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Level 2: Command detail</span></div>
-                    <div>bun run pipeline gen image --help --json</div>
+                    <div>qcut gen image --help --json</div>
                     <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Level 3: Parameter detail</span></div>
-                    <div>bun run pipeline gen image --help model --json</div>
+                    <div>qcut gen image --help model --json</div>
                 </div>
             </section>
 
