@@ -170,6 +170,7 @@
             <a href="#generate-image" class="sidebar-link">gen image</a>
             <a href="#create-video" class="sidebar-link">gen video</a>
             <a href="#generate-avatar" class="sidebar-link">gen avatar</a>
+            <a href="#generate-speech" class="sidebar-link">gen tts</a>
 
             <div class="sidebar-heading">edit</div>
             <a href="#autoclip" class="sidebar-link">edit autoclip</a>
@@ -399,6 +400,27 @@
                         <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key (default: <code class="mono text-sm">kling_motion_control</code>)</td></tr>
                         <tr><td class="flag-name">--no-sound</td><td></td><td>boolean</td><td>Strip audio</td></tr>
                         <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Motion prompt</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- gen tts -->
+            <section id="generate-speech" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">gen tts</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Generate speech from text using Chatterbox, ElevenLabs, or Qwen3.</p>
+                <div class="cmd-code p-3 mb-4">qcut gen tts -t "Hello world" --provider elevenlabs</div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Text to speak <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>TTS model (default: <code class="mono text-sm">chatterbox_tts</code>)</td></tr>
+                        <tr><td class="flag-name">--provider</td><td></td><td>string</td><td>Provider shorthand: <code class="mono text-sm">chatterbox</code>, <code class="mono text-sm">elevenlabs</code>, <code class="mono text-sm">qwen</code></td></tr>
+                        <tr><td class="flag-name">--voice</td><td></td><td>string</td><td>Voice preset (ElevenLabs/Qwen3)</td></tr>
+                        <tr><td class="flag-name">--audio-url</td><td></td><td>string</td><td>Voice reference audio URL (for cloning)</td></tr>
+                        <tr><td class="flag-name">--language-code</td><td></td><td>string</td><td>Language code (ElevenLabs)</td></tr>
                     </tbody>
                 </table>
             </section>
