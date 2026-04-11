@@ -562,15 +562,15 @@ config:
 
             <!-- ── VIMAX ── -->
             <div class="mb-6 mt-12">
-                <h2 class="text-2xl font-bold">ViMax &mdash; Agentic Video Production</h2>
+                <h2 class="text-2xl font-bold">Flow &mdash; Agentic Video Production</h2>
                 <p class="text-sm mt-1" style="color: var(--text-muted);">End-to-end AI video production: from idea to finished film.</p>
             </div>
 
-            <!-- vimax:idea2video -->
+            <!-- flow idea2video -->
             <section id="vimax-idea2video" class="cmd-section cmd-card p-6 mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold mono">vimax:idea2video</h3>
-                    <span class="badge badge-category">ViMax</span>
+                    <h3 class="text-lg font-semibold mono">flow idea2video</h3>
+                    <span class="badge badge-category">Flow</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Full pipeline: idea &rarr; screenplay &rarr; characters &rarr; portraits &rarr; storyboard &rarr; video.</p>
                 <div class="cmd-code p-3 mb-4">bun run pipeline flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
@@ -592,8 +592,8 @@ config:
             <!-- vimax:script2video -->
             <section id="vimax-script2video" class="cmd-section cmd-card p-6 mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold mono">vimax:script2video</h3>
-                    <span class="badge badge-category">ViMax</span>
+                    <h3 class="text-lg font-semibold mono">flow script2video</h3>
+                    <span class="badge badge-category">Flow</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Script &rarr; storyboard &rarr; video (from existing script.json).</p>
                 <div class="cmd-code p-3 mb-4">bun run pipeline flow script2video --script script.json --portraits registry.json</div>
@@ -610,8 +610,8 @@ config:
             <!-- vimax:novel2movie -->
             <section id="vimax-novel2movie" class="cmd-section cmd-card p-6 mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold mono">vimax:novel2movie</h3>
-                    <span class="badge badge-category">ViMax</span>
+                    <h3 class="text-lg font-semibold mono">flow novel2movie</h3>
+                    <span class="badge badge-category">Flow</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Novel text file &rarr; chapter extraction &rarr; screenplay &rarr; video.</p>
                 <div class="cmd-code p-3 mb-4">bun run pipeline flow novel2movie --novel book.txt --max-scenes 20</div>
@@ -631,36 +631,36 @@ config:
             <!-- vimax portraits -->
             <section id="vimax-portraits" class="cmd-section cmd-card p-6 mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold">ViMax Portrait & Script Commands</h3>
-                    <span class="badge badge-category">ViMax</span>
+                    <h3 class="text-lg font-semibold">Flow — Portrait & Script Commands</h3>
+                    <span class="badge badge-category">Flow</span>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:generate-script</h4>
+                        <h4 class="font-medium mono text-sm mb-1">flow script</h4>
                         <p class="text-sm" style="color: var(--text-muted);">Generate screenplay from an idea. Flags: <code class="mono text-xs">--idea</code>, <code class="mono text-xs">--duration</code>, <code class="mono text-xs">--llm-model</code></p>
                     </div>
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:extract-characters</h4>
+                        <h4 class="font-medium mono text-sm mb-1">flow characters</h4>
                         <p class="text-sm" style="color: var(--text-muted);">Extract character descriptions from text. Flags: <code class="mono text-xs">--text</code>, <code class="mono text-xs">--llm-model</code></p>
                     </div>
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:generate-portraits</h4>
+                        <h4 class="font-medium mono text-sm mb-1">flow portraits</h4>
                         <p class="text-sm" style="color: var(--text-muted);">Generate character portraits. Flags: <code class="mono text-xs">--text</code>, <code class="mono text-xs">--max-characters</code>, <code class="mono text-xs">--views</code>, <code class="mono text-xs">--image-model</code></p>
                     </div>
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:generate-storyboard</h4>
+                        <h4 class="font-medium mono text-sm mb-1">flow storyboard</h4>
                         <p class="text-sm" style="color: var(--text-muted);">Generate storyboard images from script. Flags: <code class="mono text-xs">--script</code>, <code class="mono text-xs">--portraits</code>, <code class="mono text-xs">--style</code></p>
                     </div>
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:create-registry</h4>
+                        <h4 class="font-medium mono text-sm mb-1">flow registry-create</h4>
                         <p class="text-sm" style="color: var(--text-muted);">Build portrait registry from directory. Flags: <code class="mono text-xs">--input</code>, <code class="mono text-xs">--project-id</code></p>
                     </div>
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:show-registry</h4>
+                        <h4 class="font-medium mono text-sm mb-1">flow registry-show</h4>
                         <p class="text-sm" style="color: var(--text-muted);">Display registry contents. Flags: <code class="mono text-xs">--input</code></p>
                     </div>
                     <div>
-                        <h4 class="font-medium mono text-sm mb-1">vimax:list-models</h4>
+                        <h4 class="font-medium mono text-sm mb-1">system models</h4>
                         <p class="text-sm" style="color: var(--text-muted);">List ViMax-relevant models (image, video, image-to-video).</p>
                     </div>
                 </div>
