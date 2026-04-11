@@ -170,6 +170,7 @@
             <a href="#generate-image" class="sidebar-link">gen image</a>
             <a href="#create-video" class="sidebar-link">gen video</a>
             <a href="#generate-avatar" class="sidebar-link">gen avatar</a>
+            <a href="#generate-music" class="sidebar-link">gen music</a>
             <a href="#generate-speech" class="sidebar-link">gen tts</a>
 
             <div class="sidebar-heading">edit</div>
@@ -400,6 +401,37 @@
                         <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key (default: <code class="mono text-sm">kling_motion_control</code>)</td></tr>
                         <tr><td class="flag-name">--no-sound</td><td></td><td>boolean</td><td>Strip audio</td></tr>
                         <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Motion prompt</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- gen music -->
+            <section id="generate-music" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">gen music</h3>
+                    <span class="badge badge-category">Generation</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">Generate full music tracks with vocals and lyrics using MiniMax Music v2.6. Supports instrumental mode, structure tags, and audio quality settings.</p>
+                <div class="cmd-code p-4 space-y-1 text-sm mb-4">
+                    <div><span style="color: oklch(0.6 0.08 195);"># With lyrics (supports [verse], [chorus], [bridge], [outro] tags)</span></div>
+                    <div>qcut gen music -t "Indie folk, acoustic guitar, melancholic" \</div>
+                    <div>&nbsp;&nbsp;--lyrics "[verse] Walking through the rain alone tonight [chorus] But I keep on walking"</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Chinese traditional style with lyrics</span></div>
+                    <div>qcut gen music -t "Chinese guzheng, bamboo flute, elegant female vocal, 80 BPM" \</div>
+                    <div>&nbsp;&nbsp;--lyrics "[verse] 月落乌啼霜满天 [chorus] 千里江山如画卷"</div>
+                    <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Instrumental (no vocals)</span></div>
+                    <div>qcut gen music -t "Cinematic orchestral, epic, Hans Zimmer style" --instrumental</div>
+                </div>
+                <table class="flag-table">
+                    <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Music style/mood description (10-300 chars) <span class="badge badge-required">required</span></td></tr>
+                        <tr><td class="flag-name">--lyrics</td><td></td><td>string</td><td>Song lyrics with structure tags: <code class="mono text-sm">[verse]</code>, <code class="mono text-sm">[chorus]</code>, <code class="mono text-sm">[bridge]</code>, <code class="mono text-sm">[outro]</code></td></tr>
+                        <tr><td class="flag-name">--instrumental</td><td></td><td>boolean</td><td>Generate vocal-free instrumental music</td></tr>
+                        <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Music model (default: <code class="mono text-sm">minimax_music_v2_6</code>)</td></tr>
+                        <tr><td class="flag-name">--audio-format</td><td></td><td>string</td><td>Output format: <code class="mono text-sm">mp3</code>, <code class="mono text-sm">wav</code>, <code class="mono text-sm">pcm</code> (default: mp3)</td></tr>
+                        <tr><td class="flag-name">--sample-rate</td><td></td><td>number</td><td>Sample rate: 16000, 24000, 32000, 44100</td></tr>
+                        <tr><td class="flag-name">--bitrate</td><td></td><td>number</td><td>Bitrate: 32000, 64000, 128000, 256000</td></tr>
                     </tbody>
                 </table>
             </section>
