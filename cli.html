@@ -174,12 +174,12 @@
             <a href="#generate-grid" class="sidebar-link">gen grid</a>
             <a href="#upscale-image" class="sidebar-link">edit upscale</a>
 
-            <div class="sidebar-heading">analyze / audio</div>
+            <div class="sidebar-heading">analyze</div>
             <a href="#analyze-video" class="sidebar-link">analyze video</a>
-            <a href="#transcribe" class="sidebar-link">audio transcribe</a>
+            <a href="#transcribe" class="sidebar-link">analyze transcribe</a>
             <a href="#query-video" class="sidebar-link">analyze query</a>
             <a href="#autoclip" class="sidebar-link">edit autoclip</a>
-            <a href="#translate-video" class="sidebar-link">audio translate</a>
+            <a href="#translate-video" class="sidebar-link">analyze translate</a>
 
             <div class="sidebar-heading">flow</div>
             <a href="#run-pipeline" class="sidebar-link">flow run</a>
@@ -252,7 +252,7 @@
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Create a video</span></div>
                         <div>qcut gen video -m kling_2_6_pro -t "Ocean waves at sunset" -d 5s</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Transcribe audio</span></div>
-                        <div>qcut audio transcribe -i audio.mp3 --srt</div>
+                        <div>qcut analyze transcribe -i audio.mp3 --srt</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Run a YAML pipeline</span></div>
                         <div>qcut flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Full video from an idea (ViMax)</span></div>
@@ -424,7 +424,7 @@
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Transcribe audio to text with optional SRT subtitle output.</p>
-                <div class="cmd-code p-3 mb-4">qcut audio transcribe -i audio.mp3 --srt --language en</div>
+                <div class="cmd-code p-3 mb-4">qcut analyze transcribe -i audio.mp3 --srt --language en</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
@@ -482,11 +482,11 @@
             <!-- translate-video -->
             <section id="translate-video" class="cmd-section cmd-card p-6 mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold mono">audio translate</h3>
+                    <h3 class="text-lg font-semibold mono">analyze translate</h3>
                     <span class="badge badge-category">Analysis</span>
                 </div>
                 <p class="mb-4" style="color: var(--text-muted);">Translate a video's speech into another language using HeyGen Translate.</p>
-                <div class="cmd-code p-3 mb-4">qcut audio translate -i video.mp4 -l Spanish</div>
+                <div class="cmd-code p-3 mb-4">qcut analyze translate -i video.mp4 -l Spanish</div>
                 <table class="flag-table">
                     <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
                     <tbody>
