@@ -185,6 +185,7 @@
             <a href="#translate-video" class="sidebar-link">analyze translate</a>
 
             <div class="sidebar-heading">flow</div>
+            <a href="#flow-overview" class="sidebar-link">Overview</a>
             <a href="#run-pipeline" class="sidebar-link">flow run</a>
             <a href="#pipeline-yaml" class="sidebar-link">YAML Schema</a>
             <a href="#vimax-idea2video" class="sidebar-link">flow idea2video</a>
@@ -544,6 +545,58 @@
                     </tbody>
                 </table>
                 <div class="cmd-code p-3 mb-4">qcut analyze translate -i podcast.mp3 -l Chinese</div>
+            </section>
+
+            <!-- ── FLOW GROUP ── -->
+            <div class="mb-6 mt-12">
+                <h2 class="text-2xl font-bold">Flow Commands</h2>
+                <p class="text-sm mt-1" style="color: var(--text-muted);">Chain multiple AI steps — YAML pipelines and end-to-end agentic video production.</p>
+            </div>
+
+            <!-- flow group overview card -->
+            <section id="flow-overview" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold mono">flow</h3>
+                    <span class="badge badge-category">Group</span>
+                </div>
+                <p class="mb-4" style="color: var(--text-muted);">
+                    The <code class="mono text-sm">flow</code> group covers 11 commands for multi-step AI workflows —
+                    from YAML pipelines to end-to-end video production (idea &rarr; script &rarr; characters &rarr; portraits &rarr; storyboard &rarr; video).
+                </p>
+                <div class="cmd-code p-3 mb-4">qcut flow --help</div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">YAML Pipelines</h4>
+                        <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                            <li><a href="#run-pipeline" class="mono" style="color: var(--text-primary);">flow run</a> &mdash; execute a YAML pipeline</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">Agentic Video (end-to-end)</h4>
+                        <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                            <li><a href="#vimax-idea2video" class="mono" style="color: var(--text-primary);">flow idea2video</a> &mdash; one-shot idea &rarr; video</li>
+                            <li><a href="#vimax-script2video" class="mono" style="color: var(--text-primary);">flow script2video</a> &mdash; screenplay &rarr; video</li>
+                            <li><a href="#vimax-novel2movie" class="mono" style="color: var(--text-primary);">flow novel2movie</a> &mdash; novel &rarr; long-form movie</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">Single-stage helpers</h4>
+                        <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                            <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow script</a> &mdash; idea &rarr; screenplay (LLM only)</li>
+                            <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow characters</a> &mdash; text &rarr; character list</li>
+                            <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow storyboard</a> &mdash; script &rarr; storyboard frames</li>
+                            <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow portraits</a> &mdash; characters &rarr; portrait images</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">Registry &amp; status</h4>
+                        <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                            <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow registry-create</a> &mdash; directory &rarr; portrait registry</li>
+                            <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow registry-show</a> &mdash; inspect existing registry</li>
+                            <li><span class="mono" style="color: var(--text-primary);">flow status</span> &mdash; check pipeline job progress</li>
+                        </ul>
+                    </div>
+                </div>
             </section>
 
             <!-- ── PIPELINES ── -->
