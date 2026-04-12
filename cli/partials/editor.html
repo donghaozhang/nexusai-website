@@ -1,0 +1,373 @@
+<!-- ── EDITOR COMMANDS ── -->
+<div class="mb-6 mt-12">
+    <h2 class="text-2xl font-bold">Editor Commands</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">Control the running QCut editor via CLI. Requires QCut to be running. Most commands need <code class="mono text-sm">--project-id</code>.</p>
+</div>
+
+<!-- Editor Overview -->
+<section id="editor-overview" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Getting Started</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Editor commands use the <code class="mono text-sm">editor:</code> prefix and communicate with QCut over HTTP (default: <code class="mono text-sm">127.0.0.1:8765</code>).</p>
+    <div class="cmd-code p-4 space-y-1 text-sm">
+        <div><span style="color: oklch(0.6 0.08 195);"># Check editor connectivity</span></div>
+        <div>qcut editor:health --json</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># List projects and pick one</span></div>
+        <div>qcut editor:navigator:projects --json</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Use --project-id for most commands</span></div>
+        <div>qcut editor:timeline:info --project-id &lt;id&gt; --json</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Or use --resume for sticky sessions</span></div>
+        <div>qcut editor:timeline:info --resume my-session --json</div>
+    </div>
+    <div class="mt-4 space-y-2">
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">editor:health</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Check editor connectivity. Flags: <code class="mono text-xs">--status-only</code>, <code class="mono text-xs">--deep</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">editor:console</h4>
+            <p class="text-sm" style="color: var(--text-muted);">List captured renderer console messages. Flags: <code class="mono text-xs">--level</code>, <code class="mono text-xs">--since</code>, <code class="mono text-xs">--limit</code>, <code class="mono text-xs">--stream</code>, <code class="mono text-xs">--clear</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">editor:errors</h4>
+            <p class="text-sm" style="color: var(--text-muted);">List captured renderer errors. Flags: <code class="mono text-xs">--since</code>, <code class="mono text-xs">--limit</code>, <code class="mono text-xs">--stream</code>, <code class="mono text-xs">--clear</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">editor:undo / editor:redo</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Undo or redo the last action.</p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">editor:state:snapshot</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Get editor state snapshot. Flags: <code class="mono text-xs">--include</code> (timeline, selection, playhead, media, editor, project)</p>
+        </div>
+    </div>
+</section>
+
+<!-- Editor Media -->
+<section id="editor-media" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:media:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Manage media files within a project.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:media:list</td><td>List media files</td><td><code class="mono text-xs">--project-id</code></td></tr>
+            <tr><td class="flag-name">editor:media:info</td><td>Get media info</td><td><code class="mono text-xs">--project-id</code>, <code class="mono text-xs">--media-id</code></td></tr>
+            <tr><td class="flag-name">editor:media:import</td><td>Import local file</td><td><code class="mono text-xs">--source</code>, <code class="mono text-xs">--add-to-timeline</code></td></tr>
+            <tr><td class="flag-name">editor:media:import-url</td><td>Import from URL</td><td><code class="mono text-xs">--url</code>, <code class="mono text-xs">--filename</code></td></tr>
+            <tr><td class="flag-name">editor:media:batch-import</td><td>Batch import (max 20)</td><td><code class="mono text-xs">--items</code> or <code class="mono text-xs">--sources</code></td></tr>
+            <tr><td class="flag-name">editor:media:extract-frame</td><td>Extract video frame</td><td><code class="mono text-xs">--start-time</code></td></tr>
+            <tr><td class="flag-name">editor:media:rename</td><td>Rename media</td><td><code class="mono text-xs">--new-name</code></td></tr>
+            <tr><td class="flag-name">editor:media:delete</td><td>Delete media</td><td><code class="mono text-xs">--media-id</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Project -->
+<section id="editor-project" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:project:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Manage projects in the running editor.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:project:list</td><td>List all projects</td><td></td></tr>
+            <tr><td class="flag-name">editor:project:info</td><td>Get project info as JSON</td><td><code class="mono text-xs">--full</code></td></tr>
+            <tr><td class="flag-name">editor:project:create</td><td>Create project</td><td><code class="mono text-xs">--new-name</code></td></tr>
+            <tr><td class="flag-name">editor:project:rename</td><td>Rename project</td><td><code class="mono text-xs">--new-name</code></td></tr>
+            <tr><td class="flag-name">editor:project:duplicate</td><td>Duplicate project</td><td><code class="mono text-xs">--project-id</code></td></tr>
+            <tr><td class="flag-name">editor:project:delete</td><td>Delete project</td><td><code class="mono text-xs">--project-id</code></td></tr>
+            <tr><td class="flag-name">editor:project:settings</td><td>Get project settings</td><td></td></tr>
+            <tr><td class="flag-name">editor:project:update-settings</td><td>Update project settings</td><td><code class="mono text-xs">--data</code></td></tr>
+            <tr><td class="flag-name">editor:project:stats</td><td>Get project statistics</td><td></td></tr>
+            <tr><td class="flag-name">editor:project:summary</td><td>Get project summary (markdown)</td><td></td></tr>
+            <tr><td class="flag-name">editor:project:report</td><td>Generate pipeline report</td><td></td></tr>
+            <tr><td class="flag-name">editor:project:export-state</td><td>Dump full project.json to disk</td><td><code class="mono text-xs">--output</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Timeline -->
+<section id="editor-timeline" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:timeline:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Manipulate the video timeline — add, move, split, trim, and play elements.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:timeline:info</td><td>Get timeline state</td><td></td></tr>
+            <tr><td class="flag-name">editor:timeline:play</td><td>Play timeline</td><td></td></tr>
+            <tr><td class="flag-name">editor:timeline:pause</td><td>Pause timeline</td><td></td></tr>
+            <tr><td class="flag-name">editor:timeline:toggle-play</td><td>Toggle play/pause</td><td></td></tr>
+            <tr><td class="flag-name">editor:timeline:seek</td><td>Seek to time</td><td><code class="mono text-xs">--time</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:add-element</td><td>Add element</td><td><code class="mono text-xs">--data</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:batch-add</td><td>Batch add (max 50)</td><td><code class="mono text-xs">--elements</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:add-clip</td><td>Add media clip</td><td><code class="mono text-xs">--media-id</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:update-element</td><td>Update element</td><td><code class="mono text-xs">--element-id</code>, <code class="mono text-xs">--data</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:batch-update</td><td>Batch update</td><td><code class="mono text-xs">--updates</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:delete-element</td><td>Delete element</td><td><code class="mono text-xs">--element-id</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:batch-delete</td><td>Batch delete</td><td><code class="mono text-xs">--cuts</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:split</td><td>Split element at time</td><td><code class="mono text-xs">--element-id</code>, <code class="mono text-xs">--split-time</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:move</td><td>Move element</td><td><code class="mono text-xs">--time</code>, <code class="mono text-xs">--to-track</code>, <code class="mono text-xs">--ripple</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:trim</td><td>Trim element</td><td><code class="mono text-xs">--start-time</code>, <code class="mono text-xs">--end-time</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:arrange</td><td>Arrange elements</td><td><code class="mono text-xs">--mode</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:select</td><td>Select element</td><td><code class="mono text-xs">--element-id</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:get-selection</td><td>Get current selection</td><td></td></tr>
+            <tr><td class="flag-name">editor:timeline:clear-selection</td><td>Clear selection</td><td></td></tr>
+            <tr><td class="flag-name">editor:timeline:export</td><td>Export timeline</td><td><code class="mono text-xs">--output-format</code></td></tr>
+            <tr><td class="flag-name">editor:timeline:import</td><td>Import timeline data</td><td><code class="mono text-xs">--data</code>, <code class="mono text-xs">--replace</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Editing -->
+<section id="editor-editing" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:editing:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Automated editing — batch cuts, auto-edit (filler/silence removal), and AI-suggested cuts.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:editing:batch-cuts</td><td>Batch cut operations</td><td><code class="mono text-xs">--cuts</code></td></tr>
+            <tr><td class="flag-name">editor:editing:delete-range</td><td>Delete time range</td><td><code class="mono text-xs">--start-time</code>, <code class="mono text-xs">--end-time</code></td></tr>
+            <tr><td class="flag-name">editor:editing:auto-edit</td><td>Auto-edit (fillers/silences)</td><td><code class="mono text-xs">--remove-fillers</code>, <code class="mono text-xs">--remove-silences</code>, <code class="mono text-xs">--poll</code></td></tr>
+            <tr><td class="flag-name">editor:editing:auto-edit-status</td><td>Check auto-edit job</td><td><code class="mono text-xs">--job-id</code></td></tr>
+            <tr><td class="flag-name">editor:editing:auto-edit-list</td><td>List auto-edit jobs</td><td></td></tr>
+            <tr><td class="flag-name">editor:editing:suggest-cuts</td><td>AI-suggest cuts</td><td><code class="mono text-xs">--prompt</code>, <code class="mono text-xs">--poll</code></td></tr>
+            <tr><td class="flag-name">editor:editing:suggest-status</td><td>Check suggest-cuts status</td><td><code class="mono text-xs">--job-id</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Analysis -->
+<section id="editor-analyze" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:analyze:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Analyze media within the editor — scenes, frames, fillers, beats.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:analyze:video</td><td>Analyze video with AI vision</td><td><code class="mono text-xs">--source</code>, <code class="mono text-xs">--analysis-type</code>, <code class="mono text-xs">--model</code></td></tr>
+            <tr><td class="flag-name">editor:analyze:models</td><td>List analysis models</td><td></td></tr>
+            <tr><td class="flag-name">editor:analyze:scenes</td><td>Detect scene changes</td><td><code class="mono text-xs">--threshold</code></td></tr>
+            <tr><td class="flag-name">editor:analyze:frames</td><td>Analyze video frames</td><td><code class="mono text-xs">--timestamps</code>, <code class="mono text-xs">--gap</code>, <code class="mono text-xs">--prompt</code></td></tr>
+            <tr><td class="flag-name">editor:analyze:fillers</td><td>Detect filler words/silences</td><td><code class="mono text-xs">--media-id</code></td></tr>
+            <tr><td class="flag-name">editor:analyze:beats</td><td>Detect audio beats and BPM</td><td><code class="mono text-xs">--threshold</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Transcription -->
+<section id="editor-transcribe" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:transcribe:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Transcribe media within the editor (sync and async).</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:transcribe:run</td><td>Transcribe media (sync)</td><td><code class="mono text-xs">--source</code>, <code class="mono text-xs">--model</code>, <code class="mono text-xs">--language</code></td></tr>
+            <tr><td class="flag-name">editor:transcribe:start</td><td>Transcribe media (async)</td><td><code class="mono text-xs">--source</code>, <code class="mono text-xs">--poll</code></td></tr>
+            <tr><td class="flag-name">editor:transcribe:status</td><td>Get job status</td><td><code class="mono text-xs">--job-id</code></td></tr>
+            <tr><td class="flag-name">editor:transcribe:list-jobs</td><td>List transcription jobs</td><td></td></tr>
+            <tr><td class="flag-name">editor:transcribe:cancel</td><td>Cancel transcription job</td><td><code class="mono text-xs">--job-id</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Generation -->
+<section id="editor-generate" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:generate:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">AI generation within the editor (images, videos, avatars).</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:generate:start</td><td>Start AI generation</td><td><code class="mono text-xs">--data</code>, <code class="mono text-xs">--poll</code></td></tr>
+            <tr><td class="flag-name">editor:generate:status</td><td>Get generation job status</td><td><code class="mono text-xs">--job-id</code></td></tr>
+            <tr><td class="flag-name">editor:generate:list-jobs</td><td>List generation jobs</td><td></td></tr>
+            <tr><td class="flag-name">editor:generate:cancel</td><td>Cancel generation job</td><td><code class="mono text-xs">--job-id</code></td></tr>
+            <tr><td class="flag-name">editor:generate:models</td><td>List generation models</td><td></td></tr>
+            <tr><td class="flag-name">editor:generate:estimate-cost</td><td>Estimate generation cost</td><td><code class="mono text-xs">--model</code>, <code class="mono text-xs">--text</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Editor Export -->
+<section id="editor-export" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">editor:export:*</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Export video from the editor with presets, GIF, cursor, and zoom options.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:export:presets</td><td>List export presets</td><td></td></tr>
+            <tr><td class="flag-name">editor:export:recommend</td><td>Recommend export settings</td><td><code class="mono text-xs">--target</code></td></tr>
+            <tr><td class="flag-name">editor:export:start</td><td>Start export</td><td><code class="mono text-xs">--preset</code>, <code class="mono text-xs">--filename</code>, <code class="mono text-xs">--poll</code></td></tr>
+            <tr><td class="flag-name">editor:export:status</td><td>Get export job status</td><td><code class="mono text-xs">--job-id</code></td></tr>
+            <tr><td class="flag-name">editor:export:list-jobs</td><td>List export jobs</td><td></td></tr>
+        </tbody>
+    </table>
+    <p class="mt-3 text-sm" style="color: var(--text-muted);">
+        <strong>Export start flags:</strong>
+        <code class="mono text-xs">--export-format</code>,
+        <code class="mono text-xs">--gif-fps</code>,
+        <code class="mono text-xs">--gif-loop</code>,
+        <code class="mono text-xs">--gif-quality</code>,
+        <code class="mono text-xs">--cursor-sway</code>,
+        <code class="mono text-xs">--auto-zoom</code>,
+        <code class="mono text-xs">--mic</code>,
+        <code class="mono text-xs">--system-audio</code>
+    </p>
+</section>
+
+<!-- Editor UI & Snapshots -->
+<section id="editor-ui" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">UI, Snapshots & Diffs</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Interact with editor UI elements, take accessibility snapshots, and compare states.</p>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Key Flags</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:ui:switch-panel</td><td>Switch editor panel</td><td><code class="mono text-xs">--panel</code>, <code class="mono text-xs">--tab</code></td></tr>
+            <tr><td class="flag-name">editor:ui:context-menu</td><td>Dispatch right-click context menu</td><td><code class="mono text-xs">--element-id</code></td></tr>
+            <tr><td class="flag-name">editor:snapshot</td><td>Get accessibility snapshot</td><td><code class="mono text-xs">--interactive</code>, <code class="mono text-xs">--depth</code></td></tr>
+            <tr><td class="flag-name">editor:snapshot:click</td><td>Click a UI ref</td><td><code class="mono text-xs">--ref</code></td></tr>
+            <tr><td class="flag-name">editor:snapshot:fill</td><td>Fill a text input by ref</td><td><code class="mono text-xs">--ref</code>, <code class="mono text-xs">--text</code></td></tr>
+            <tr><td class="flag-name">editor:snapshot:select</td><td>Select dropdown option by ref</td><td><code class="mono text-xs">--ref</code>, <code class="mono text-xs">--value</code></td></tr>
+            <tr><td class="flag-name">editor:snapshot:check</td><td>Toggle checkbox/switch by ref</td><td><code class="mono text-xs">--ref</code>, <code class="mono text-xs">--checked</code></td></tr>
+            <tr><td class="flag-name">editor:screenshot:capture</td><td>Take screenshot</td><td><code class="mono text-xs">--filename</code></td></tr>
+            <tr><td class="flag-name">editor:diff:snapshot</td><td>Compare two snapshot files</td><td><code class="mono text-xs">--before</code>, <code class="mono text-xs">--after</code></td></tr>
+            <tr><td class="flag-name">editor:diff:screenshot</td><td>Pixel-diff two screenshots</td><td><code class="mono text-xs">--before</code>, <code class="mono text-xs">--after</code>, <code class="mono text-xs">--threshold</code></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Screen Recording -->
+<section id="editor-screen-recording" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Screen Recording</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:screen-recording:sources</td><td>List capture sources</td></tr>
+            <tr><td class="flag-name">editor:screen-recording:start</td><td>Start recording (<code class="mono text-xs">--source-id</code>, <code class="mono text-xs">--filename</code>)</td></tr>
+            <tr><td class="flag-name">editor:screen-recording:stop</td><td>Stop recording (<code class="mono text-xs">--discard</code>)</td></tr>
+            <tr><td class="flag-name">editor:screen-recording:status</td><td>Get recording status</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Remotion -->
+<section id="editor-remotion" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Remotion</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:remotion:list</td><td>List Remotion elements on timeline</td></tr>
+            <tr><td class="flag-name">editor:remotion:inspect</td><td>Inspect a Remotion element</td></tr>
+            <tr><td class="flag-name">editor:remotion:update-props</td><td>Update Remotion element props</td></tr>
+            <tr><td class="flag-name">editor:remotion:export</td><td>Export with Remotion engine</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Search -->
+<section id="editor-search" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Search</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:search:query</td><td>Search transcriptions by text (<code class="mono text-xs">--query</code>)</td></tr>
+            <tr><td class="flag-name">editor:search:status</td><td>List transcription status for all media</td></tr>
+            <tr><td class="flag-name">editor:search:index</td><td>Trigger transcription for untranscribed media</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Stickers -->
+<section id="editor-stickers" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Stickers</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:sticker:add</td><td>Add sticker (<code class="mono text-xs">--sticker-id</code> or <code class="mono text-xs">--source</code>, position, time)</td></tr>
+            <tr><td class="flag-name">editor:sticker:update</td><td>Update sticker position/size/image</td></tr>
+            <tr><td class="flag-name">editor:sticker:remove</td><td>Remove sticker</td></tr>
+            <tr><td class="flag-name">editor:sticker:list</td><td>List all stickers on timeline</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Script Director (Moyin) -->
+<section id="editor-moyin" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Script Director (Moyin)</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:moyin:set-script</td><td>Push script text to director panel</td></tr>
+            <tr><td class="flag-name">editor:moyin:parse</td><td>Trigger Parse Script</td></tr>
+            <tr><td class="flag-name">editor:moyin:status</td><td>Get pipeline progress</td></tr>
+            <tr><td class="flag-name">editor:moyin:export</td><td>Export Script Director data as JSON</td></tr>
+            <tr><td class="flag-name">editor:moyin:generate</td><td>Generate a script from a description</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Misc -->
+<section id="editor-misc" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Misc</h3>
+        <span class="badge badge-category">Editor</span>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">editor:novel:parse</td><td>Parse novel text into structured screenplay</td></tr>
+            <tr><td class="flag-name">editor:navigator:projects</td><td>List saved projects</td></tr>
+            <tr><td class="flag-name">editor:navigator:open</td><td>Open a project in editor</td></tr>
+            <tr><td class="flag-name">editor:diagnostics:analyze</td><td>Analyze error (<code class="mono text-xs">--message</code>)</td></tr>
+            <tr><td class="flag-name">editor:mcp:forward-html</td><td>Forward HTML to MCP preview</td></tr>
+            <tr><td class="flag-name">editor:auth:token</td><td>Get or set auth token</td></tr>
+            <tr><td class="flag-name">editor:auth:activate</td><td>Set token and activate license</td></tr>
+            <tr><td class="flag-name">editor:auth:logout</td><td>Clear auth token</td></tr>
+            <tr><td class="flag-name">editor:session:save</td><td>Save sticky CLI session state</td></tr>
+            <tr><td class="flag-name">editor:session:load</td><td>Load a saved session</td></tr>
+            <tr><td class="flag-name">editor:session:list</td><td>List all saved sessions</td></tr>
+            <tr><td class="flag-name">editor:session:delete</td><td>Delete a saved session</td></tr>
+        </tbody>
+    </table>
+</section>

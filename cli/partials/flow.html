@@ -1,0 +1,231 @@
+<!-- ── FLOW GROUP ── -->
+<div class="mb-6 mt-12">
+    <h2 class="text-2xl font-bold">Flow Commands</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">Chain multiple AI steps — YAML pipelines and end-to-end agentic video production.</p>
+</div>
+
+<!-- flow group overview card -->
+<section id="flow-overview" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">flow</h3>
+        <span class="badge badge-category">Group</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">
+        The <code class="mono text-sm">flow</code> group covers 11 commands for multi-step AI workflows —
+        from YAML pipelines to end-to-end video production (idea &rarr; script &rarr; characters &rarr; portraits &rarr; storyboard &rarr; video).
+    </p>
+    <div class="cmd-code p-3 mb-4">qcut flow --help</div>
+    <div class="grid md:grid-cols-2 gap-6">
+        <div>
+            <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">YAML Pipelines</h4>
+            <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                <li><a href="#run-pipeline" class="mono" style="color: var(--text-primary);">flow run</a> &mdash; execute a YAML pipeline</li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">Agentic Video (end-to-end)</h4>
+            <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                <li><a href="#vimax-idea2video" class="mono" style="color: var(--text-primary);">flow idea2video</a> &mdash; one-shot idea &rarr; video</li>
+                <li><a href="#vimax-script2video" class="mono" style="color: var(--text-primary);">flow script2video</a> &mdash; screenplay &rarr; video</li>
+                <li><a href="#vimax-novel2movie" class="mono" style="color: var(--text-primary);">flow novel2movie</a> &mdash; novel &rarr; long-form movie</li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">Single-stage helpers</h4>
+            <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow script</a> &mdash; idea &rarr; screenplay (LLM only)</li>
+                <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow characters</a> &mdash; text &rarr; character list</li>
+                <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow storyboard</a> &mdash; script &rarr; storyboard frames</li>
+                <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow portraits</a> &mdash; characters &rarr; portrait images</li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-medium text-sm mb-2" style="color: var(--text-primary);">Registry &amp; status</h4>
+            <ul class="space-y-1 text-sm" style="color: var(--text-muted);">
+                <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow registry-create</a> &mdash; directory &rarr; portrait registry</li>
+                <li><a href="#vimax-portraits" class="mono" style="color: var(--text-primary);">flow registry-show</a> &mdash; inspect existing registry</li>
+                <li><span class="mono" style="color: var(--text-primary);">flow status</span> &mdash; check pipeline job progress</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ── PIPELINES ── -->
+<div class="mb-6 mt-12">
+    <h2 class="text-2xl font-bold">YAML Pipelines</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">Chain multiple AI steps into automated workflows.</p>
+</div>
+
+<!-- run-pipeline -->
+<section id="run-pipeline" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">flow run</h3>
+        <span class="badge badge-category">Pipeline</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Run a multi-step YAML pipeline.</p>
+    <div class="cmd-code p-3 mb-4">qcut flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--config</td><td class="mono text-sm">-c</td><td>string</td><td>YAML pipeline file <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Input text, file, or <code class="mono text-sm">-</code> for stdin</td></tr>
+            <tr><td class="flag-name">--save-intermediates</td><td></td><td>boolean</td><td>Save each step's output</td></tr>
+            <tr><td class="flag-name">--parallel</td><td></td><td>boolean</td><td>Parallel step execution</td></tr>
+            <tr><td class="flag-name">--max-workers</td><td></td><td>integer</td><td>Max concurrent workers (default: <code class="mono text-sm">8</code>)</td></tr>
+            <tr><td class="flag-name">--no-confirm</td><td></td><td>boolean</td><td>Skip cost confirmation</td></tr>
+            <tr><td class="flag-name">--stream</td><td></td><td>boolean</td><td>JSONL progress on stderr</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Pipeline YAML Schema -->
+<section id="pipeline-yaml" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Pipeline YAML Schema</h3>
+    </div>
+    <div class="cmd-code p-4 text-sm">
+<pre>name: my-pipeline
+steps:
+  - type: text_to_image
+    model: flux_dev
+    params:
+      image_size: landscape_16_9
+    enabled: true
+    retry_count: 0
+
+  - type: parallel_group
+    merge_strategy: COLLECT_ALL
+    steps:
+      - type: text_to_image
+        model: flux_schnell
+
+config:
+  output_dir: ./output
+  save_intermediates: true
+  parallel: false
+  max_workers: 8</pre>
+    </div>
+    <p class="mt-4 text-sm" style="color: var(--text-muted);">
+        <strong>Step types:</strong>
+        <code class="mono text-xs">text_to_image</code>,
+        <code class="mono text-xs">image_to_image</code>,
+        <code class="mono text-xs">text_to_video</code>,
+        <code class="mono text-xs">image_to_video</code>,
+        <code class="mono text-xs">video_to_video</code>,
+        <code class="mono text-xs">avatar</code>,
+        <code class="mono text-xs">motion_transfer</code>,
+        <code class="mono text-xs">upscale</code>,
+        <code class="mono text-xs">upscale_video</code>,
+        <code class="mono text-xs">add_audio</code>,
+        <code class="mono text-xs">text_to_speech</code>,
+        <code class="mono text-xs">speech_to_text</code>,
+        <code class="mono text-xs">image_understanding</code>,
+        <code class="mono text-xs">prompt_generation</code>
+    </p>
+</section>
+
+<!-- ── VIMAX ── -->
+<div class="mb-6 mt-12">
+    <h2 class="text-2xl font-bold">Flow &mdash; Agentic Video Production</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">End-to-end AI video production: from idea to finished film.</p>
+</div>
+
+<!-- flow idea2video -->
+<section id="vimax-idea2video" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">flow idea2video</h3>
+        <span class="badge badge-category">Flow</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Full pipeline: idea &rarr; screenplay &rarr; characters &rarr; portraits &rarr; storyboard &rarr; video.</p>
+    <div class="cmd-code p-3 mb-4">qcut flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--idea</td><td></td><td>string</td><td>Story idea <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Target duration (seconds)</td></tr>
+            <tr><td class="flag-name">--no-portraits</td><td></td><td>boolean</td><td>Skip portrait generation</td></tr>
+            <tr><td class="flag-name">--no-references</td><td></td><td>boolean</td><td>Disable character references</td></tr>
+            <tr><td class="flag-name">--config</td><td class="mono text-sm">-c</td><td>string</td><td>YAML config overrides</td></tr>
+            <tr><td class="flag-name">--llm-model</td><td></td><td>string</td><td>Override LLM agent model</td></tr>
+            <tr><td class="flag-name">--image-model</td><td></td><td>string</td><td>Override image model</td></tr>
+            <tr><td class="flag-name">--video-model</td><td></td><td>string</td><td>Override video model</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- vimax:script2video -->
+<section id="vimax-script2video" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">flow script2video</h3>
+        <span class="badge badge-category">Flow</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Script &rarr; storyboard &rarr; video (from existing script.json).</p>
+    <div class="cmd-code p-3 mb-4">qcut flow script2video --script script.json --portraits registry.json</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--script</td><td></td><td>string</td><td>Script JSON path <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--portraits</td><td class="mono text-sm">-p</td><td>string</td><td>Portrait registry JSON path</td></tr>
+            <tr><td class="flag-name">--no-references</td><td></td><td>boolean</td><td>Disable character references</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- vimax:novel2movie -->
+<section id="vimax-novel2movie" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">flow novel2movie</h3>
+        <span class="badge badge-category">Flow</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Novel text file &rarr; chapter extraction &rarr; screenplay &rarr; video.</p>
+    <div class="cmd-code p-3 mb-4">qcut flow novel2movie --novel book.txt --max-scenes 20</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--novel</td><td></td><td>string</td><td>Novel text file <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--title</td><td></td><td>string</td><td>Override title</td></tr>
+            <tr><td class="flag-name">--max-scenes</td><td></td><td>integer</td><td>Cap total scenes</td></tr>
+            <tr><td class="flag-name">--no-portraits</td><td></td><td>boolean</td><td>Skip portraits</td></tr>
+            <tr><td class="flag-name">--scripts-only</td><td></td><td>boolean</td><td>Stop after scripts</td></tr>
+            <tr><td class="flag-name">--storyboard-only</td><td></td><td>boolean</td><td>Stop after storyboard</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- vimax portraits -->
+<section id="vimax-portraits" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold">Flow — Portrait & Script Commands</h3>
+        <span class="badge badge-category">Flow</span>
+    </div>
+    <div class="space-y-4">
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">flow script</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Generate screenplay from an idea. Flags: <code class="mono text-xs">--idea</code>, <code class="mono text-xs">--duration</code>, <code class="mono text-xs">--llm-model</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">flow characters</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Extract character descriptions from text. Flags: <code class="mono text-xs">--text</code>, <code class="mono text-xs">--llm-model</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">flow portraits</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Generate character portraits. Flags: <code class="mono text-xs">--text</code>, <code class="mono text-xs">--max-characters</code>, <code class="mono text-xs">--views</code>, <code class="mono text-xs">--image-model</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">flow storyboard</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Generate storyboard images from script. Flags: <code class="mono text-xs">--script</code>, <code class="mono text-xs">--portraits</code>, <code class="mono text-xs">--style</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">flow registry-create</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Build portrait registry from directory. Flags: <code class="mono text-xs">--input</code>, <code class="mono text-xs">--project-id</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">flow registry-show</h4>
+            <p class="text-sm" style="color: var(--text-muted);">Display registry contents. Flags: <code class="mono text-xs">--input</code></p>
+        </div>
+        <div>
+            <h4 class="font-medium mono text-sm mb-1">system models</h4>
+            <p class="text-sm" style="color: var(--text-muted);">List ViMax-relevant models (image, video, image-to-video).</p>
+        </div>
+    </div>
+</section>

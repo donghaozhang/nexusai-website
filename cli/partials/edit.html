@@ -1,0 +1,117 @@
+<!-- ── EDITING ── -->
+<div class="mb-6 mt-12">
+    <h2 class="text-2xl font-bold">Editing Commands</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">Autoclip, upscale, motion transfer, and compositing.</p>
+</div>
+
+<!-- autoclip -->
+<section id="autoclip" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">edit autoclip</h3>
+        <span class="badge badge-category">Editing</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Extract highlight clips from a video using subtitle-based LLM analysis. 4-step pipeline: outline &rarr; timeline &rarr; scoring &rarr; ffmpeg cutting.</p>
+    <div class="cmd-code p-3 mb-4">qcut edit autoclip -i video.mp4 -s subs.srt -o /tmp/clips --min-score 0.8</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Input video file <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--srt-file</td><td class="mono text-sm">-s</td><td>string</td><td>SRT/VTT subtitle file (auto-detects if omitted)</td></tr>
+            <tr><td class="flag-name">--output</td><td class="mono text-sm">-o</td><td>string</td><td>Output directory for clips</td></tr>
+            <tr><td class="flag-name">--min-score</td><td></td><td>number</td><td>Minimum score threshold 0-1 (default: <code class="mono text-sm">0.7</code>)</td></tr>
+            <tr><td class="flag-name">--step</td><td></td><td>number</td><td>Run only a specific step (1-4)</td></tr>
+            <tr><td class="flag-name">--dry-run</td><td></td><td>boolean</td><td>Run analysis only, skip cutting</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- upscale-image -->
+<section id="upscale-image" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">edit upscale</h3>
+        <span class="badge badge-category">Editing</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Upscale an image to higher resolution.</p>
+    <div class="cmd-code p-3 mb-4">qcut edit upscale -i photo.png --target 2160p</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Image path or URL</td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Upscaling model (default: <code class="mono text-sm">topaz</code>)</td></tr>
+            <tr><td class="flag-name">--target</td><td></td><td>string</td><td><code class="mono text-sm">720p</code>(1x), <code class="mono text-sm">1080p</code>(2x), <code class="mono text-sm">1440p</code>(3x), <code class="mono text-sm">2160p</code>(4x)</td></tr>
+            <tr><td class="flag-name">--output-format</td><td class="mono text-sm">-f</td><td>string</td><td>Output format (default: <code class="mono text-sm">png</code>)</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- transfer-motion -->
+<section id="transfer-motion" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">edit motion</h3>
+        <span class="badge badge-category">Editing</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Transfer motion from a reference video onto an image.</p>
+    <div class="cmd-code p-3 mb-4">qcut edit motion --image-url photo.png --video-url dance.mp4</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--image-url</td><td></td><td>string</td><td>Source image <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--video-url</td><td></td><td>string</td><td>Reference motion video <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key (default: <code class="mono text-sm">kling_motion_control</code>)</td></tr>
+            <tr><td class="flag-name">--no-sound</td><td></td><td>boolean</td><td>Strip audio</td></tr>
+            <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Motion prompt</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- gen music -->
+<section id="generate-music" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">gen music</h3>
+        <span class="badge badge-category">Generation</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Generate full music tracks with vocals and lyrics using MiniMax Music v2.6. Supports instrumental mode, structure tags, and audio quality settings.</p>
+    <div class="cmd-code p-4 space-y-1 text-sm mb-4">
+        <div><span style="color: oklch(0.6 0.08 195);"># With lyrics (supports [verse], [chorus], [bridge], [outro] tags)</span></div>
+        <div>qcut gen music -t "Indie folk, acoustic guitar, melancholic" \</div>
+        <div>&nbsp;&nbsp;--lyrics "[verse] Walking through the rain alone tonight [chorus] But I keep on walking"</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Chinese traditional style with lyrics</span></div>
+        <div>qcut gen music -t "Chinese guzheng, bamboo flute, elegant female vocal, 80 BPM" \</div>
+        <div>&nbsp;&nbsp;--lyrics "[verse] 月落乌啼霜满天 [chorus] 千里江山如画卷"</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Instrumental (no vocals)</span></div>
+        <div>qcut gen music -t "Cinematic orchestral, epic, Hans Zimmer style" --instrumental</div>
+    </div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Music style/mood description (10-300 chars) <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--lyrics</td><td></td><td>string</td><td>Song lyrics with structure tags: <code class="mono text-sm">[verse]</code>, <code class="mono text-sm">[chorus]</code>, <code class="mono text-sm">[bridge]</code>, <code class="mono text-sm">[outro]</code></td></tr>
+            <tr><td class="flag-name">--instrumental</td><td></td><td>boolean</td><td>Generate vocal-free instrumental music</td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Music model (default: <code class="mono text-sm">minimax_music_v2_6</code>)</td></tr>
+            <tr><td class="flag-name">--audio-format</td><td></td><td>string</td><td>Output format: <code class="mono text-sm">mp3</code>, <code class="mono text-sm">wav</code>, <code class="mono text-sm">pcm</code> (default: mp3)</td></tr>
+            <tr><td class="flag-name">--sample-rate</td><td></td><td>number</td><td>Sample rate: 16000, 24000, 32000, 44100</td></tr>
+            <tr><td class="flag-name">--bitrate</td><td></td><td>number</td><td>Bitrate: 32000, 64000, 128000, 256000</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- gen tts -->
+<section id="generate-speech" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">gen tts</h3>
+        <span class="badge badge-category">Generation</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Generate speech from text using Chatterbox, ElevenLabs, or Qwen3.</p>
+    <div class="cmd-code p-3 mb-4">qcut gen tts -t "Hello world" --provider elevenlabs</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Text to speak <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>TTS model (default: <code class="mono text-sm">chatterbox_tts</code>)</td></tr>
+            <tr><td class="flag-name">--provider</td><td></td><td>string</td><td>Provider shorthand: <code class="mono text-sm">chatterbox</code>, <code class="mono text-sm">elevenlabs</code>, <code class="mono text-sm">qwen</code></td></tr>
+            <tr><td class="flag-name">--voice</td><td></td><td>string</td><td>Voice preset (ElevenLabs/Qwen3)</td></tr>
+            <tr><td class="flag-name">--audio-url</td><td></td><td>string</td><td>Voice reference audio URL (for cloning)</td></tr>
+            <tr><td class="flag-name">--language-code</td><td></td><td>string</td><td>Language code (ElevenLabs)</td></tr>
+        </tbody>
+    </table>
+</section>

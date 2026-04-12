@@ -1,0 +1,74 @@
+<!-- ── GENERATION ── -->
+<div class="mb-6">
+    <h2 class="text-2xl font-bold">Generation Commands</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">Create images, videos, avatars, and more with AI models.</p>
+</div>
+
+<!-- generate-image -->
+<section id="generate-image" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">gen image</h3>
+        <span class="badge badge-category">Generation</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Generate an image from a text prompt. Use <code class="mono text-sm">--grid</code> to produce a composite grid of images.</p>
+    <div class="cmd-code p-3 mb-4">qcut gen image -t "A cat in space" -m flux_dev --aspect-ratio 16:9</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Text prompt <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key (default: <code class="mono text-sm">nano_banana_pro</code>)</td></tr>
+            <tr><td class="flag-name">--aspect-ratio</td><td></td><td>string</td><td>e.g. <code class="mono text-sm">16:9</code>, <code class="mono text-sm">9:16</code>, <code class="mono text-sm">1:1</code></td></tr>
+            <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>e.g. <code class="mono text-sm">1080p</code>, <code class="mono text-sm">720p</code></td></tr>
+            <tr><td class="flag-name">--negative-prompt</td><td></td><td>string</td><td>Negative prompt</td></tr>
+            <tr><td class="flag-name">--grid</td><td></td><td>string</td><td>Grid layout: <code class="mono text-sm">2x2</code>, <code class="mono text-sm">3x3</code>, <code class="mono text-sm">2x3</code>, etc.</td></tr>
+            <tr><td class="flag-name">--grid-upscale</td><td></td><td>float</td><td>Upscale factor after grid compositing</td></tr>
+            <tr><td class="flag-name">--style</td><td></td><td>string</td><td>Style prefix prepended to prompt</td></tr>
+            <tr><td class="flag-name">--output-dir</td><td class="mono text-sm">-o</td><td>string</td><td>Output directory</td></tr>
+        </tbody>
+    </table>
+    <div class="cmd-code p-3 mb-4">qcut gen image -t "Seasons of a tree" --grid 2x2</div>
+</section>
+
+<!-- create-video -->
+<section id="create-video" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">gen video</h3>
+        <span class="badge badge-category">Generation</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Create a video from text or image input.</p>
+    <div class="cmd-code p-3 mb-4">qcut gen video -m kling_2_6_pro -t "Ocean waves" -d 5s</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Text prompt</td></tr>
+            <tr><td class="flag-name">--image-url</td><td></td><td>string</td><td>Input image (for image-to-video)</td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Duration, e.g. <code class="mono text-sm">5s</code></td></tr>
+            <tr><td class="flag-name">--aspect-ratio</td><td></td><td>string</td><td>Aspect ratio</td></tr>
+            <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>Resolution</td></tr>
+            <tr><td class="flag-name">--negative-prompt</td><td></td><td>string</td><td>Negative prompt</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- generate-avatar -->
+<section id="generate-avatar" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">gen avatar</h3>
+        <span class="badge badge-category">Generation</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Generate a talking avatar video.</p>
+    <div class="cmd-code p-3 mb-4">qcut gen avatar -t "Hello world" --image-url avatar.png</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--text</td><td class="mono text-sm">-t</td><td>string</td><td>Script text</td></tr>
+            <tr><td class="flag-name">--image-url</td><td></td><td>string</td><td>Avatar image</td></tr>
+            <tr><td class="flag-name">--audio-url</td><td></td><td>string</td><td>Input audio URL</td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>string</td><td>Model key</td></tr>
+            <tr><td class="flag-name">--voice-id</td><td></td><td>string</td><td>Voice ID for TTS</td></tr>
+            <tr><td class="flag-name">--duration</td><td class="mono text-sm">-d</td><td>string</td><td>Duration</td></tr>
+            <tr><td class="flag-name">--resolution</td><td></td><td>string</td><td>Resolution</td></tr>
+        </tbody>
+    </table>
+</section>

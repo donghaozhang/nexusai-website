@@ -1,0 +1,150 @@
+<!-- ── UTILITIES ── -->
+<div class="mb-6 mt-12">
+    <h2 class="text-2xl font-bold">Utilities</h2>
+    <p class="text-sm mt-1" style="color: var(--text-muted);">Model discovery, API keys, project management, and more.</p>
+</div>
+
+<!-- list-models -->
+<section id="list-models" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">system models</h3>
+        <span class="badge badge-category">Discovery</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">List all available AI models. Filter by category.</p>
+    <div class="cmd-code p-3 mb-4">qcut system models --category text_to_video --json</div>
+    <p class="text-sm" style="color: var(--text-muted);">
+        <strong>Specialized lists:</strong>
+        <code class="mono text-xs">system models-avatar</code>,
+        <code class="mono text-xs">system models-video</code>,
+        <code class="mono text-xs">system models-motion</code>,
+        <code class="mono text-xs">system models-speech</code>
+    </p>
+    <div class="mt-4">
+        <h4 class="font-medium text-sm mb-2">system cost</h4>
+        <div class="cmd-code p-3">qcut system cost -m veo3 -d 8s</div>
+    </div>
+</section>
+
+<!-- API Keys -->
+<section id="api-keys" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">system keys</h3>
+        <span class="badge badge-category">Config</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Keys stored in <code class="mono text-sm">~/.qcut/.env</code> (mode 0600).</p>
+    <div class="cmd-code p-4 space-y-1 text-sm">
+        <div><span style="color: oklch(0.6 0.08 195);"># Create .env template</span></div>
+        <div>qcut system setup</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Set a key</span></div>
+        <div>qcut system set-key --name FAL_KEY --value &lt;key&gt;</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check all keys</span></div>
+        <div>qcut system check-keys</div>
+    </div>
+    <p class="mt-4 text-sm" style="color: var(--text-muted);">
+        <strong>Supported keys:</strong>
+        <code class="mono text-xs">FAL_KEY</code>,
+        <code class="mono text-xs">GEMINI_API_KEY</code>,
+        <code class="mono text-xs">OPENROUTER_API_KEY</code>,
+        <code class="mono text-xs">ELEVENLABS_API_KEY</code>,
+        <code class="mono text-xs">OPENAI_API_KEY</code>,
+        <code class="mono text-xs">RUNWAY_API_KEY</code>,
+        <code class="mono text-xs">HEYGEN_API_KEY</code>,
+        <code class="mono text-xs">DID_API_KEY</code>,
+        <code class="mono text-xs">SYNTHESIA_API_KEY</code>
+    </p>
+</section>
+
+<!-- Project Management -->
+<section id="project-management" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">system project</h3>
+        <span class="badge badge-category">Config</span>
+    </div>
+    <div class="cmd-code p-4 space-y-1 text-sm">
+        <div><span style="color: oklch(0.6 0.08 195);"># Initialize project structure</span></div>
+        <div>qcut system project-init --directory ./my-project</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Preview file organization</span></div>
+        <div>qcut system project-organize --directory ./my-project --source ./incoming --dry-run</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Execute organization</span></div>
+        <div>qcut system project-organize --directory ./my-project --source ./incoming --recursive</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check structure</span></div>
+        <div>qcut system project-info --directory ./my-project --json</div>
+    </div>
+</section>
+
+<!-- YouTube Upload -->
+<section id="youtube-upload" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">youtube:upload</h3>
+        <span class="badge badge-category">Upload</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">Upload videos to YouTube via Google OAuth.</p>
+    <div class="cmd-code p-3 mb-4">qcut youtube:upload -i video.mp4 --title "My Video" --mode unlisted</div>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--input</td><td class="mono text-sm">-i</td><td>string</td><td>Path to video file <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--title</td><td></td><td>string</td><td>Video title <span class="badge badge-required">required</span></td></tr>
+            <tr><td class="flag-name">--text</td><td></td><td>string</td><td>Video description</td></tr>
+            <tr><td class="flag-name">--data</td><td></td><td>string</td><td>Comma-separated tags</td></tr>
+            <tr><td class="flag-name">--mode</td><td></td><td>string</td><td><code class="mono text-sm">public</code>, <code class="mono text-sm">unlisted</code>, <code class="mono text-sm">private</code></td></tr>
+            <tr><td class="flag-name">--category</td><td></td><td>number</td><td>YouTube category ID (default: <code class="mono text-sm">22</code>)</td></tr>
+            <tr><td class="flag-name">--image</td><td></td><td>string</td><td>Path to thumbnail image</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Global Options -->
+<section id="global-options" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">system options</h3>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">These flags work with all commands.</p>
+    <table class="flag-table">
+        <thead><tr><th>Flag</th><th>Short</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td class="flag-name">--output-dir</td><td class="mono text-sm">-o</td><td>Output directory (default: <code class="mono text-sm">./output</code>)</td></tr>
+            <tr><td class="flag-name">--model</td><td class="mono text-sm">-m</td><td>Model key</td></tr>
+            <tr><td class="flag-name">--json</td><td></td><td>JSON output with <code class="mono text-sm">command_id</code> and <code class="mono text-sm">duration_ms</code></td></tr>
+            <tr><td class="flag-name">--quiet</td><td class="mono text-sm">-q</td><td>Suppress progress and exit metadata</td></tr>
+            <tr><td class="flag-name">--verbose</td><td class="mono text-sm">-v</td><td>Debug logging + JSONL events on stderr</td></tr>
+            <tr><td class="flag-name">--stream</td><td></td><td>JSONL progress events on stderr</td></tr>
+            <tr><td class="flag-name">--help</td><td class="mono text-sm">-h</td><td>Print help</td></tr>
+        </tbody>
+    </table>
+    <div class="mt-6">
+        <h4 class="font-medium text-sm mb-3">JSON Output Envelope</h4>
+        <div class="cmd-code p-4 text-sm">
+<pre>{
+  "status": "ok",
+  "command_id": "cmd-1741830000-a1b2c3",
+  "duration_ms": 8300,
+  "data": {
+    "command": "gen image",
+    "success": true,
+    "outputPath": "./output/cli-1234/output_1234.png",
+    "cost": 0.005
+  }
+}</pre>
+        </div>
+    </div>
+    <div class="mt-6">
+        <h4 class="font-medium text-sm mb-3">Exit Codes</h4>
+        <table class="flag-table">
+            <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+            <tbody>
+                <tr><td class="mono font-medium">0</td><td>Success</td></tr>
+                <tr><td class="mono font-medium">1</td><td>General error</td></tr>
+                <tr><td class="mono font-medium">2</td><td>Invalid arguments / unknown command</td></tr>
+                <tr><td class="mono font-medium">3</td><td>Model not found</td></tr>
+                <tr><td class="mono font-medium">4</td><td>API key missing</td></tr>
+                <tr><td class="mono font-medium">5</td><td>API call failed</td></tr>
+                <tr><td class="mono font-medium">6</td><td>Pipeline failed</td></tr>
+                <tr><td class="mono font-medium">7</td><td>File not found</td></tr>
+                <tr><td class="mono font-medium">8</td><td>Permission denied</td></tr>
+                <tr><td class="mono font-medium">9</td><td>Timeout</td></tr>
+                <tr><td class="mono font-medium">10</td><td>Cancelled</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
