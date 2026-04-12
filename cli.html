@@ -211,7 +211,12 @@
             <a href="#editor-generate" class="sidebar-link">Generation</a>
             <a href="#editor-export" class="sidebar-link">Export</a>
             <a href="#editor-ui" class="sidebar-link">UI & Snapshots</a>
-            <a href="#editor-more" class="sidebar-link">More</a>
+            <a href="#editor-screen-recording" class="sidebar-link">Screen Recording</a>
+            <a href="#editor-remotion" class="sidebar-link">Remotion</a>
+            <a href="#editor-search" class="sidebar-link">Search</a>
+            <a href="#editor-stickers" class="sidebar-link">Stickers</a>
+            <a href="#editor-moyin" class="sidebar-link">Script Director</a>
+            <a href="#editor-misc" class="sidebar-link">Misc</a>
         </aside>
 
         <!-- Main content -->
@@ -1195,93 +1200,114 @@ config:
             </section>
 
             <!-- Editor More -->
-            <section id="editor-more" class="cmd-section cmd-card p-6 mb-6">
+            <!-- Screen Recording -->
+            <section id="editor-screen-recording" class="cmd-section cmd-card p-6 mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-lg font-semibold">More Editor Commands</h3>
+                    <h3 class="text-lg font-semibold">Screen Recording</h3>
                     <span class="badge badge-category">Editor</span>
                 </div>
-                <div class="space-y-4">
-                    <div>
-                        <h4 class="font-medium text-sm mb-2">Screen Recording</h4>
-                        <table class="flag-table">
-                            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-                            <tbody>
-                                <tr><td class="flag-name">editor:screen-recording:sources</td><td>List capture sources</td></tr>
-                                <tr><td class="flag-name">editor:screen-recording:start</td><td>Start recording (<code class="mono text-xs">--source-id</code>, <code class="mono text-xs">--filename</code>)</td></tr>
-                                <tr><td class="flag-name">editor:screen-recording:stop</td><td>Stop recording (<code class="mono text-xs">--discard</code>)</td></tr>
-                                <tr><td class="flag-name">editor:screen-recording:status</td><td>Get recording status</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <h4 class="font-medium text-sm mb-2">Remotion</h4>
-                        <table class="flag-table">
-                            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-                            <tbody>
-                                <tr><td class="flag-name">editor:remotion:list</td><td>List Remotion elements on timeline</td></tr>
-                                <tr><td class="flag-name">editor:remotion:inspect</td><td>Inspect a Remotion element</td></tr>
-                                <tr><td class="flag-name">editor:remotion:update-props</td><td>Update Remotion element props</td></tr>
-                                <tr><td class="flag-name">editor:remotion:export</td><td>Export with Remotion engine</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <h4 class="font-medium text-sm mb-2">Search</h4>
-                        <table class="flag-table">
-                            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-                            <tbody>
-                                <tr><td class="flag-name">editor:search:query</td><td>Search transcriptions by text (<code class="mono text-xs">--query</code>)</td></tr>
-                                <tr><td class="flag-name">editor:search:status</td><td>List transcription status for all media</td></tr>
-                                <tr><td class="flag-name">editor:search:index</td><td>Trigger transcription for untranscribed media</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <h4 class="font-medium text-sm mb-2">Stickers</h4>
-                        <table class="flag-table">
-                            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-                            <tbody>
-                                <tr><td class="flag-name">editor:sticker:add</td><td>Add sticker (<code class="mono text-xs">--sticker-id</code> or <code class="mono text-xs">--source</code>, position, time)</td></tr>
-                                <tr><td class="flag-name">editor:sticker:update</td><td>Update sticker position/size/image</td></tr>
-                                <tr><td class="flag-name">editor:sticker:remove</td><td>Remove sticker</td></tr>
-                                <tr><td class="flag-name">editor:sticker:list</td><td>List all stickers on timeline</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <h4 class="font-medium text-sm mb-2">Script Director (Moyin)</h4>
-                        <table class="flag-table">
-                            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-                            <tbody>
-                                <tr><td class="flag-name">editor:moyin:set-script</td><td>Push script text to director panel</td></tr>
-                                <tr><td class="flag-name">editor:moyin:parse</td><td>Trigger Parse Script</td></tr>
-                                <tr><td class="flag-name">editor:moyin:status</td><td>Get pipeline progress</td></tr>
-                                <tr><td class="flag-name">editor:moyin:export</td><td>Export Script Director data as JSON</td></tr>
-                                <tr><td class="flag-name">editor:moyin:generate</td><td>Generate a script from a description</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <h4 class="font-medium text-sm mb-2">Other</h4>
-                        <table class="flag-table">
-                            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-                            <tbody>
-                                <tr><td class="flag-name">editor:novel:parse</td><td>Parse novel text into structured screenplay</td></tr>
-                                <tr><td class="flag-name">editor:navigator:projects</td><td>List saved projects</td></tr>
-                                <tr><td class="flag-name">editor:navigator:open</td><td>Open a project in editor</td></tr>
-                                <tr><td class="flag-name">editor:diagnostics:analyze</td><td>Analyze error (<code class="mono text-xs">--message</code>)</td></tr>
-                                <tr><td class="flag-name">editor:mcp:forward-html</td><td>Forward HTML to MCP preview</td></tr>
-                                <tr><td class="flag-name">editor:auth:token</td><td>Get or set auth token</td></tr>
-                                <tr><td class="flag-name">editor:auth:activate</td><td>Set token and activate license</td></tr>
-                                <tr><td class="flag-name">editor:auth:logout</td><td>Clear auth token</td></tr>
-                                <tr><td class="flag-name">editor:session:save</td><td>Save sticky CLI session state</td></tr>
-                                <tr><td class="flag-name">editor:session:load</td><td>Load a saved session</td></tr>
-                                <tr><td class="flag-name">editor:session:list</td><td>List all saved sessions</td></tr>
-                                <tr><td class="flag-name">editor:session:delete</td><td>Delete a saved session</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <table class="flag-table">
+                    <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">editor:screen-recording:sources</td><td>List capture sources</td></tr>
+                        <tr><td class="flag-name">editor:screen-recording:start</td><td>Start recording (<code class="mono text-xs">--source-id</code>, <code class="mono text-xs">--filename</code>)</td></tr>
+                        <tr><td class="flag-name">editor:screen-recording:stop</td><td>Stop recording (<code class="mono text-xs">--discard</code>)</td></tr>
+                        <tr><td class="flag-name">editor:screen-recording:status</td><td>Get recording status</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Remotion -->
+            <section id="editor-remotion" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Remotion</h3>
+                    <span class="badge badge-category">Editor</span>
                 </div>
+                <table class="flag-table">
+                    <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">editor:remotion:list</td><td>List Remotion elements on timeline</td></tr>
+                        <tr><td class="flag-name">editor:remotion:inspect</td><td>Inspect a Remotion element</td></tr>
+                        <tr><td class="flag-name">editor:remotion:update-props</td><td>Update Remotion element props</td></tr>
+                        <tr><td class="flag-name">editor:remotion:export</td><td>Export with Remotion engine</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Search -->
+            <section id="editor-search" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Search</h3>
+                    <span class="badge badge-category">Editor</span>
+                </div>
+                <table class="flag-table">
+                    <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">editor:search:query</td><td>Search transcriptions by text (<code class="mono text-xs">--query</code>)</td></tr>
+                        <tr><td class="flag-name">editor:search:status</td><td>List transcription status for all media</td></tr>
+                        <tr><td class="flag-name">editor:search:index</td><td>Trigger transcription for untranscribed media</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Stickers -->
+            <section id="editor-stickers" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Stickers</h3>
+                    <span class="badge badge-category">Editor</span>
+                </div>
+                <table class="flag-table">
+                    <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">editor:sticker:add</td><td>Add sticker (<code class="mono text-xs">--sticker-id</code> or <code class="mono text-xs">--source</code>, position, time)</td></tr>
+                        <tr><td class="flag-name">editor:sticker:update</td><td>Update sticker position/size/image</td></tr>
+                        <tr><td class="flag-name">editor:sticker:remove</td><td>Remove sticker</td></tr>
+                        <tr><td class="flag-name">editor:sticker:list</td><td>List all stickers on timeline</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Script Director (Moyin) -->
+            <section id="editor-moyin" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Script Director (Moyin)</h3>
+                    <span class="badge badge-category">Editor</span>
+                </div>
+                <table class="flag-table">
+                    <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">editor:moyin:set-script</td><td>Push script text to director panel</td></tr>
+                        <tr><td class="flag-name">editor:moyin:parse</td><td>Trigger Parse Script</td></tr>
+                        <tr><td class="flag-name">editor:moyin:status</td><td>Get pipeline progress</td></tr>
+                        <tr><td class="flag-name">editor:moyin:export</td><td>Export Script Director data as JSON</td></tr>
+                        <tr><td class="flag-name">editor:moyin:generate</td><td>Generate a script from a description</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Misc -->
+            <section id="editor-misc" class="cmd-section cmd-card p-6 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">Misc</h3>
+                    <span class="badge badge-category">Editor</span>
+                </div>
+                <table class="flag-table">
+                    <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td class="flag-name">editor:novel:parse</td><td>Parse novel text into structured screenplay</td></tr>
+                        <tr><td class="flag-name">editor:navigator:projects</td><td>List saved projects</td></tr>
+                        <tr><td class="flag-name">editor:navigator:open</td><td>Open a project in editor</td></tr>
+                        <tr><td class="flag-name">editor:diagnostics:analyze</td><td>Analyze error (<code class="mono text-xs">--message</code>)</td></tr>
+                        <tr><td class="flag-name">editor:mcp:forward-html</td><td>Forward HTML to MCP preview</td></tr>
+                        <tr><td class="flag-name">editor:auth:token</td><td>Get or set auth token</td></tr>
+                        <tr><td class="flag-name">editor:auth:activate</td><td>Set token and activate license</td></tr>
+                        <tr><td class="flag-name">editor:auth:logout</td><td>Clear auth token</td></tr>
+                        <tr><td class="flag-name">editor:session:save</td><td>Save sticky CLI session state</td></tr>
+                        <tr><td class="flag-name">editor:session:load</td><td>Load a saved session</td></tr>
+                        <tr><td class="flag-name">editor:session:list</td><td>List all saved sessions</td></tr>
+                        <tr><td class="flag-name">editor:session:delete</td><td>Delete a saved session</td></tr>
+                    </tbody>
+                </table>
             </section>
 
             <!-- 3-Level Help -->
