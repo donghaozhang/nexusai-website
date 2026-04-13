@@ -194,6 +194,7 @@
             <a href="#vimax-portraits" class="sidebar-link">Portraits</a>
 
             <div class="sidebar-heading">system</div>
+            <a href="#auth" class="sidebar-link">system login/logout</a>
             <a href="#list-models" class="sidebar-link">system models</a>
             <a href="#api-keys" class="sidebar-link">system keys</a>
             <a href="#project-management" class="sidebar-link">system project</a>
@@ -254,6 +255,7 @@
             <!-- Quick Start -->
             <section id="quick-start" class="cmd-section mb-12">
                 <h2 class="text-2xl font-bold mb-4">Quick Start</h2>
+                <p class="mb-4 text-sm" style="color: var(--text-muted);">Every <code class="mono text-xs">qcut gen</code>, <code class="mono text-xs">qcut flow</code>, and <code class="mono text-xs">qcut analyze</code> command deducts credits — so you have to log in <strong>before</strong> running any of them. Follow Step 1 first, then come back to Step 2.</p>
                 <div class="cmd-card p-6">
                     <h3 class="text-base font-semibold mb-2">1. Log in</h3>
                     <p class="mb-3 text-sm" style="color: var(--text-muted);">Every AI command deducts credits from your account. Sign up once (free tier includes 50 credits/month), then log in from the CLI.</p>
@@ -275,9 +277,14 @@
                         <div class="mt-2" style="color: var(--text-muted);">
                             Verify with <code class="mono text-xs">qcut system check-keys --json</code> — a successful login shows your user email and remaining credits.
                         </div>
+                        <div class="mt-2" style="color: var(--text-muted);">
+                            Check balance directly against the license server:
+                            <div class="mt-1"><code class="mono text-xs">curl -H "Authorization: Bearer $(qcut system get-key --name QCUT_AUTH_TOKEN --reveal)" https://qcut-license-server.zdhpeter.workers.dev/api/credits/balance</code></div>
+                        </div>
                     </div>
 
                     <h3 class="text-base font-semibold mb-2">2. Run a command</h3>
+                    <p class="mb-3 text-sm" style="color: var(--text-muted);">Each of these requires an active session — if you skipped Step 1 the CLI will exit with <code class="mono text-xs">API key missing</code> (exit code <code class="mono text-xs">4</code>).</p>
                     <div class="cmd-code p-4 space-y-1">
                         <div><span style="color: oklch(0.6 0.08 195);"># Generate an image</span></div>
                         <div>qcut gen image -t "A cinematic portrait at golden hour"</div>
@@ -289,6 +296,12 @@
                         <div>qcut flow run -c pipeline.yaml -i "A sunset" --no-confirm</div>
                         <div class="mt-3"><span style="color: oklch(0.6 0.08 195);"># Full video from an idea (ViMax)</span></div>
                         <div>qcut flow idea2video --idea "A detective in 1920s Paris" -d 120</div>
+                    </div>
+
+                    <h3 class="text-base font-semibold mt-6 mb-2">3. Log out when done</h3>
+                    <p class="mb-3 text-sm" style="color: var(--text-muted);">Clears the stored <code class="mono text-xs">QCUT_AUTH_TOKEN</code> from <code class="mono text-xs">~/.qcut/.env</code>.</p>
+                    <div class="cmd-code p-4 space-y-1">
+                        <div>qcut system logout</div>
                     </div>
                 </div>
             </section>

@@ -25,6 +25,39 @@
     </div>
 </section>
 
+<!-- Authentication -->
+<section id="auth" class="cmd-section cmd-card p-6 mb-6">
+    <div class="flex items-center gap-3 mb-2">
+        <h3 class="text-lg font-semibold mono">system login / logout</h3>
+        <span class="badge badge-category">Auth</span>
+    </div>
+    <p class="mb-4" style="color: var(--text-muted);">
+        Sign in to route AI calls through QCut's license-server proxy and pay with credits. The returned JWT is stored as <code class="mono text-sm">QCUT_AUTH_TOKEN</code> in <code class="mono text-sm">~/.qcut/.env</code>. Required for any <code class="mono text-sm">qcut gen</code> / <code class="mono text-sm">qcut flow</code> / <code class="mono text-sm">qcut analyze</code> command unless you've set a local provider key (e.g. <code class="mono text-sm">GMI_API_KEY</code>) for BYOK mode.
+    </p>
+    <div class="cmd-code p-4 space-y-1 text-sm">
+        <div><span style="color: oklch(0.6 0.08 195);"># Google OAuth (opens a browser window)</span></div>
+        <div>qcut system login</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Email + password (interactive)</span></div>
+        <div>qcut system login --email you@example.com</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Scripted / CI</span></div>
+        <div>qcut system login --email "$QCUT_EMAIL" --password "$QCUT_PASSWORD"</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Create a new account</span></div>
+        <div>qcut system signup --email you@example.com --password "$PW"</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Clear the stored token</span></div>
+        <div>qcut system logout</div>
+    </div>
+    <p class="mt-4 text-sm" style="color: var(--text-muted);">
+        <strong>Credit balance:</strong> query the license server directly with your token —
+    </p>
+    <div class="cmd-code p-4 mt-2 text-sm">
+        <div>curl -H "Authorization: Bearer $(qcut system get-key --name QCUT_AUTH_TOKEN --reveal)" \</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;https://qcut-license-server.zdhpeter.workers.dev/api/credits/balance</div>
+    </div>
+    <p class="mt-4 text-sm" style="color: var(--text-muted);">
+        <strong>Force proxy routing</strong> (ignore a local provider key for one call): <code class="mono text-xs">env -u GMI_API_KEY qcut gen video -m gmi_veo31_lite_t2v -t "…"</code>
+    </p>
+</section>
+
 <!-- API Keys -->
 <section id="api-keys" class="cmd-section cmd-card p-6 mb-6">
     <div class="flex items-center gap-3 mb-2">
@@ -37,14 +70,19 @@
         <div>qcut system setup</div>
         <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Set a key</span></div>
         <div>qcut system set-key --name FAL_KEY --value &lt;key&gt;</div>
+        <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Reveal a stored key (use --reveal for raw value)</span></div>
+        <div>qcut system get-key --name QCUT_AUTH_TOKEN --reveal</div>
         <div class="mt-2"><span style="color: oklch(0.6 0.08 195);"># Check all keys</span></div>
         <div>qcut system check-keys</div>
     </div>
     <p class="mt-4 text-sm" style="color: var(--text-muted);">
         <strong>Supported keys:</strong>
+        <code class="mono text-xs">QCUT_AUTH_TOKEN</code>,
+        <code class="mono text-xs">GMI_API_KEY</code>,
         <code class="mono text-xs">FAL_KEY</code>,
         <code class="mono text-xs">GEMINI_API_KEY</code>,
         <code class="mono text-xs">OPENROUTER_API_KEY</code>,
+        <code class="mono text-xs">ANTHROPIC_API_KEY</code>,
         <code class="mono text-xs">ELEVENLABS_API_KEY</code>,
         <code class="mono text-xs">OPENAI_API_KEY</code>,
         <code class="mono text-xs">RUNWAY_API_KEY</code>,
