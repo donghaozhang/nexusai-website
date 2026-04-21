@@ -153,7 +153,7 @@
     <script src="../i18n.js"></script>
     <script>
         lucide.createIcons();
-        (function(){var n=document.querySelector("nav");if(!n)return;var t=false;window.addEventListener("scroll",function(){if(!t){requestAnimationFrame(function(){n.classList.toggle("nav-scrolled",window.scrollY>10);t=false});t=true}},{passive:true})})();
+        (()=> {var n=document.querySelector("nav");if(!n)return;var t=false;window.addEventListener("scroll",()=> {if(!t){requestAnimationFrame(()=> {n.classList.toggle("nav-scrolled",window.scrollY>10);t=false});t=true}},{passive:true})})();
         AOS.init({ duration: 600, easing: 'ease-out-quart', once: true, offset: 50 });
     </script>
     <script>

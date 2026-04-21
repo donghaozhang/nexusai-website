@@ -132,7 +132,7 @@ function readMetaContent({ name }) {
 		if (!documentRef || typeof documentRef.querySelector !== "function") {
 			return "";
 		}
-		const metaElement = documentRef.querySelector(`meta[name=\"${name}\"]`);
+		const metaElement = documentRef.querySelector(`meta[name="${name}"]`);
 		const content =
 			typeof metaElement?.getAttribute === "function"
 				? metaElement.getAttribute("content")

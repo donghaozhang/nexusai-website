@@ -805,7 +805,7 @@
         lucide.createIcons();
 
         // Typewriter effect
-        (function() {
+        (() => {
             const words = ['Film', 'TV Series', 'Commercial', 'Music Video', 'Short Film', 'Documentary'];
             const el = document.querySelector('.typewriter-text');
             if (!el) return;
@@ -846,13 +846,13 @@
         });
 
         // Nav scroll shadow
-        (function() {
+        (() => {
             const nav = document.querySelector('nav');
             if (!nav) return;
             let ticking = false;
-            window.addEventListener('scroll', function() {
+            window.addEventListener('scroll', () => {
                 if (!ticking) {
-                    requestAnimationFrame(function() {
+                    requestAnimationFrame(() => {
                         nav.classList.toggle('nav-scrolled', window.scrollY > 10);
                         ticking = false;
                     });
@@ -867,7 +867,7 @@
         const successMessage = document.getElementById('success-message');
 
         if (contactForm) {
-            contactForm.addEventListener('submit', async function(e) {
+            contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const originalText = submitBtn.textContent;
                 submitBtn.disabled = true;

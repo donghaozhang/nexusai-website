@@ -100,6 +100,6 @@
     </footer>
     <script src="theme.js"></script>
 <script>lucide.createIcons();</script>
-<script>(function(){var n=document.querySelector("nav");if(!n)return;var t=false;window.addEventListener("scroll",function(){if(!t){requestAnimationFrame(function(){n.classList.toggle("nav-scrolled",window.scrollY>10);t=false});t=true}},{passive:true})})()</script>
+<script>(()=> {var n=document.querySelector("nav");if(!n)return;var t=false;window.addEventListener("scroll",()=> {if(!t){requestAnimationFrame(()=> {n.classList.toggle("nav-scrolled",window.scrollY>10);t=false});t=true}},{passive:true})})()</script>
 </body>
 </html>
