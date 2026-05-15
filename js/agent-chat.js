@@ -5,6 +5,14 @@ const DEFAULT_LICENSE_SERVER_URL =
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
+const CODEX_AGENT_SYSTEM_PROMPT = [
+	"You are running inside QCut's Daytona CLI image.",
+	"Use shell commands when the user asks you to inspect or run QCut.",
+	"For image generation requests, run the QCut CLI rather than any external image tool.",
+	"Write generated files under /tmp/qcut-output so the worker can upload them.",
+	"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
+	"Report the command you ran and the resulting artifact paths.",
+].join("\n");
 const chatMessages = [];
 
 function getRuntimeGlobal() {
@@ -224,7 +232,12 @@ function buildCodexChatPrompt({ messages, prompt }) {
 			)
 		: [];
 	if (priorMessages.length === 0) {
-		return currentPrompt;
+		return [
+			CODEX_AGENT_SYSTEM_PROMPT,
+			"",
+			"Latest user message:",
+			currentPrompt,
+		].join("\n");
 	}
 	const transcript = priorMessages
 		.map((message) => {
@@ -233,6 +246,8 @@ function buildCodexChatPrompt({ messages, prompt }) {
 		})
 		.join("\n\n");
 	return [
+		CODEX_AGENT_SYSTEM_PROMPT,
+		"",
 		"Continue this QCut website chat. Answer the latest user message.",
 		"",
 		"Conversation so far:",

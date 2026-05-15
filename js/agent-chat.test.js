@@ -60,7 +60,17 @@ test("buildAgentRequest keeps codex prompts out of the shell command", () => {
 			command: "codex exec --skip-git-repo-check --json -",
 			args: {
 				source: "qcut_website_chat_agent",
-				codexPrompt: "Explain how the Daytona worker runs qcut.",
+				codexPrompt: [
+					"You are running inside QCut's Daytona CLI image.",
+					"Use shell commands when the user asks you to inspect or run QCut.",
+					"For image generation requests, run the QCut CLI rather than any external image tool.",
+					"Write generated files under /tmp/qcut-output so the worker can upload them.",
+					"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
+					"Report the command you ran and the resulting artifact paths.",
+					"",
+					"Latest user message:",
+					"Explain how the Daytona worker runs qcut.",
+				].join("\n"),
 			},
 		}
 	);
@@ -77,6 +87,13 @@ test("buildCodexChatPrompt includes prior turns for follow-up messages", () => {
 			prompt: "What should we test next?",
 		}),
 		[
+			"You are running inside QCut's Daytona CLI image.",
+			"Use shell commands when the user asks you to inspect or run QCut.",
+			"For image generation requests, run the QCut CLI rather than any external image tool.",
+			"Write generated files under /tmp/qcut-output so the worker can upload them.",
+			"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
+			"Report the command you ran and the resulting artifact paths.",
+			"",
 			"Continue this QCut website chat. Answer the latest user message.",
 			"",
 			"Conversation so far:",
