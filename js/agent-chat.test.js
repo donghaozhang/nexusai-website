@@ -62,6 +62,8 @@ test("buildAgentRequest keeps codex prompts out of the shell command", () => {
 				source: "qcut_website_chat_agent",
 				codexPrompt: [
 					"You are running inside QCut's Daytona CLI image.",
+					"The QCut native CLI skill is available at /home/qcut/qcut/.claude/skills/native-cli/SKILL.md.",
+					"Read that skill before running nontrivial QCut CLI workflows or when command syntax is unclear.",
 					"Use shell commands when the user asks you to inspect or run QCut.",
 					"For image generation requests, run the QCut CLI rather than any external image tool.",
 					"Write generated files under /tmp/qcut-output so the worker can upload them.",
@@ -88,6 +90,8 @@ test("buildCodexChatPrompt includes prior turns for follow-up messages", () => {
 		}),
 		[
 			"You are running inside QCut's Daytona CLI image.",
+			"The QCut native CLI skill is available at /home/qcut/qcut/.claude/skills/native-cli/SKILL.md.",
+			"Read that skill before running nontrivial QCut CLI workflows or when command syntax is unclear.",
 			"Use shell commands when the user asks you to inspect or run QCut.",
 			"For image generation requests, run the QCut CLI rather than any external image tool.",
 			"Write generated files under /tmp/qcut-output so the worker can upload them.",
