@@ -49,6 +49,23 @@ test("buildImageCommand normalizes prompt into worker-safe tokens", () => {
 	);
 });
 
+test("buildAgentRequest keeps codex prompts out of the shell command", () => {
+	const AgentChatAPI = loadAgentChatApi();
+	assert.deepEqual(
+		AgentChatAPI.buildAgentRequest({
+			mode: "codex",
+			prompt: "Explain how the Daytona worker runs qcut.",
+		}),
+		{
+			command: "codex exec --skip-git-repo-check --json -",
+			args: {
+				source: "qcut_website_chat_agent",
+				codexPrompt: "Explain how the Daytona worker runs qcut.",
+			},
+		}
+	);
+});
+
 test("createAgentJob posts to the license server agent route", async () => {
 	let requestUrl = "";
 	let requestInit = null;
@@ -73,6 +90,7 @@ test("createAgentJob posts to the license server agent route", async () => {
 
 	const job = await AgentChatAPI.createAgentJob({
 		command: "qcut system doctor --json",
+		args: { source: "qcut_website_chat_agent" },
 	});
 
 	assert.equal(job.id, "job-1");

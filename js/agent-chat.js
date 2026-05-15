@@ -3,6 +3,7 @@ const DEFAULT_LICENSE_SERVER_URL =
 	"https://qcut-license-server.zdhpeter.workers.dev";
 
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
+const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
 
 function getRuntimeGlobal() {
 	try {
@@ -171,13 +172,36 @@ function buildImageCommand({ prompt }) {
 	return `qcut gen image -t ${normalizePromptSlug({ prompt })} -m flux_dev --json`;
 }
 
-async function createAgentJob({ command }) {
+function buildCodexCommand() {
+	return CODEX_AGENT_COMMAND;
+}
+
+function buildAgentRequest({ mode, prompt }) {
+	if (mode === "codex") {
+		return {
+			command: buildCodexCommand(),
+			args: {
+				source: "qcut_website_chat_agent",
+				codexPrompt:
+					typeof prompt === "string" && prompt.trim().length > 0
+						? prompt.trim()
+						: "Summarize the current QCut agent status.",
+			},
+		};
+	}
+	return {
+		command: buildImageCommand({ prompt }),
+		args: { source: "qcut_website_chat_agent" },
+	};
+}
+
+async function createAgentJob({ command, args }) {
 	const payload = await requestAgentApi({
 		path: "/api/agent/jobs",
 		method: "POST",
 		body: {
 			command,
-			args: { source: "qcut_website_chat_agent" },
+			args: args || { source: "qcut_website_chat_agent" },
 		},
 	});
 	if (!payload || typeof payload !== "object" || !payload.job) {
@@ -341,7 +365,11 @@ function renderEvents({ events }) {
 
 function setCommandPreview() {
 	const prompt = getValue({ id: "agent-prompt" });
-	setText({ id: "agent-command-preview", text: buildImageCommand({ prompt }) });
+	const mode = getValue({ id: "agent-mode" });
+	setText({
+		id: "agent-command-preview",
+		text: buildAgentRequest({ mode, prompt }).command,
+	});
 }
 
 function showError({ message }) {
@@ -381,8 +409,11 @@ async function submitAgentJob() {
 		if (token.trim().length > 0) {
 			saveAuthToken({ token });
 		}
-		const command = buildImageCommand({ prompt: getValue({ id: "agent-prompt" }) });
-		const job = await createAgentJob({ command });
+		const request = buildAgentRequest({
+			mode: getValue({ id: "agent-mode" }),
+			prompt: getValue({ id: "agent-prompt" }),
+		});
+		const job = await createAgentJob(request);
 		renderJob({ job });
 		renderArtifacts({ artifacts: [] });
 		renderEvents({ events: [] });
@@ -397,6 +428,7 @@ async function submitAgentJob() {
 
 function initAgentChatPage() {
 	const promptInput = getElement({ id: "agent-prompt" });
+	const modeInput = getElement({ id: "agent-mode" });
 	const submitButton = getElement({ id: "agent-submit" });
 	if (!promptInput || !submitButton) {
 		return;
@@ -405,11 +437,17 @@ function initAgentChatPage() {
 	setValue({ id: "agent-token", value: readAuthToken() });
 	setCommandPreview();
 	promptInput.addEventListener("input", setCommandPreview);
+	if (modeInput) {
+		modeInput.addEventListener("change", setCommandPreview);
+	}
 	submitButton.addEventListener("click", submitAgentJob);
 }
 
 const AgentChatAPI = {
+	buildAgentRequest,
+	buildCodexCommand,
 	buildImageCommand,
+	CODEX_AGENT_COMMAND,
 	createAgentJob,
 	getAgentJobDetail,
 	isTerminalStatus,
