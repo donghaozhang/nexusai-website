@@ -144,9 +144,9 @@
                     <textarea id="agent-prompt" class="agent-input mt-2 p-4 min-h-32" placeholder="small blue square icon on a clean white background">small blue square icon on a clean white background</textarea>
 
                     <div class="mt-5">
-                        <label for="agent-token" class="text-sm font-medium">QCut auth token</label>
-                        <input id="agent-token" type="password" class="agent-input mt-2 px-4 py-3 mono text-sm" placeholder="Paste QCUT_AUTH_TOKEN for dogfood">
-                        <p class="text-xs text-muted mt-2">For now, get it with <span class="mono">qcut system get-key --name QCUT_AUTH_TOKEN --reveal</span>. The proper web login bridge is the next step.</p>
+                        <label for="agent-token" class="text-sm font-medium">QCut auth token override</label>
+                        <input id="agent-token" type="password" class="agent-input mt-2 px-4 py-3 mono text-sm" placeholder="Optional">
+                        <p class="text-xs text-muted mt-2">Leave empty to use the default test agent account configured on the license server.</p>
                     </div>
 
                     <div class="mt-5">

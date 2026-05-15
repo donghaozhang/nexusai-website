@@ -137,15 +137,14 @@ async function requestAgentApi({ path, method, body }) {
 	}
 
 	const token = readAuthToken();
-	if (token.length === 0) {
-		throw new Error("QCut auth token required");
-	}
+	const authHeaders =
+		token.length === 0 ? {} : { Authorization: `Bearer ${token}` };
 
 	const response = await fetcher(`${getApiBaseUrl()}${path}`, {
 		method,
 		headers: {
 			Accept: "application/json",
-			Authorization: `Bearer ${token}`,
+			...authHeaders,
 			...(body === undefined ? {} : { "Content-Type": "application/json" }),
 		},
 		body: body === undefined ? undefined : JSON.stringify(body),
@@ -165,15 +164,14 @@ async function requestAgentText({ path }) {
 	}
 
 	const token = readAuthToken();
-	if (token.length === 0) {
-		throw new Error("QCut auth token required");
-	}
+	const authHeaders =
+		token.length === 0 ? {} : { Authorization: `Bearer ${token}` };
 
 	const response = await fetcher(`${getApiBaseUrl()}${path}`, {
 		method: "GET",
 		headers: {
 			Accept: "text/plain",
-			Authorization: `Bearer ${token}`,
+			...authHeaders,
 		},
 	});
 	const rawText = await response.text();

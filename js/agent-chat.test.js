@@ -176,16 +176,21 @@ test("getAgentArtifactText reads text artifacts from the license server", async 
 	assert.equal(requestInit.headers.Accept, "text/plain");
 });
 
-test("createAgentJob requires an auth token", async () => {
+test("createAgentJob can use the server-side default agent account", async () => {
+	let requestInit = null;
 	setupRuntime({
 		token: "",
-		fetchImpl: async () =>
-			createResponse({ status: 201, payload: { job: { id: "job-1" } } }),
+		fetchImpl: async (_url, init) => {
+			requestInit = init;
+			return createResponse({ status: 201, payload: { job: { id: "job-1" } } });
+		},
 	});
 	const AgentChatAPI = loadAgentChatApi();
 
-	await assert.rejects(
-		AgentChatAPI.createAgentJob({ command: "qcut system doctor --json" }),
-		/QCut auth token required/
-	);
+	const job = await AgentChatAPI.createAgentJob({
+		command: "qcut system doctor --json",
+	});
+
+	assert.equal(job.id, "job-1");
+	assert.equal(requestInit.headers.Authorization, undefined);
 });
