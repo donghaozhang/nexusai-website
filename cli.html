@@ -130,6 +130,7 @@
                         <a href="index.html#ai" class="nav-link text-sm text-muted hover:text-primary transition-colors">AI Models</a>
                         <a href="releases.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Releases</a>
                         <a href="cli.html" class="text-sm font-medium transition-colors" style="color: var(--text-primary);">CLI</a>
+                        <a href="chat-agent.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Chat Agent</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -151,6 +152,7 @@
             <a href="index.html#ai" class="block text-sm text-muted">AI Models</a>
             <a href="releases.html" class="block text-sm text-muted">Releases</a>
             <a href="cli.html" class="block text-sm font-medium" style="color: var(--text-primary);">CLI</a>
+            <a href="chat-agent.html" class="block text-sm text-muted">Chat Agent</a>
         </div>
     </div>
 
@@ -165,6 +167,7 @@
             <div class="sidebar-heading">Getting Started</div>
             <a href="#installation" class="sidebar-link">Installation</a>
             <a href="#quick-start" class="sidebar-link">Quick Start</a>
+            <a href="#chat-agent" class="sidebar-link">Chat Agent</a>
 
             <div class="sidebar-heading">gen</div>
             <a href="#generate-image" class="sidebar-link">gen image</a>
@@ -303,6 +306,19 @@
                     <div class="cmd-code p-4 space-y-1">
                         <div>qcut system logout</div>
                     </div>
+                </div>
+            </section>
+
+            <section id="chat-agent" class="cmd-section mb-12">
+                <h2 class="text-2xl font-bold mb-4">Chat Agent</h2>
+                <div class="cmd-card p-6">
+                    <p class="mb-4 text-sm" style="color: var(--text-muted);">
+                        Run the same QCut CLI through the Daytona-backed website agent. The page creates an <code class="mono text-xs">agent_jobs</code> row, then the worker runs the command and uploads artifacts.
+                    </p>
+                    <a href="chat-agent.html" class="btn-dark px-5 py-3 rounded-full text-sm font-medium inline-flex items-center gap-2">
+                        Open Chat Agent
+                        <span aria-hidden="true">→</span>
+                    </a>
                 </div>
             </section>
 

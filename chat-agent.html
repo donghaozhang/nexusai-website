@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCut - Chat Agent</title>
+    <meta name="description" content="Submit QCut CLI jobs to the Daytona-backed agent worker from the QCut website.">
+    <link rel="icon" type="image/png" href="assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+    <style>
+        .mono { font-family: "JetBrains Mono", monospace; }
+        .agent-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            transition: border-color 0.2s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart);
+        }
+        .agent-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px oklch(0.62 0.17 25 / 0.14);
+        }
+        .status-chip {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <img src="assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="index.html#features" class="nav-link text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="releases.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="cli.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">CLI</a>
+                        <a href="chat-agent.html" class="text-sm font-medium transition-colors" style="color: var(--text-primary);">Chat Agent</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('open')" class="hamburger items-center justify-center theme-toggle md:hidden" aria-label="Open menu">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Open menu</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <button type="button" onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Light theme</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Dark theme</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="hidden sm:inline-flex btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="mobile-menu fixed top-14 left-0 w-full z-40 bg-primary border-b border-main md:hidden">
+        <div class="px-6 py-2 space-y-1">
+            <a href="index.html#features" class="block text-sm text-muted">Features</a>
+            <a href="releases.html" class="block text-sm text-muted">Releases</a>
+            <a href="cli.html" class="block text-sm text-muted">CLI</a>
+            <a href="chat-agent.html" class="block text-sm font-medium" style="color: var(--text-primary);">Chat Agent</a>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 pt-24 pb-16">
+        <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div class="space-y-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 status-chip mb-4">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                        Daytona-backed QCut CLI
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl font-semibold leading-tight mb-4">Chat Agent</h1>
+                    <p class="text-lg text-muted max-w-2xl">
+                        Submit a QCut CLI job from the website. The request creates an <span class="mono text-sm">agent_jobs</span> row, the worker claims it, Daytona runs the GHCR CLI image, and artifacts return through Supabase.
+                    </p>
+                </div>
+
+                <section class="card rounded-2xl p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-5">
+                        <div>
+                            <h2 class="text-xl font-semibold">Generate an image</h2>
+                            <p class="text-sm text-muted mt-1">This first UI maps your prompt to a worker-safe <span class="mono">qcut gen image</span> command.</p>
+                        </div>
+                        <span class="status-chip" id="agent-job-status">idle</span>
+                    </div>
+
+                    <label for="agent-prompt" class="text-sm font-medium">Prompt</label>
+                    <textarea id="agent-prompt" class="agent-input mt-2 p-4 min-h-32" placeholder="small blue square icon on a clean white background">small blue square icon on a clean white background</textarea>
+
+                    <div class="mt-5">
+                        <label for="agent-token" class="text-sm font-medium">QCut auth token</label>
+                        <input id="agent-token" type="password" class="agent-input mt-2 px-4 py-3 mono text-sm" placeholder="Paste QCUT_AUTH_TOKEN for dogfood">
+                        <p class="text-xs text-muted mt-2">For now, get it with <span class="mono">qcut system get-key --name QCUT_AUTH_TOKEN --reveal</span>. The proper web login bridge is the next step.</p>
+                    </div>
+
+                    <div class="mt-5">
+                        <div class="text-xs uppercase tracking-wider text-muted mb-2">Command</div>
+                        <pre id="agent-command-preview" class="cmd-code p-4 overflow-x-auto"></pre>
+                    </div>
+
+                    <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                        <button id="agent-submit" type="button" class="btn-dark px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Run agent
+                        </button>
+                        <a href="cli.html#auth" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center">CLI auth docs</a>
+                    </div>
+
+                    <div id="agent-error" class="hidden mt-4 p-3 rounded-xl text-sm" style="background: var(--color-error-light); color: var(--color-error);"></div>
+                </section>
+            </div>
+
+            <aside class="card rounded-2xl p-6 self-start">
+                <h2 class="text-lg font-semibold mb-4">Job state</h2>
+                <p id="agent-job-empty" class="text-sm text-muted">No job submitted yet.</p>
+                <div id="agent-job-summary" class="hidden space-y-3 text-sm">
+                    <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Job</span><span id="agent-job-id" class="mono break-all">-</span></div>
+                    <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Exit</span><span id="agent-job-exit" class="mono">-</span></div>
+                    <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Runner</span><span id="agent-job-runner" class="mono break-all">-</span></div>
+                    <div id="agent-job-error" class="text-sm" style="color: var(--color-error);"></div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="grid gap-6 lg:grid-cols-2 mt-8">
+            <div class="card rounded-2xl p-6">
+                <h2 class="text-lg font-semibold mb-4">Artifacts</h2>
+                <div id="agent-artifacts" class="space-y-3">
+                    <p class="text-sm text-muted">Artifacts will appear after the worker uploads outputs.</p>
+                </div>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <h2 class="text-lg font-semibold mb-4">Events</h2>
+                <div id="agent-events" class="space-y-3">
+                    <p class="text-sm text-muted">Worker events will appear as the job runs.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t" style="border-color: var(--border-color);">
+        <div class="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <img src="assets/qcut-logo.png" alt="QCut" class="h-6 w-6">
+                <span class="text-sm text-muted">QCut Chat Agent</span>
+            </div>
+            <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-sm text-muted hover:text-primary transition-colors">GitHub</a>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/agent-chat.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
