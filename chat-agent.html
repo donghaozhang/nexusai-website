@@ -35,6 +35,37 @@
             font-size: 12px;
             color: var(--text-muted);
         }
+        .agent-chat-log {
+            min-height: 240px;
+            max-height: 420px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .agent-chat-message {
+            max-width: 88%;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+        .agent-chat-message + .agent-chat-message {
+            margin-top: 12px;
+        }
+        .agent-chat-user {
+            margin-left: auto;
+            background: var(--color-primary-light);
+        }
+        .agent-chat-assistant {
+            margin-right: auto;
+            background: var(--bg-primary);
+        }
+        .agent-chat-pending {
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -93,8 +124,8 @@
                 <section class="card rounded-2xl p-6">
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-5">
                         <div>
-                            <h2 class="text-xl font-semibold">Run an agent job</h2>
-                            <p class="text-sm text-muted mt-1">Choose QCut image generation or Codex chat execution in the Daytona sandbox.</p>
+                            <h2 class="text-xl font-semibold">Talk to the sandbox</h2>
+                            <p class="text-sm text-muted mt-1">Send a Codex prompt or run a QCut image job in Daytona.</p>
                         </div>
                         <span class="status-chip" id="agent-job-status">idle</span>
                     </div>
@@ -105,7 +136,11 @@
                         <option value="codex">Codex chat agent</option>
                     </select>
 
-                    <label for="agent-prompt" class="text-sm font-medium">Prompt</label>
+                    <div id="agent-chat-log" class="agent-chat-log mb-5">
+                        <p class="text-sm text-muted">Codex replies will appear here after each run.</p>
+                    </div>
+
+                    <label for="agent-prompt" class="text-sm font-medium">Message</label>
                     <textarea id="agent-prompt" class="agent-input mt-2 p-4 min-h-32" placeholder="small blue square icon on a clean white background">small blue square icon on a clean white background</textarea>
 
                     <div class="mt-5">
@@ -122,7 +157,7 @@
                     <div class="mt-6 flex flex-col sm:flex-row gap-3">
                         <button id="agent-submit" type="button" class="btn-dark px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
                             <i data-lucide="send" class="w-4 h-4"></i>
-                            Run agent
+                            Send
                         </button>
                         <a href="cli.html#auth" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center">CLI auth docs</a>
                     </div>

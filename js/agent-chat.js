@@ -4,6 +4,8 @@ const DEFAULT_LICENSE_SERVER_URL =
 
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
+const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
+const chatMessages = [];
 
 function getRuntimeGlobal() {
 	try {
@@ -156,6 +158,38 @@ async function requestAgentApi({ path, method, body }) {
 	return payload;
 }
 
+async function requestAgentText({ path }) {
+	const fetcher = getFetch();
+	if (!fetcher) {
+		throw new Error("Fetch API is unavailable");
+	}
+
+	const token = readAuthToken();
+	if (token.length === 0) {
+		throw new Error("QCut auth token required");
+	}
+
+	const response = await fetcher(`${getApiBaseUrl()}${path}`, {
+		method: "GET",
+		headers: {
+			Accept: "text/plain",
+			Authorization: `Bearer ${token}`,
+		},
+	});
+	const rawText = await response.text();
+	if (!response.ok) {
+		let message = rawText;
+		try {
+			const payload = JSON.parse(rawText);
+			message = getPayloadError({ payload }) || rawText;
+		} catch {
+			message = rawText;
+		}
+		throw new Error(message || `Request failed (${response.status})`);
+	}
+	return rawText;
+}
+
 function normalizePromptSlug({ prompt }) {
 	const normalized =
 		typeof prompt === "string"
@@ -176,16 +210,48 @@ function buildCodexCommand() {
 	return CODEX_AGENT_COMMAND;
 }
 
-function buildAgentRequest({ mode, prompt }) {
+function buildCodexChatPrompt({ messages, prompt }) {
+	const currentPrompt =
+		typeof prompt === "string" && prompt.trim().length > 0
+			? prompt.trim()
+			: "Summarize the current QCut agent status.";
+	const priorMessages = Array.isArray(messages)
+		? messages.filter(
+				(message) =>
+					message &&
+					(message.role === "user" || message.role === "assistant") &&
+					typeof message.content === "string" &&
+					message.content.trim().length > 0 &&
+					message.status !== "pending"
+			)
+		: [];
+	if (priorMessages.length === 0) {
+		return currentPrompt;
+	}
+	const transcript = priorMessages
+		.map((message) => {
+			const role = message.role === "assistant" ? "Assistant" : "User";
+			return `${role}: ${message.content.trim()}`;
+		})
+		.join("\n\n");
+	return [
+		"Continue this QCut website chat. Answer the latest user message.",
+		"",
+		"Conversation so far:",
+		transcript,
+		"",
+		"Latest user message:",
+		currentPrompt,
+	].join("\n");
+}
+
+function buildAgentRequest({ mode, prompt, messages }) {
 	if (mode === "codex") {
 		return {
 			command: buildCodexCommand(),
 			args: {
 				source: "qcut_website_chat_agent",
-				codexPrompt:
-					typeof prompt === "string" && prompt.trim().length > 0
-						? prompt.trim()
-						: "Summarize the current QCut agent status.",
+				codexPrompt: buildCodexChatPrompt({ messages, prompt }),
 			},
 		};
 	}
@@ -217,6 +283,20 @@ async function getAgentJobDetail({ jobId }) {
 	return requestAgentApi({
 		path: `/api/agent/jobs/${encodeURIComponent(jobId.trim())}`,
 		method: "GET",
+	});
+}
+
+async function getAgentArtifactText({ jobId, artifactId }) {
+	if (typeof jobId !== "string" || jobId.trim().length === 0) {
+		throw new Error("Job id required");
+	}
+	if (typeof artifactId !== "string" || artifactId.trim().length === 0) {
+		throw new Error("Artifact id required");
+	}
+	return requestAgentText({
+		path: `/api/agent/jobs/${encodeURIComponent(
+			jobId.trim()
+		)}/artifacts/${encodeURIComponent(artifactId.trim())}/text`,
 	});
 }
 
@@ -265,6 +345,59 @@ function setDisabled({ id, disabled }) {
 	}
 }
 
+function appendChatMessage({ role, content, status }) {
+	const id = `${Date.now()}-${chatMessages.length}`;
+	chatMessages.push({ id, role, content, status: status || "ready" });
+	renderChatMessages();
+	return id;
+}
+
+function updateChatMessage({ id, content, status }) {
+	const message = chatMessages.find((item) => item.id === id);
+	if (!message) {
+		return;
+	}
+	message.content = content;
+	message.status = status || "ready";
+	renderChatMessages();
+}
+
+function renderChatMessages() {
+	const list = getElement({ id: "agent-chat-log" });
+	const doc = getRuntimeWindow()?.document;
+	if (!list || !doc) {
+		return;
+	}
+	list.innerHTML = "";
+	if (chatMessages.length === 0) {
+		const empty = doc.createElement("p");
+		empty.className = "text-sm text-muted";
+		empty.textContent = "Codex replies will appear here after each run.";
+		list.appendChild(empty);
+		return;
+	}
+
+	for (const message of chatMessages) {
+		const row = doc.createElement("div");
+		row.className = `agent-chat-message ${message.role === "user" ? "agent-chat-user" : "agent-chat-assistant"}`;
+
+		const label = doc.createElement("div");
+		label.className = "text-xs font-medium uppercase tracking-wider";
+		label.textContent = message.role === "user" ? "You" : "Codex";
+
+		const body = doc.createElement("div");
+		body.className = "mt-2 whitespace-pre-wrap";
+		body.textContent = message.content;
+
+		if (message.status === "pending") {
+			row.classList.add("agent-chat-pending");
+		}
+		row.append(label, body);
+		list.appendChild(row);
+	}
+	list.scrollTop = list.scrollHeight;
+}
+
 function renderJob({ job }) {
 	if (!job) {
 		return;
@@ -279,6 +412,28 @@ function renderJob({ job }) {
 	setText({ id: "agent-job-error", text: job.error || "" });
 	setHidden({ id: "agent-job-empty", hidden: true });
 	setHidden({ id: "agent-job-summary", hidden: false });
+}
+
+function getArtifactFilename({ artifact }) {
+	const filename = artifact?.meta?.filename;
+	if (typeof filename === "string" && filename.length > 0) {
+		return filename;
+	}
+	const storagePath =
+		typeof artifact?.storagePath === "string" ? artifact.storagePath : "";
+	const parts = storagePath.split("/");
+	return parts[parts.length - 1] || "";
+}
+
+function findCodexLastMessageArtifact({ artifacts }) {
+	if (!Array.isArray(artifacts)) {
+		return null;
+	}
+	return (
+		artifacts.find(
+			(artifact) => getArtifactFilename({ artifact }) === CODEX_LAST_MESSAGE_FILE
+		) || null
+	);
 }
 
 function renderArtifacts({ artifacts }) {
@@ -368,7 +523,7 @@ function setCommandPreview() {
 	const mode = getValue({ id: "agent-mode" });
 	setText({
 		id: "agent-command-preview",
-		text: buildAgentRequest({ mode, prompt }).command,
+		text: buildAgentRequest({ mode, prompt, messages: chatMessages }).command,
 	});
 }
 
@@ -377,7 +532,47 @@ function showError({ message }) {
 	setHidden({ id: "agent-error", hidden: message.length === 0 });
 }
 
-function pollJob({ jobId }) {
+async function resolveCodexChatReply({ detail, assistantMessageId }) {
+	if (detail.job?.status !== "succeeded") {
+		updateChatMessage({
+			id: assistantMessageId,
+			content: detail.job?.error || "Codex job failed before returning a reply.",
+			status: "error",
+		});
+		return;
+	}
+	const artifact = findCodexLastMessageArtifact({ artifacts: detail.artifacts });
+	if (!artifact?.id) {
+		updateChatMessage({
+			id: assistantMessageId,
+			content: "Codex finished, but no final message artifact was uploaded.",
+			status: "error",
+		});
+		return;
+	}
+	try {
+		const text = await getAgentArtifactText({
+			jobId: detail.job.id,
+			artifactId: artifact.id,
+		});
+		updateChatMessage({
+			id: assistantMessageId,
+			content: typeof text === "string" && text.trim().length > 0 ? text.trim() : "(empty response)",
+			status: "ready",
+		});
+	} catch (error) {
+		updateChatMessage({
+			id: assistantMessageId,
+			content:
+				error instanceof Error
+					? `Codex replied, but the website could not load it: ${error.message}`
+					: "Codex replied, but the website could not load it.",
+			status: "error",
+		});
+	}
+}
+
+function pollJob({ jobId, mode, assistantMessageId }) {
 	const win = getRuntimeWindow();
 	if (!win) {
 		return;
@@ -391,6 +586,9 @@ function pollJob({ jobId }) {
 			if (isTerminalStatus({ status: detail.job?.status })) {
 				win.clearInterval(intervalId);
 				setDisabled({ id: "agent-submit", disabled: false });
+				if (mode === "codex" && assistantMessageId) {
+					await resolveCodexChatReply({ detail, assistantMessageId });
+				}
 			}
 		} catch (error) {
 			showError({
@@ -405,19 +603,38 @@ async function submitAgentJob() {
 	setDisabled({ id: "agent-submit", disabled: true });
 
 	try {
+		const mode = getValue({ id: "agent-mode" });
+		const prompt = getValue({ id: "agent-prompt" });
 		const token = getValue({ id: "agent-token" });
 		if (token.trim().length > 0) {
 			saveAuthToken({ token });
 		}
 		const request = buildAgentRequest({
-			mode: getValue({ id: "agent-mode" }),
-			prompt: getValue({ id: "agent-prompt" }),
+			mode,
+			prompt,
+			messages: chatMessages,
 		});
+		let assistantMessageId = "";
+		const visiblePrompt =
+			typeof prompt === "string" && prompt.trim().length > 0
+				? prompt.trim()
+				: "Summarize the current QCut agent status.";
 		const job = await createAgentJob(request);
+		if (mode === "codex") {
+			appendChatMessage({
+				role: "user",
+				content: visiblePrompt,
+			});
+			assistantMessageId = appendChatMessage({
+				role: "assistant",
+				content: "Running Codex in the Daytona sandbox...",
+				status: "pending",
+			});
+		}
 		renderJob({ job });
 		renderArtifacts({ artifacts: [] });
 		renderEvents({ events: [] });
-		pollJob({ jobId: job.id });
+		pollJob({ jobId: job.id, mode, assistantMessageId });
 	} catch (error) {
 		setDisabled({ id: "agent-submit", disabled: false });
 		showError({
@@ -445,10 +662,13 @@ function initAgentChatPage() {
 
 const AgentChatAPI = {
 	buildAgentRequest,
+	buildCodexChatPrompt,
 	buildCodexCommand,
 	buildImageCommand,
 	CODEX_AGENT_COMMAND,
 	createAgentJob,
+	findCodexLastMessageArtifact,
+	getAgentArtifactText,
 	getAgentJobDetail,
 	isTerminalStatus,
 	normalizePromptSlug,
