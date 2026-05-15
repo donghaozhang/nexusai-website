@@ -198,6 +198,37 @@ async function requestAgentText({ path }) {
 	return rawText;
 }
 
+async function requestAgentBlob({ path }) {
+	const fetcher = getFetch();
+	if (!fetcher) {
+		throw new Error("Fetch API is unavailable");
+	}
+
+	const token = readAuthToken();
+	const authHeaders =
+		token.length === 0 ? {} : { Authorization: `Bearer ${token}` };
+
+	const response = await fetcher(`${getApiBaseUrl()}${path}`, {
+		method: "GET",
+		headers: {
+			Accept: "application/octet-stream",
+			...authHeaders,
+		},
+	});
+	if (!response.ok) {
+		const rawText = await response.text();
+		let message = rawText;
+		try {
+			const payload = JSON.parse(rawText);
+			message = getPayloadError({ payload }) || rawText;
+		} catch {
+			message = rawText;
+		}
+		throw new Error(message || `Request failed (${response.status})`);
+	}
+	return response.blob();
+}
+
 function normalizePromptSlug({ prompt }) {
 	const normalized =
 		typeof prompt === "string"
@@ -313,6 +344,46 @@ async function getAgentArtifactText({ jobId, artifactId }) {
 			jobId.trim()
 		)}/artifacts/${encodeURIComponent(artifactId.trim())}/text`,
 	});
+}
+
+function buildAgentArtifactDownloadPath({ jobId, artifactId }) {
+	if (typeof jobId !== "string" || jobId.trim().length === 0) {
+		throw new Error("Job id required");
+	}
+	if (typeof artifactId !== "string" || artifactId.trim().length === 0) {
+		throw new Error("Artifact id required");
+	}
+	return `/api/agent/jobs/${encodeURIComponent(
+		jobId.trim()
+	)}/artifacts/${encodeURIComponent(artifactId.trim())}/download`;
+}
+
+async function downloadAgentArtifact({ jobId, artifact }) {
+	const filename = getArtifactFilename({ artifact }) || "qcut-artifact";
+	const blob = await requestAgentBlob({
+		path: buildAgentArtifactDownloadPath({
+			jobId,
+			artifactId: artifact?.id,
+		}),
+	});
+	const win = getRuntimeWindow();
+	const doc = win?.document;
+	if (!win?.URL || !doc) {
+		throw new Error("Browser download APIs are unavailable");
+	}
+
+	const objectUrl = win.URL.createObjectURL(blob);
+	try {
+		const anchor = doc.createElement("a");
+		anchor.href = objectUrl;
+		anchor.download = filename;
+		anchor.style.display = "none";
+		doc.body.appendChild(anchor);
+		anchor.click();
+		anchor.remove();
+	} finally {
+		win.setTimeout(() => win.URL.revokeObjectURL(objectUrl), 1000);
+	}
 }
 
 function isTerminalStatus({ status }) {
@@ -440,6 +511,20 @@ function getArtifactFilename({ artifact }) {
 	return parts[parts.length - 1] || "";
 }
 
+function formatArtifactSize({ artifact }) {
+	const bytes = Number(artifact?.bytes || 0);
+	if (!Number.isFinite(bytes) || bytes <= 0) {
+		return "0 bytes";
+	}
+	if (bytes < 1024) {
+		return `${bytes} bytes`;
+	}
+	if (bytes < 1024 * 1024) {
+		return `${(bytes / 1024).toFixed(1)} KB`;
+	}
+	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 function findCodexLastMessageArtifact({ artifacts }) {
 	if (!Array.isArray(artifacts)) {
 		return null;
@@ -471,7 +556,7 @@ function renderArtifacts({ artifacts }) {
 		row.className = "card rounded-xl p-4";
 
 		const shell = doc.createElement("div");
-		shell.className = "flex items-start justify-between gap-4";
+		shell.className = "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between";
 
 		const content = doc.createElement("div");
 		const kind = doc.createElement("div");
@@ -483,11 +568,43 @@ function renderArtifacts({ artifacts }) {
 		path.textContent = artifact.storagePath || "";
 		content.append(kind, path);
 
+		const actions = doc.createElement("div");
+		actions.className = "flex shrink-0 items-center gap-3";
+
 		const size = doc.createElement("div");
 		size.className = "text-xs text-muted";
-		size.textContent = `${artifact.bytes || 0} bytes`;
+		size.textContent = formatArtifactSize({ artifact });
 
-		shell.append(content, size);
+		const downloadButton = doc.createElement("button");
+		downloadButton.type = "button";
+		downloadButton.className = "btn-outline px-4 py-2 rounded-full text-xs font-medium";
+		downloadButton.textContent = "Download";
+		downloadButton.disabled = !artifact.id || !artifact.jobId;
+		downloadButton.addEventListener("click", async () => {
+			const originalText = downloadButton.textContent;
+			downloadButton.disabled = true;
+			downloadButton.textContent = "Downloading";
+			showError({ message: "" });
+			try {
+				await downloadAgentArtifact({
+					jobId: artifact.jobId,
+					artifact,
+				});
+			} catch (error) {
+				showError({
+					message:
+						error instanceof Error
+							? `Artifact download failed: ${error.message}`
+							: "Artifact download failed",
+				});
+			} finally {
+				downloadButton.disabled = !artifact.id || !artifact.jobId;
+				downloadButton.textContent = originalText;
+			}
+		});
+
+		actions.append(size, downloadButton);
+		shell.append(content, actions);
 		row.appendChild(shell);
 		list.appendChild(row);
 	}
@@ -676,13 +793,17 @@ function initAgentChatPage() {
 }
 
 const AgentChatAPI = {
+	buildAgentArtifactDownloadPath,
 	buildAgentRequest,
 	buildCodexChatPrompt,
 	buildCodexCommand,
 	buildImageCommand,
 	CODEX_AGENT_COMMAND,
 	createAgentJob,
+	downloadAgentArtifact,
 	findCodexLastMessageArtifact,
+	formatArtifactSize,
+	getArtifactFilename,
 	getAgentArtifactText,
 	getAgentJobDetail,
 	isTerminalStatus,

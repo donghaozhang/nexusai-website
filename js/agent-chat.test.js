@@ -197,6 +197,96 @@ test("getAgentArtifactText reads text artifacts from the license server", async 
 	assert.equal(requestInit.headers.Accept, "text/plain");
 });
 
+test("downloadAgentArtifact fetches binary artifacts and starts a browser download", async () => {
+	let requestUrl = "";
+	let requestInit = null;
+	let clicked = false;
+	let revokedUrl = "";
+	const anchor = {
+		download: "",
+		href: "",
+		style: {},
+		click() {
+			clicked = true;
+		},
+		remove() {},
+	};
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url, init) => {
+			requestUrl = url;
+			requestInit = init;
+			return {
+				ok: true,
+				status: 200,
+				async blob() {
+					return new Blob([new Uint8Array([1, 2, 3])], {
+						type: "image/jpeg",
+					});
+				},
+			};
+		},
+	});
+	global.window.document = {
+		body: {
+			appendChild(node) {
+				assert.equal(node, anchor);
+			},
+		},
+		createElement(tagName) {
+			assert.equal(tagName, "a");
+			return anchor;
+		},
+	};
+	global.window.URL = {
+		createObjectURL(blob) {
+			assert.equal(blob.type, "image/jpeg");
+			return "blob:artifact";
+		},
+		revokeObjectURL(url) {
+			revokedUrl = url;
+		},
+	};
+	global.window.setTimeout = (callback) => {
+		callback();
+		return 1;
+	};
+	const AgentChatAPI = loadAgentChatApi();
+
+	await AgentChatAPI.downloadAgentArtifact({
+		jobId: "job-1",
+		artifact: {
+			id: "artifact-1",
+			jobId: "job-1",
+			meta: { filename: "result.jpg" },
+		},
+	});
+
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/jobs/job-1/artifacts/artifact-1/download"
+	);
+	assert.equal(requestInit.method, "GET");
+	assert.equal(requestInit.headers.Authorization, "Bearer token-abc");
+	assert.equal(requestInit.headers.Accept, "application/octet-stream");
+	assert.equal(anchor.href, "blob:artifact");
+	assert.equal(anchor.download, "result.jpg");
+	assert.equal(clicked, true);
+	assert.equal(revokedUrl, "blob:artifact");
+});
+
+test("buildAgentArtifactDownloadPath encodes job and artifact ids", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.buildAgentArtifactDownloadPath({
+			jobId: "job / 1",
+			artifactId: "artifact / 1",
+		}),
+		"/api/agent/jobs/job%20%2F%201/artifacts/artifact%20%2F%201/download"
+	);
+});
+
 test("createAgentJob can use the server-side default agent account", async () => {
 	let requestInit = null;
 	setupRuntime({
