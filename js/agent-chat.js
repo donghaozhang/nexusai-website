@@ -12,6 +12,9 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 	"Use shell commands when the user asks you to inspect or run QCut.",
 	"For image generation requests, run the QCut CLI rather than any external image tool.",
 	"Write generated files under /tmp/qcut-output so the worker can upload them.",
+	"yt-dlp and deno are available for authorized video download probes.",
+	"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
+	"Write only final user-requested files and small diagnostic summaries/logs under /tmp/qcut-output.",
 	"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
 	"Report the command you ran and the resulting artifact paths.",
 ].join("\n");
