@@ -8,6 +8,8 @@ const CODEX_TERMINAL_COMMAND =
 	"codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message /tmp/qcut-output/codex-last-message.md -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
 const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
+const BRACKETED_PASTE_START = "\u001b[200~";
+const BRACKETED_PASTE_END = "\u001b[201~";
 const CODEX_AGENT_SYSTEM_PROMPT = [
 	"You are running inside QCut's Daytona CLI image.",
 	"The QCut native CLI skill is available at /home/qcut/qcut/.claude/skills/native-cli/SKILL.md.",
@@ -310,6 +312,22 @@ function buildTerminalPromptCommand({ prompt, messages, marker }) {
 			`find /tmp/qcut-output -maxdepth 1 -type f -printf '%f (%s bytes)\\n' 2>/dev/null | sort`,
 		].join("\n") + "\n"
 	);
+}
+
+function buildInteractiveCodexInput({ prompt }) {
+	const currentPrompt =
+		typeof prompt === "string" && prompt.trim().length > 0
+			? prompt.trim()
+			: "Summarize the current QCut agent status.";
+	return `${BRACKETED_PASTE_START}${sanitizeTerminalPaste({
+		text: currentPrompt,
+	})}${BRACKETED_PASTE_END}\n`;
+}
+
+function sanitizeTerminalPaste({ text }) {
+	return String(text)
+		.replaceAll(BRACKETED_PASTE_START, "")
+		.replaceAll(BRACKETED_PASTE_END, "");
 }
 
 function buildCodexChatPrompt({ messages, prompt }) {
@@ -1259,11 +1277,12 @@ function setCommandPreview() {
 	const prompt = getValue({ id: "agent-prompt" });
 	setText({
 		id: "agent-command-preview",
-		text: buildTerminalPromptCommand({
-			prompt,
-			messages: chatMessages,
-			marker: "QCUT_CODEX_PROMPT",
-		}),
+		text: `Interactive Codex input:\n${sanitizeTerminalPaste({
+			text:
+				typeof prompt === "string" && prompt.trim().length > 0
+					? prompt.trim()
+					: "Summarize the current QCut agent status.",
+		})}`,
 	});
 }
 
@@ -1367,9 +1386,8 @@ async function submitAgentJob() {
 				? prompt.trim()
 				: "Summarize the current QCut agent status.";
 		await connectAgentTerminal();
-		const command = buildTerminalPromptCommand({
+		const command = buildInteractiveCodexInput({
 			prompt,
-			messages: chatMessages,
 		});
 		const sent = sendTerminalInput({ text: command });
 		if (!sent) {
@@ -1382,7 +1400,7 @@ async function submitAgentJob() {
 		appendChatMessage({
 			role: "assistant",
 			content:
-				"Sent to the Daytona terminal. Watch the live Codex output above.",
+				"Sent to the persistent Codex session. Watch the live output above.",
 		});
 		setText({ id: "agent-job-status", text: "running" });
 		startTerminalArtifactPoll();
@@ -1452,6 +1470,7 @@ const AgentChatAPI = {
 	buildAgentRequest,
 	buildCodexChatPrompt,
 	buildCodexCommand,
+	buildInteractiveCodexInput,
 	buildTerminalPromptCommand,
 	CODEX_AGENT_COMMAND,
 	CODEX_TERMINAL_COMMAND,

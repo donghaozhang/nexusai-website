@@ -129,6 +129,15 @@ test("buildTerminalPromptCommand wraps prompts for visible PTY Codex runs", () =
 	assert.match(command, /find \/tmp\/qcut-output/);
 });
 
+test("buildInteractiveCodexInput pastes prompts into the persistent Codex session", () => {
+	const AgentChatAPI = loadAgentChatApi();
+	const input = AgentChatAPI.buildInteractiveCodexInput({
+		prompt: "Generate a small blue icon.",
+	});
+
+	assert.equal(input, "\u001b[200~Generate a small blue icon.\u001b[201~\n");
+});
+
 test("findCodexLastMessageArtifact selects the Codex final response", () => {
 	const AgentChatAPI = loadAgentChatApi();
 	assert.deepEqual(
