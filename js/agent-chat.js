@@ -1160,6 +1160,22 @@ function writeTerminal({ text }) {
 	}
 }
 
+function resetTerminalOutput({ message }) {
+	const text = typeof message === "string" ? message : "";
+	if (terminalInstance) {
+		terminalInstance.reset();
+		if (text.length > 0) {
+			terminalInstance.write(text);
+		}
+		scheduleTerminalFit();
+		return;
+	}
+	const fallback = getElement({ id: "agent-terminal-fallback" });
+	if (fallback) {
+		fallback.textContent = text;
+	}
+}
+
 function sendTerminalResize() {
 	if (!terminalSocket || terminalSocket.readyState !== 1) {
 		return;
@@ -1178,10 +1194,56 @@ function sendTerminalInput({ text }) {
 	return true;
 }
 
+function waitForTerminalSocketOpen({ socket }) {
+	if (socket.readyState === 1) {
+		return Promise.resolve(socket);
+	}
+	if (socket.readyState !== 0) {
+		return Promise.reject(new Error("Terminal socket is closed"));
+	}
+	const win = getRuntimeWindow();
+	return new Promise((resolve, reject) => {
+		let timeoutId = null;
+		const cleanup = () => {
+			socket.removeEventListener("open", handleOpen);
+			socket.removeEventListener("close", handleClose);
+			socket.removeEventListener("error", handleError);
+			if (win && timeoutId !== null) {
+				win.clearTimeout(timeoutId);
+			}
+		};
+		const handleOpen = () => {
+			cleanup();
+			resolve(socket);
+		};
+		const handleClose = () => {
+			cleanup();
+			reject(new Error("Terminal socket closed before connecting"));
+		};
+		const handleError = () => {
+			cleanup();
+			reject(new Error("Terminal socket failed to connect"));
+		};
+		socket.addEventListener("open", handleOpen);
+		socket.addEventListener("close", handleClose);
+		socket.addEventListener("error", handleError);
+		if (win && typeof win.setTimeout === "function") {
+			timeoutId = win.setTimeout(() => {
+				cleanup();
+				reject(new Error("Terminal connect timed out"));
+			}, 90_000);
+		}
+	});
+}
+
 async function connectAgentTerminal() {
-	if (terminalSocket && terminalSocket.readyState <= 1) {
+	if (terminalSocket?.readyState === 1) {
 		return terminalSocket;
 	}
+	if (terminalSocket?.readyState === 0) {
+		return waitForTerminalSocketOpen({ socket: terminalSocket });
+	}
+	terminalSocket = null;
 	setTerminalStatus({ text: "connecting" });
 	showError({ message: "" });
 	const WebSocketCtor = getWebSocketConstructor();
@@ -1198,15 +1260,17 @@ async function connectAgentTerminal() {
 		sessionId: activeTerminalSessionId,
 	});
 	ensureTerminalRenderer();
-	terminalSocket = new WebSocketCtor(payload.ws_url);
-	terminalSocket.binaryType = "arraybuffer";
-	terminalSocket.addEventListener("open", () => {
+	resetTerminalOutput({ message: "Connecting to Daytona Codex...\r\n" });
+	const socket = new WebSocketCtor(payload.ws_url);
+	terminalSocket = socket;
+	socket.binaryType = "arraybuffer";
+	socket.addEventListener("open", () => {
 		setTerminalStatus({ text: "connected" });
 		setText({ id: "agent-job-status", text: "terminal" });
 		sendTerminalResize();
 		startTerminalArtifactPoll();
 	});
-	terminalSocket.addEventListener("message", (event) => {
+	socket.addEventListener("message", (event) => {
 		const Decoder = getTextDecoder();
 		if (!Decoder) {
 			return;
@@ -1217,14 +1281,21 @@ async function connectAgentTerminal() {
 		}
 		writeTerminal({ text: new Decoder().decode(event.data) });
 	});
-	terminalSocket.addEventListener("close", () => {
+	socket.addEventListener("close", () => {
+		if (terminalSocket !== socket) {
+			return;
+		}
+		terminalSocket = null;
 		setTerminalStatus({ text: "disconnected" });
 		clearTerminalArtifactPoll();
 	});
-	terminalSocket.addEventListener("error", () => {
+	socket.addEventListener("error", () => {
+		if (terminalSocket !== socket) {
+			return;
+		}
 		setTerminalStatus({ text: "error" });
 	});
-	return terminalSocket;
+	return waitForTerminalSocketOpen({ socket });
 }
 
 function disconnectAgentTerminal() {
@@ -1234,25 +1305,7 @@ function disconnectAgentTerminal() {
 	terminalSocket = null;
 	clearTerminalArtifactPoll();
 	setTerminalStatus({ text: "disconnected" });
-}
-
-function autoConnectAgentTerminal() {
-	const win = getRuntimeWindow();
-	const connect = () => {
-		void connectAgentTerminal().catch((error) => {
-			showError({
-				message:
-					error instanceof Error
-						? `Terminal auto-connect failed: ${error.message}`
-						: "Terminal auto-connect failed",
-			});
-		});
-	};
-	if (win && typeof win.setTimeout === "function") {
-		win.setTimeout(connect, 0);
-		return;
-	}
-	connect();
+	resetTerminalOutput({ message: "Connect to open a real terminal." });
 }
 
 async function refreshSessionArtifacts() {
@@ -1460,7 +1513,6 @@ function initAgentChatPage() {
 			void refreshSessionArtifacts();
 		});
 	}
-	autoConnectAgentTerminal();
 }
 
 const AgentChatAPI = {
@@ -1474,7 +1526,6 @@ const AgentChatAPI = {
 	buildTerminalPromptCommand,
 	CODEX_AGENT_COMMAND,
 	CODEX_TERMINAL_COMMAND,
-	autoConnectAgentTerminal,
 	clearStoredAgentSessionId,
 	createAgentJob,
 	createAgentPtyToken,
