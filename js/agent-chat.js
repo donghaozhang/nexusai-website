@@ -321,7 +321,7 @@ function buildInteractiveCodexInput({ prompt }) {
 			: "Summarize the current QCut agent status.";
 	return `${BRACKETED_PASTE_START}${sanitizeTerminalPaste({
 		text: currentPrompt,
-	})}${BRACKETED_PASTE_END}\n`;
+	})}${BRACKETED_PASTE_END}\r`;
 }
 
 function sanitizeTerminalPaste({ text }) {

@@ -135,7 +135,7 @@ test("buildInteractiveCodexInput pastes prompts into the persistent Codex sessio
 		prompt: "Generate a small blue icon.",
 	});
 
-	assert.equal(input, "\u001b[200~Generate a small blue icon.\u001b[201~\n");
+	assert.equal(input, "\u001b[200~Generate a small blue icon.\u001b[201~\r");
 });
 
 test("findCodexLastMessageArtifact selects the Codex final response", () => {
