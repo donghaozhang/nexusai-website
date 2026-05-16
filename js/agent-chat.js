@@ -4,6 +4,8 @@ const DEFAULT_LICENSE_SERVER_URL =
 
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
+const CODEX_TERMINAL_COMMAND =
+	"codex exec --skip-git-repo-check --sandbox danger-full-access --output-last-message /tmp/qcut-output/codex-last-message.md -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
 const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const CODEX_AGENT_SYSTEM_PROMPT = [
@@ -14,6 +16,7 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 	"For image generation requests, run the QCut CLI rather than any external image tool.",
 	"Write generated files under /tmp/qcut-output so the worker can upload them.",
 	"yt-dlp and deno are available for authorized video download probes.",
+	"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 	"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
 	"Write only final user-requested files and small diagnostic summaries/logs under /tmp/qcut-output.",
 	"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
@@ -21,6 +24,11 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 ].join("\n");
 const chatMessages = [];
 let activeJobPollIntervalId = null;
+let terminalSocket = null;
+let terminalInstance = null;
+let terminalFitAddon = null;
+let terminalArtifactPollIntervalId = null;
+let activeTerminalSessionId = "";
 
 function getRuntimeGlobal() {
 	try {
@@ -177,7 +185,10 @@ function getPayloadError({ payload }) {
 	if (typeof payload.error === "string" && payload.error.trim().length > 0) {
 		return payload.error.trim();
 	}
-	if (typeof payload.message === "string" && payload.message.trim().length > 0) {
+	if (
+		typeof payload.message === "string" &&
+		payload.message.trim().length > 0
+	) {
 		return payload.message.trim();
 	}
 	return "";
@@ -276,6 +287,30 @@ function buildCodexCommand() {
 	return CODEX_AGENT_COMMAND;
 }
 
+function createTerminalPromptMarker() {
+	return `QCUT_CODEX_PROMPT_${Date.now().toString(36)}_${Math.random()
+		.toString(36)
+		.slice(2)}`;
+}
+
+function buildTerminalPromptCommand({ prompt, messages, marker }) {
+	const promptMarker =
+		typeof marker === "string" && marker.trim().length > 0
+			? marker.trim()
+			: createTerminalPromptMarker();
+	return (
+		[
+			"mkdir -p /tmp/qcut-output",
+			`cat > /tmp/qcut-terminal-prompt.md <<'${promptMarker}'`,
+			buildCodexChatPrompt({ messages, prompt }),
+			promptMarker,
+			`${CODEX_TERMINAL_COMMAND} < /tmp/qcut-terminal-prompt.md`,
+			"printf '\\n[artifacts]\\n'",
+			`find /tmp/qcut-output -maxdepth 1 -type f -printf '%f (%s bytes)\\n' 2>/dev/null | sort`,
+		].join("\n") + "\n"
+	);
+}
+
 function buildCodexChatPrompt({ messages, prompt }) {
 	const currentPrompt =
 		typeof prompt === "string" && prompt.trim().length > 0
@@ -360,6 +395,40 @@ async function createAgentSession() {
 	return payload.session;
 }
 
+async function createAgentPtyToken({ sessionId }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	const payload = await requestAgentApi({
+		path: `/api/agent/sessions/${encodeURIComponent(
+			sessionId.trim()
+		)}/pty-token`,
+		method: "POST",
+		body: {},
+	});
+	if (
+		!payload ||
+		typeof payload !== "object" ||
+		typeof payload.ws_url !== "string"
+	) {
+		throw new Error("Agent terminal response is invalid");
+	}
+	return payload;
+}
+
+async function getAgentSessionArtifacts({ sessionId }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	const payload = await requestAgentApi({
+		path: `/api/agent/sessions/${encodeURIComponent(
+			sessionId.trim()
+		)}/artifacts`,
+		method: "GET",
+	});
+	return Array.isArray(payload?.artifacts) ? payload.artifacts : [];
+}
+
 async function endAgentSession({ sessionId }) {
 	const value = typeof sessionId === "string" ? sessionId.trim() : "";
 	if (value.length === 0) {
@@ -409,13 +478,33 @@ function buildAgentArtifactDownloadPath({ jobId, artifactId }) {
 	)}/artifacts/${encodeURIComponent(artifactId.trim())}/download`;
 }
 
+function buildAgentSessionArtifactDownloadPath({ sessionId, filename }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	if (typeof filename !== "string" || filename.trim().length === 0) {
+		throw new Error("Artifact filename required");
+	}
+	return `/api/agent/sessions/${encodeURIComponent(
+		sessionId.trim()
+	)}/artifacts/${encodeURIComponent(filename.trim())}/download`;
+}
+
 async function downloadAgentArtifact({ jobId, artifact }) {
 	const filename = getArtifactFilename({ artifact }) || "qcut-artifact";
+	const downloadPath =
+		typeof artifact?.sessionId === "string" &&
+		artifact.sessionId.trim().length > 0
+			? buildAgentSessionArtifactDownloadPath({
+					sessionId: artifact.sessionId,
+					filename,
+				})
+			: buildAgentArtifactDownloadPath({
+					jobId,
+					artifactId: artifact?.id,
+				});
 	const blob = await requestAgentBlob({
-		path: buildAgentArtifactDownloadPath({
-			jobId,
-			artifactId: artifact?.id,
-		}),
+		path: downloadPath,
 	});
 	const win = getRuntimeWindow();
 	const doc = win?.document;
@@ -511,6 +600,7 @@ async function ensureAgentSession() {
 
 async function resetAgentSession() {
 	showError({ message: "" });
+	disconnectAgentTerminal();
 	const sessionId = readStoredAgentSessionId();
 	setDisabled({ id: "agent-new-session", disabled: true });
 	try {
@@ -595,7 +685,10 @@ function renderJob({ job }) {
 	setText({ id: "agent-job-status", text: job.status || "-" });
 	setText({
 		id: "agent-job-exit",
-		text: job.exitCode === null || job.exitCode === undefined ? "-" : String(job.exitCode),
+		text:
+			job.exitCode === null || job.exitCode === undefined
+				? "-"
+				: String(job.exitCode),
 	});
 	setText({ id: "agent-job-runner", text: job.runnerId || "-" });
 	setText({ id: "agent-job-error", text: job.error || "" });
@@ -656,7 +749,8 @@ function findCodexLastMessageArtifact({ artifacts }) {
 	}
 	return (
 		artifacts.find(
-			(artifact) => getArtifactFilename({ artifact }) === CODEX_LAST_MESSAGE_FILE
+			(artifact) =>
+				getArtifactFilename({ artifact }) === CODEX_LAST_MESSAGE_FILE
 		) || null
 	);
 }
@@ -665,7 +759,19 @@ function getEventPayloadMessage({ payload }) {
 	if (!payload || typeof payload !== "object") {
 		return "";
 	}
-	if (typeof payload.message === "string" && payload.message.trim().length > 0) {
+	if (
+		payload.item &&
+		typeof payload.item === "object" &&
+		payload.item.type === "agent_message" &&
+		typeof payload.item.text === "string" &&
+		payload.item.text.trim().length > 0
+	) {
+		return payload.item.text.trim();
+	}
+	if (
+		typeof payload.message === "string" &&
+		payload.message.trim().length > 0
+	) {
 		return payload.message.trim();
 	}
 	if (typeof payload.type === "string" && payload.type.trim().length > 0) {
@@ -692,8 +798,42 @@ function formatEventPreview({ event }) {
 	return preview.length > 180 ? `${preview.slice(0, 177)}...` : preview;
 }
 
+function getLatestCodexAgentMessage({ events }) {
+	if (!Array.isArray(events)) {
+		return "";
+	}
+	const chronological = events.slice().sort((left, right) => {
+		const leftTime = Date.parse(left?.createdAt || "");
+		const rightTime = Date.parse(right?.createdAt || "");
+		return (
+			(Number.isNaN(leftTime) ? 0 : leftTime) -
+			(Number.isNaN(rightTime) ? 0 : rightTime)
+		);
+	});
+	for (let index = chronological.length - 1; index >= 0; index -= 1) {
+		const payload = chronological[index]?.payload;
+		if (!payload || typeof payload !== "object") {
+			continue;
+		}
+		const item =
+			payload.item && typeof payload.item === "object" ? payload.item : null;
+		if (
+			item?.type === "agent_message" &&
+			typeof item.text === "string" &&
+			item.text.trim().length > 0
+		) {
+			return item.text.trim();
+		}
+	}
+	return "";
+}
+
 function buildLiveCodexStatus({ events }) {
 	const base = "Running Codex in the Daytona sandbox...";
+	const latestAgentMessage = getLatestCodexAgentMessage({ events });
+	if (latestAgentMessage.length > 0) {
+		return latestAgentMessage;
+	}
 	if (!Array.isArray(events) || events.length === 0) {
 		return base;
 	}
@@ -726,7 +866,8 @@ function renderArtifacts({ artifacts }) {
 	if (!Array.isArray(artifacts) || artifacts.length === 0) {
 		const empty = doc.createElement("p");
 		empty.className = "text-sm text-muted";
-		empty.textContent = "Artifacts will appear after the worker uploads outputs.";
+		empty.textContent =
+			"Artifacts will appear after Codex writes files under /tmp/qcut-output.";
 		list.appendChild(empty);
 		return;
 	}
@@ -736,7 +877,8 @@ function renderArtifacts({ artifacts }) {
 		row.className = "card rounded-xl p-4";
 
 		const shell = doc.createElement("div");
-		shell.className = "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between";
+		shell.className =
+			"flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between";
 
 		const content = doc.createElement("div");
 		const kind = doc.createElement("div");
@@ -757,9 +899,10 @@ function renderArtifacts({ artifacts }) {
 
 		const downloadButton = doc.createElement("button");
 		downloadButton.type = "button";
-		downloadButton.className = "btn-outline px-4 py-2 rounded-full text-xs font-medium";
+		downloadButton.className =
+			"btn-outline px-4 py-2 rounded-full text-xs font-medium";
 		downloadButton.textContent = "Download";
-		downloadButton.disabled = !artifact.id || !artifact.jobId;
+		downloadButton.disabled = !canDownloadArtifact({ artifact });
 		downloadButton.addEventListener("click", async () => {
 			const originalText = downloadButton.textContent;
 			downloadButton.disabled = true;
@@ -778,7 +921,7 @@ function renderArtifacts({ artifacts }) {
 							: "Artifact download failed",
 				});
 			} finally {
-				downloadButton.disabled = !artifact.id || !artifact.jobId;
+				downloadButton.disabled = !canDownloadArtifact({ artifact });
 				downloadButton.textContent = originalText;
 			}
 		});
@@ -788,6 +931,15 @@ function renderArtifacts({ artifacts }) {
 		row.appendChild(shell);
 		list.appendChild(row);
 	}
+}
+
+function canDownloadArtifact({ artifact }) {
+	return Boolean(
+		artifact?.id &&
+			(artifact.jobId ||
+				(typeof artifact.sessionId === "string" &&
+					artifact.sessionId.trim().length > 0))
+	);
 }
 
 function renderEvents({ events }) {
@@ -830,11 +982,217 @@ function renderEvents({ events }) {
 	}
 }
 
+function getWebSocketConstructor() {
+	return (
+		getRuntimeWindow()?.WebSocket || getRuntimeGlobal()?.WebSocket || null
+	);
+}
+
+function getTextDecoder() {
+	return (
+		getRuntimeWindow()?.TextDecoder || getRuntimeGlobal()?.TextDecoder || null
+	);
+}
+
+function setTerminalStatus({ text }) {
+	setText({ id: "agent-terminal-status", text });
+}
+
+function getTerminalStatus() {
+	if (!terminalSocket) {
+		return "disconnected";
+	}
+	if (terminalSocket.readyState === 1) {
+		return "connected";
+	}
+	if (terminalSocket.readyState === 0) {
+		return "connecting";
+	}
+	return "disconnected";
+}
+
+function clearTerminalArtifactPoll() {
+	const win = getRuntimeWindow();
+	if (!win || terminalArtifactPollIntervalId === null) {
+		return;
+	}
+	win.clearInterval(terminalArtifactPollIntervalId);
+	terminalArtifactPollIntervalId = null;
+}
+
+function startTerminalArtifactPoll() {
+	const win = getRuntimeWindow();
+	if (!win || terminalArtifactPollIntervalId !== null) {
+		return;
+	}
+	terminalArtifactPollIntervalId = win.setInterval(() => {
+		void refreshSessionArtifacts();
+	}, 5000);
+}
+
+function getTerminalGlobal() {
+	return getRuntimeWindow()?.Terminal || getRuntimeGlobal()?.Terminal || null;
+}
+
+function getFitAddonGlobal() {
+	const win = getRuntimeWindow();
+	const runtime = getRuntimeGlobal();
+	return win?.FitAddon?.FitAddon || runtime?.FitAddon?.FitAddon || null;
+}
+
+function ensureTerminalRenderer() {
+	const target = getElement({ id: "agent-terminal" });
+	if (!target || terminalInstance) {
+		return terminalInstance;
+	}
+	const fallback = getElement({ id: "agent-terminal-fallback" });
+	const Terminal = getTerminalGlobal();
+	if (!Terminal) {
+		if (fallback) {
+			fallback.textContent =
+				"xterm.js did not load. The terminal websocket can still be tested by refreshing the page.";
+		}
+		return null;
+	}
+	target.innerHTML = "";
+	terminalInstance = new Terminal({
+		convertEol: true,
+		cursorBlink: true,
+		fontFamily: '"JetBrains Mono", monospace',
+		fontSize: 13,
+		scrollback: 5000,
+		theme: {
+			background: "#0f0f12",
+			foreground: "#f4f4f5",
+			cursor: "#f97316",
+		},
+	});
+	const FitAddon = getFitAddonGlobal();
+	if (FitAddon) {
+		terminalFitAddon = new FitAddon();
+		terminalInstance.loadAddon(terminalFitAddon);
+	}
+	terminalInstance.open(target);
+	terminalFitAddon?.fit();
+	terminalInstance.onData((data) => sendTerminalInput({ text: data }));
+	return terminalInstance;
+}
+
+function writeTerminal({ text }) {
+	const terminal = ensureTerminalRenderer();
+	if (terminal) {
+		terminal.write(text);
+		return;
+	}
+	const fallback = getElement({ id: "agent-terminal-fallback" });
+	if (fallback) {
+		fallback.textContent += text;
+	}
+}
+
+function sendTerminalResize() {
+	if (!terminalSocket || terminalSocket.readyState !== 1) {
+		return;
+	}
+	terminalFitAddon?.fit();
+	const cols = Number(terminalInstance?.cols || 100);
+	const rows = Number(terminalInstance?.rows || 30);
+	terminalSocket.send(JSON.stringify({ kind: "resize", cols, rows }));
+}
+
+function sendTerminalInput({ text }) {
+	if (!terminalSocket || terminalSocket.readyState !== 1) {
+		return false;
+	}
+	terminalSocket.send(text);
+	return true;
+}
+
+async function connectAgentTerminal() {
+	if (terminalSocket && terminalSocket.readyState <= 1) {
+		return terminalSocket;
+	}
+	setTerminalStatus({ text: "connecting" });
+	showError({ message: "" });
+	const WebSocketCtor = getWebSocketConstructor();
+	if (!WebSocketCtor) {
+		throw new Error("WebSocket API is unavailable");
+	}
+	const token = getValue({ id: "agent-token" });
+	if (token.trim().length > 0) {
+		saveAuthToken({ token });
+	}
+	const session = await ensureAgentSession();
+	activeTerminalSessionId = session?.id || "";
+	const payload = await createAgentPtyToken({
+		sessionId: activeTerminalSessionId,
+	});
+	ensureTerminalRenderer();
+	terminalSocket = new WebSocketCtor(payload.ws_url);
+	terminalSocket.binaryType = "arraybuffer";
+	terminalSocket.addEventListener("open", () => {
+		setTerminalStatus({ text: "connected" });
+		setText({ id: "agent-job-status", text: "terminal" });
+		sendTerminalResize();
+		startTerminalArtifactPoll();
+	});
+	terminalSocket.addEventListener("message", (event) => {
+		const Decoder = getTextDecoder();
+		if (!Decoder) {
+			return;
+		}
+		if (typeof event.data === "string") {
+			writeTerminal({ text: event.data });
+			return;
+		}
+		writeTerminal({ text: new Decoder().decode(event.data) });
+	});
+	terminalSocket.addEventListener("close", () => {
+		setTerminalStatus({ text: "disconnected" });
+		clearTerminalArtifactPoll();
+	});
+	terminalSocket.addEventListener("error", () => {
+		setTerminalStatus({ text: "error" });
+	});
+	return terminalSocket;
+}
+
+function disconnectAgentTerminal() {
+	if (terminalSocket && terminalSocket.readyState <= 1) {
+		terminalSocket.close(1000, "user_disconnect");
+	}
+	terminalSocket = null;
+	clearTerminalArtifactPoll();
+	setTerminalStatus({ text: "disconnected" });
+}
+
+async function refreshSessionArtifacts() {
+	const sessionId = activeTerminalSessionId || readStoredAgentSessionId();
+	if (sessionId.length === 0) {
+		return;
+	}
+	try {
+		const artifacts = await getAgentSessionArtifacts({ sessionId });
+		renderArtifacts({ artifacts });
+	} catch (error) {
+		showError({
+			message:
+				error instanceof Error
+					? `Artifact refresh failed: ${error.message}`
+					: "Artifact refresh failed",
+		});
+	}
+}
+
 function setCommandPreview() {
 	const prompt = getValue({ id: "agent-prompt" });
 	setText({
 		id: "agent-command-preview",
-		text: buildAgentRequest({ prompt, messages: chatMessages }).command,
+		text: buildTerminalPromptCommand({
+			prompt,
+			messages: chatMessages,
+			marker: "QCUT_CODEX_PROMPT",
+		}),
 	});
 }
 
@@ -847,12 +1205,15 @@ async function resolveCodexChatReply({ detail, assistantMessageId }) {
 	if (detail.job?.status !== "succeeded") {
 		updateChatMessage({
 			id: assistantMessageId,
-			content: detail.job?.error || "Codex job failed before returning a reply.",
+			content:
+				detail.job?.error || "Codex job failed before returning a reply.",
 			status: "error",
 		});
 		return;
 	}
-	const artifact = findCodexLastMessageArtifact({ artifacts: detail.artifacts });
+	const artifact = findCodexLastMessageArtifact({
+		artifacts: detail.artifacts,
+	});
 	if (!artifact?.id) {
 		updateChatMessage({
 			id: assistantMessageId,
@@ -868,7 +1229,10 @@ async function resolveCodexChatReply({ detail, assistantMessageId }) {
 		});
 		updateChatMessage({
 			id: assistantMessageId,
-			content: typeof text === "string" && text.trim().length > 0 ? text.trim() : "(empty response)",
+			content:
+				typeof text === "string" && text.trim().length > 0
+					? text.trim()
+					: "(empty response)",
 			status: "ready",
 		});
 	} catch (error) {
@@ -913,7 +1277,8 @@ function pollJob({ jobId, assistantMessageId }) {
 			}
 		} catch (error) {
 			showError({
-				message: error instanceof Error ? error.message : "Failed to refresh job",
+				message:
+					error instanceof Error ? error.message : "Failed to refresh job",
 			});
 		}
 	}, 2500);
@@ -923,46 +1288,40 @@ function pollJob({ jobId, assistantMessageId }) {
 async function submitAgentJob() {
 	showError({ message: "" });
 	setDisabled({ id: "agent-submit", disabled: true });
-	clearActiveJobPoll();
 
 	try {
 		const prompt = getValue({ id: "agent-prompt" });
-		const token = getValue({ id: "agent-token" });
-		if (token.trim().length > 0) {
-			saveAuthToken({ token });
-		}
-		const request = buildAgentRequest({
-			prompt,
-			messages: chatMessages,
-		});
-		const session = await ensureAgentSession();
-		let assistantMessageId = "";
 		const visiblePrompt =
 			typeof prompt === "string" && prompt.trim().length > 0
 				? prompt.trim()
 				: "Summarize the current QCut agent status.";
-		const job = await createAgentJob({
-			...request,
-			sessionId: session?.id,
+		await connectAgentTerminal();
+		const command = buildTerminalPromptCommand({
+			prompt,
+			messages: chatMessages,
 		});
+		const sent = sendTerminalInput({ text: command });
+		if (!sent) {
+			throw new Error(`Terminal is ${getTerminalStatus()}`);
+		}
 		appendChatMessage({
 			role: "user",
 			content: visiblePrompt,
 		});
-		assistantMessageId = appendChatMessage({
+		appendChatMessage({
 			role: "assistant",
-			content: "Running Codex in the Daytona sandbox...",
-			status: "pending",
+			content:
+				"Sent to the Daytona terminal. Watch the live Codex output above.",
 		});
-		renderJob({ job });
-		renderArtifacts({ artifacts: [] });
-		renderEvents({ events: [] });
-		pollJob({ jobId: job.id, assistantMessageId });
+		setText({ id: "agent-job-status", text: "running" });
+		startTerminalArtifactPoll();
 	} catch (error) {
-		setDisabled({ id: "agent-submit", disabled: false });
 		showError({
-			message: error instanceof Error ? error.message : "Failed to submit job",
+			message:
+				error instanceof Error ? error.message : "Failed to submit job",
 		});
+	} finally {
+		setDisabled({ id: "agent-submit", disabled: false });
 	}
 }
 
@@ -970,6 +1329,13 @@ function initAgentChatPage() {
 	const promptInput = getElement({ id: "agent-prompt" });
 	const submitButton = getElement({ id: "agent-submit" });
 	const newSessionButton = getElement({ id: "agent-new-session" });
+	const terminalConnectButton = getElement({ id: "agent-terminal-connect" });
+	const terminalDisconnectButton = getElement({
+		id: "agent-terminal-disconnect",
+	});
+	const refreshArtifactsButton = getElement({
+		id: "agent-refresh-artifacts",
+	});
 	if (!promptInput || !submitButton) {
 		return;
 	}
@@ -982,17 +1348,44 @@ function initAgentChatPage() {
 	if (newSessionButton) {
 		newSessionButton.addEventListener("click", resetAgentSession);
 	}
+	if (terminalConnectButton) {
+		terminalConnectButton.addEventListener("click", () => {
+			void connectAgentTerminal().catch((error) => {
+				showError({
+					message:
+						error instanceof Error
+							? `Terminal connect failed: ${error.message}`
+							: "Terminal connect failed",
+				});
+			});
+		});
+	}
+	if (terminalDisconnectButton) {
+		terminalDisconnectButton.addEventListener(
+			"click",
+			disconnectAgentTerminal
+		);
+	}
+	if (refreshArtifactsButton) {
+		refreshArtifactsButton.addEventListener("click", () => {
+			void refreshSessionArtifacts();
+		});
+	}
 }
 
 const AgentChatAPI = {
 	buildLiveCodexStatus,
 	buildAgentArtifactDownloadPath,
+	buildAgentSessionArtifactDownloadPath,
 	buildAgentRequest,
 	buildCodexChatPrompt,
 	buildCodexCommand,
+	buildTerminalPromptCommand,
 	CODEX_AGENT_COMMAND,
+	CODEX_TERMINAL_COMMAND,
 	clearStoredAgentSessionId,
 	createAgentJob,
+	createAgentPtyToken,
 	createAgentSession,
 	downloadAgentArtifact,
 	endAgentSession,
@@ -1002,6 +1395,8 @@ const AgentChatAPI = {
 	getArtifactFilename,
 	getAgentArtifactText,
 	getAgentJobDetail,
+	getAgentSessionArtifacts,
+	getLatestCodexAgentMessage,
 	isTerminalStatus,
 	readStoredAgentSessionId,
 	saveStoredAgentSessionId,
@@ -1011,7 +1406,10 @@ if (typeof module !== "undefined" && module.exports) {
 	module.exports = AgentChatAPI;
 }
 
-if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+if (
+	typeof window !== "undefined" &&
+	typeof window.addEventListener === "function"
+) {
 	window.AgentChatAPI = AgentChatAPI;
 	window.addEventListener("DOMContentLoaded", initAgentChatPage);
 }

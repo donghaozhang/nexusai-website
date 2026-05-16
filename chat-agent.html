@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.css">
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
     <style>
         .mono { font-family: "JetBrains Mono", monospace; }
@@ -66,6 +67,34 @@
         .agent-chat-pending {
             color: var(--text-muted);
         }
+        .agent-terminal-shell {
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #0f0f12;
+        }
+        .agent-terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgb(255 255 255 / 0.1);
+            color: rgb(255 255 255 / 0.72);
+        }
+        #agent-terminal {
+            min-height: 440px;
+            height: 440px;
+            padding: 10px;
+        }
+        .terminal-fallback {
+            margin: 0;
+            min-height: 420px;
+            white-space: pre-wrap;
+            color: #f4f4f5;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -117,7 +146,7 @@
                     </div>
                     <h1 class="text-4xl sm:text-5xl font-semibold leading-tight mb-4">Chat Agent</h1>
                     <p class="text-lg text-muted max-w-2xl">
-                        Submit a QCut CLI job from the website. The request creates an <span class="mono text-sm">agent_jobs</span> row, the worker claims it, Daytona runs the GHCR CLI image, and artifacts return through Supabase.
+                        Open a persistent Daytona terminal from the website, send prompts to Codex CLI, and download files written under <span class="mono text-sm">/tmp/qcut-output</span>.
                     </p>
                 </div>
 
@@ -125,7 +154,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-5">
                         <div>
                             <h2 class="text-xl font-semibold">Talk to the sandbox</h2>
-                            <p class="text-sm text-muted mt-1">Send a Codex prompt to the persistent Daytona sandbox.</p>
+                            <p class="text-sm text-muted mt-1">Send prompts into a persistent Daytona terminal running Codex CLI.</p>
                         </div>
                         <span class="status-chip" id="agent-job-status">idle</span>
                     </div>
@@ -141,8 +170,25 @@
                         </button>
                     </div>
 
+                    <div class="agent-terminal-shell mb-5">
+                        <div class="agent-terminal-header">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="terminal" class="w-4 h-4"></i>
+                                <span class="mono text-xs">Daytona PTY</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span id="agent-terminal-status" class="mono text-xs">disconnected</span>
+                                <button id="agent-terminal-connect" type="button" class="btn-outline px-3 py-1.5 rounded-full text-xs font-medium">Connect</button>
+                                <button id="agent-terminal-disconnect" type="button" class="btn-outline px-3 py-1.5 rounded-full text-xs font-medium">Disconnect</button>
+                            </div>
+                        </div>
+                        <div id="agent-terminal" aria-label="QCut agent terminal">
+                            <pre id="agent-terminal-fallback" class="terminal-fallback">Connect to open a real terminal.</pre>
+                        </div>
+                    </div>
+
                     <div id="agent-chat-log" class="agent-chat-log mb-5">
-                        <p class="text-sm text-muted">Codex replies will appear here after each run.</p>
+                        <p class="text-sm text-muted">Submitted prompts will appear here. The live Codex output is in the terminal above.</p>
                     </div>
 
                     <label for="agent-prompt" class="text-sm font-medium">Message</label>
@@ -164,6 +210,10 @@
                             <i data-lucide="send" class="w-4 h-4"></i>
                             Send
                         </button>
+                        <button id="agent-refresh-artifacts" type="button" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                            Artifacts
+                        </button>
                         <a href="cli.html#auth" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center">CLI auth docs</a>
                     </div>
 
@@ -172,10 +222,10 @@
             </div>
 
             <aside class="card rounded-2xl p-6 self-start">
-                <h2 class="text-lg font-semibold mb-4">Job state</h2>
-                <p id="agent-job-empty" class="text-sm text-muted">No job submitted yet.</p>
+                <h2 class="text-lg font-semibold mb-4">Session state</h2>
+                <p id="agent-job-empty" class="text-sm text-muted">No terminal command sent yet.</p>
                 <div id="agent-job-summary" class="hidden space-y-3 text-sm">
-                    <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Job</span><span id="agent-job-id" class="mono break-all">-</span></div>
+                    <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Run</span><span id="agent-job-id" class="mono break-all">-</span></div>
                     <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Exit</span><span id="agent-job-exit" class="mono">-</span></div>
                     <div class="grid grid-cols-[70px_1fr] gap-3"><span class="text-muted">Runner</span><span id="agent-job-runner" class="mono break-all">-</span></div>
                     <div id="agent-job-error" class="text-sm" style="color: var(--color-error);"></div>
@@ -183,17 +233,11 @@
             </aside>
         </section>
 
-        <section class="grid gap-6 lg:grid-cols-2 mt-8">
+        <section class="mt-8">
             <div class="card rounded-2xl p-6">
                 <h2 class="text-lg font-semibold mb-4">Artifacts</h2>
                 <div id="agent-artifacts" class="space-y-3">
-                    <p class="text-sm text-muted">Artifacts will appear after the worker uploads outputs.</p>
-                </div>
-            </div>
-            <div class="card rounded-2xl p-6">
-                <h2 class="text-lg font-semibold mb-4">Events</h2>
-                <div id="agent-events" class="space-y-3">
-                    <p class="text-sm text-muted">Worker events will appear as the job runs.</p>
+                    <p class="text-sm text-muted">Artifacts will appear after Codex writes files under /tmp/qcut-output.</p>
                 </div>
             </div>
         </section>
@@ -211,6 +255,8 @@
 
     <script src="theme.js"></script>
     <script src="js/payment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
     <script src="js/agent-chat.js"></script>
     <script>lucide.createIcons();</script>
 </body>

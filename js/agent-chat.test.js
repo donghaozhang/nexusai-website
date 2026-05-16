@@ -58,6 +58,7 @@ test("buildAgentRequest keeps codex prompts out of the shell command", () => {
 					"For image generation requests, run the QCut CLI rather than any external image tool.",
 					"Write generated files under /tmp/qcut-output so the worker can upload them.",
 					"yt-dlp and deno are available for authorized video download probes.",
+					"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 					"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
 					"Write only final user-requested files and small diagnostic summaries/logs under /tmp/qcut-output.",
 					"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
@@ -89,6 +90,7 @@ test("buildCodexChatPrompt includes prior turns for follow-up messages", () => {
 			"For image generation requests, run the QCut CLI rather than any external image tool.",
 			"Write generated files under /tmp/qcut-output so the worker can upload them.",
 			"yt-dlp and deno are available for authorized video download probes.",
+			"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 			"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
 			"Write only final user-requested files and small diagnostic summaries/logs under /tmp/qcut-output.",
 			"Example: qcut gen image -t 'small blue square icon on a clean white background' -m flux_dev --json -o /tmp/qcut-output",
@@ -105,6 +107,26 @@ test("buildCodexChatPrompt includes prior turns for follow-up messages", () => {
 			"What should we test next?",
 		].join("\n")
 	);
+});
+
+test("buildTerminalPromptCommand wraps prompts for visible PTY Codex runs", () => {
+	const AgentChatAPI = loadAgentChatApi();
+	const command = AgentChatAPI.buildTerminalPromptCommand({
+		prompt: "Generate a small blue icon.",
+		messages: [],
+		marker: "TEST_MARKER",
+	});
+
+	assert.match(
+		command,
+		/cat > \/tmp\/qcut-terminal-prompt\.md <<'TEST_MARKER'/
+	);
+	assert.match(command, /Generate a small blue icon\./);
+	assert.match(
+		command,
+		/codex exec --skip-git-repo-check --sandbox danger-full-access --output-last-message \/tmp\/qcut-output\/codex-last-message\.md - < \/tmp\/qcut-terminal-prompt\.md/
+	);
+	assert.match(command, /find \/tmp\/qcut-output/);
 });
 
 test("findCodexLastMessageArtifact selects the Codex final response", () => {
@@ -144,6 +166,55 @@ test("buildLiveCodexStatus summarizes recent worker events", () => {
 			"daytona_sandbox_ready: sandbox ready",
 			'daytona_command_started: {"sessionId":"session-1"}',
 		].join("\n")
+	);
+});
+
+test("buildLiveCodexStatus surfaces streamed Codex stdout lines", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.buildLiveCodexStatus({
+			events: [
+				{
+					kind: "codex_stdout",
+					createdAt: "2026-05-15T00:00:03.000Z",
+					payload: { message: "STREAM_STEP_1" },
+				},
+			],
+		}),
+		[
+			"Running Codex in the Daytona sandbox...",
+			"",
+			"codex_stdout: STREAM_STEP_1",
+		].join("\n")
+	);
+});
+
+test("buildLiveCodexStatus shows real Codex agent messages as soon as event arrives", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.buildLiveCodexStatus({
+			events: [
+				{
+					kind: "codex_stdout",
+					createdAt: "2026-05-15T00:00:03.000Z",
+					payload: { message: "still working" },
+				},
+				{
+					kind: "codex_event",
+					createdAt: "2026-05-15T00:00:04.000Z",
+					payload: {
+						type: "item.completed",
+						item: {
+							type: "agent_message",
+							text: "This is the real Codex answer.",
+						},
+					},
+				},
+			],
+		}),
+		"This is the real Codex answer."
 	);
 });
 
@@ -257,6 +328,71 @@ test("createAgentSession posts to the session route", async () => {
 	assert.equal(requestUrl, "https://license.test/api/agent/sessions");
 	assert.equal(requestInit.method, "POST");
 	assert.equal(requestInit.body, JSON.stringify({}));
+});
+
+test("createAgentPtyToken posts to the terminal token route", async () => {
+	let requestUrl = "";
+	let requestInit = null;
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url, init) => {
+			requestUrl = url;
+			requestInit = init;
+			return createResponse({
+				status: 200,
+				payload: {
+					session: { id: "agent-session-1" },
+					ws_url: "wss://relay.test/pty?token=abc",
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const payload = await AgentChatAPI.createAgentPtyToken({
+		sessionId: "agent-session-1",
+	});
+
+	assert.equal(payload.ws_url, "wss://relay.test/pty?token=abc");
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/pty-token"
+	);
+	assert.equal(requestInit.method, "POST");
+	assert.equal(requestInit.body, JSON.stringify({}));
+});
+
+test("getAgentSessionArtifacts reads terminal artifacts", async () => {
+	let requestUrl = "";
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return createResponse({
+				status: 200,
+				payload: {
+					artifacts: [
+						{
+							id: "result.png",
+							sessionId: "agent-session-1",
+							meta: { filename: "result.png" },
+						},
+					],
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const artifacts = await AgentChatAPI.getAgentSessionArtifacts({
+		sessionId: "agent-session-1",
+	});
+
+	assert.equal(artifacts[0].id, "result.png");
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/artifacts"
+	);
 });
 
 test("ensureAgentSession saves the session id for reset controls", async () => {
