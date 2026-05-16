@@ -1218,6 +1218,25 @@ function disconnectAgentTerminal() {
 	setTerminalStatus({ text: "disconnected" });
 }
 
+function autoConnectAgentTerminal() {
+	const win = getRuntimeWindow();
+	const connect = () => {
+		void connectAgentTerminal().catch((error) => {
+			showError({
+				message:
+					error instanceof Error
+						? `Terminal auto-connect failed: ${error.message}`
+						: "Terminal auto-connect failed",
+			});
+		});
+	};
+	if (win && typeof win.setTimeout === "function") {
+		win.setTimeout(connect, 0);
+		return;
+	}
+	connect();
+}
+
 async function refreshSessionArtifacts() {
 	const sessionId = activeTerminalSessionId || readStoredAgentSessionId();
 	if (sessionId.length === 0) {
@@ -1423,6 +1442,7 @@ function initAgentChatPage() {
 			void refreshSessionArtifacts();
 		});
 	}
+	autoConnectAgentTerminal();
 }
 
 const AgentChatAPI = {
@@ -1435,6 +1455,7 @@ const AgentChatAPI = {
 	buildTerminalPromptCommand,
 	CODEX_AGENT_COMMAND,
 	CODEX_TERMINAL_COMMAND,
+	autoConnectAgentTerminal,
 	clearStoredAgentSessionId,
 	createAgentJob,
 	createAgentPtyToken,
