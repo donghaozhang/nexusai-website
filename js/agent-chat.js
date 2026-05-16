@@ -539,6 +539,61 @@ function findCodexLastMessageArtifact({ artifacts }) {
 	);
 }
 
+function getEventPayloadMessage({ payload }) {
+	if (!payload || typeof payload !== "object") {
+		return "";
+	}
+	if (typeof payload.message === "string" && payload.message.trim().length > 0) {
+		return payload.message.trim();
+	}
+	if (typeof payload.type === "string" && payload.type.trim().length > 0) {
+		const status =
+			typeof payload.status === "string" && payload.status.trim().length > 0
+				? ` ${payload.status.trim()}`
+				: "";
+		return `${payload.type.trim()}${status}`;
+	}
+	try {
+		return JSON.stringify(payload);
+	} catch {
+		return "";
+	}
+}
+
+function formatEventPreview({ event }) {
+	const kind =
+		typeof event?.kind === "string" && event.kind.trim().length > 0
+			? event.kind.trim()
+			: "event";
+	const message = getEventPayloadMessage({ payload: event?.payload });
+	const preview = message.length > 0 ? `${kind}: ${message}` : kind;
+	return preview.length > 180 ? `${preview.slice(0, 177)}...` : preview;
+}
+
+function buildLiveCodexStatus({ events }) {
+	const base = "Running Codex in the Daytona sandbox...";
+	if (!Array.isArray(events) || events.length === 0) {
+		return base;
+	}
+	const chronological = events
+		.slice()
+		.sort((left, right) => {
+			const leftTime = Date.parse(left?.createdAt || "");
+			const rightTime = Date.parse(right?.createdAt || "");
+			return (
+				(Number.isNaN(leftTime) ? 0 : leftTime) -
+				(Number.isNaN(rightTime) ? 0 : rightTime)
+			);
+		})
+		.slice(-4)
+		.map((event) => formatEventPreview({ event }))
+		.filter((line) => line.length > 0);
+	if (chronological.length === 0) {
+		return base;
+	}
+	return [base, "", ...chronological].join("\n");
+}
+
 function renderArtifacts({ artifacts }) {
 	const list = getElement({ id: "agent-artifacts" });
 	const doc = getRuntimeWindow()?.document;
@@ -718,7 +773,15 @@ function pollJob({ jobId, mode, assistantMessageId }) {
 			renderJob({ job: detail.job });
 			renderArtifacts({ artifacts: detail.artifacts });
 			renderEvents({ events: detail.events });
-			if (isTerminalStatus({ status: detail.job?.status })) {
+			const isTerminal = isTerminalStatus({ status: detail.job?.status });
+			if (mode === "codex" && assistantMessageId && !isTerminal) {
+				updateChatMessage({
+					id: assistantMessageId,
+					content: buildLiveCodexStatus({ events: detail.events }),
+					status: "pending",
+				});
+			}
+			if (isTerminal) {
 				win.clearInterval(intervalId);
 				setDisabled({ id: "agent-submit", disabled: false });
 				if (mode === "codex" && assistantMessageId) {
@@ -796,6 +859,7 @@ function initAgentChatPage() {
 }
 
 const AgentChatAPI = {
+	buildLiveCodexStatus,
 	buildAgentArtifactDownloadPath,
 	buildAgentRequest,
 	buildCodexChatPrompt,

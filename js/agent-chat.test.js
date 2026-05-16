@@ -130,6 +130,33 @@ test("findCodexLastMessageArtifact selects the Codex final response", () => {
 	);
 });
 
+test("buildLiveCodexStatus summarizes recent worker events", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.buildLiveCodexStatus({
+			events: [
+				{
+					kind: "daytona_command_started",
+					createdAt: "2026-05-15T00:00:02.000Z",
+					payload: { sessionId: "session-1" },
+				},
+				{
+					kind: "daytona_sandbox_ready",
+					createdAt: "2026-05-15T00:00:01.000Z",
+					payload: { message: "sandbox ready" },
+				},
+			],
+		}),
+		[
+			"Running Codex in the Daytona sandbox...",
+			"",
+			"daytona_sandbox_ready: sandbox ready",
+			'daytona_command_started: {"sessionId":"session-1"}',
+		].join("\n")
+	);
+});
+
 test("createAgentJob posts to the license server agent route", async () => {
 	let requestUrl = "";
 	let requestInit = null;
