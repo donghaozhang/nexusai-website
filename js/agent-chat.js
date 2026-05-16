@@ -1305,6 +1305,7 @@ function disconnectAgentTerminal() {
 	terminalSocket = null;
 	clearTerminalArtifactPoll();
 	setTerminalStatus({ text: "disconnected" });
+	setText({ id: "agent-job-status", text: "idle" });
 	resetTerminalOutput({ message: "Connect to open a real terminal." });
 }
 
@@ -1455,7 +1456,7 @@ async function submitAgentJob() {
 			content:
 				"Sent to the persistent Codex session. Watch the live output above.",
 		});
-		setText({ id: "agent-job-status", text: "running" });
+		setText({ id: "agent-job-status", text: "terminal" });
 		startTerminalArtifactPoll();
 	} catch (error) {
 		showError({
