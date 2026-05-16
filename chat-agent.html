@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button onclick="document.getElementById('mobile-menu').classList.toggle('open')" class="hamburger items-center justify-center theme-toggle md:hidden" aria-label="Open menu">
+                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('open')" class="hamburger items-center justify-center theme-toggle md:hidden" aria-label="Open menu">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Open menu</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
                     <button type="button" onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
@@ -135,6 +135,17 @@
                         <option value="image">QCut image generation</option>
                         <option value="codex">Codex chat agent</option>
                     </select>
+
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
+                        <div>
+                            <div class="text-xs uppercase tracking-wider text-muted">Session</div>
+                            <div id="agent-session-status" class="mono text-xs mt-1 break-all">none</div>
+                        </div>
+                        <button id="agent-new-session" type="button" class="btn-outline px-4 py-2 rounded-full text-xs font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            New
+                        </button>
+                    </div>
 
                     <div id="agent-chat-log" class="agent-chat-log mb-5">
                         <p class="text-sm text-muted">Codex replies will appear here after each run.</p>

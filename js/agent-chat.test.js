@@ -11,7 +11,7 @@ function createResponse({ status, payload }) {
 	};
 }
 
-function setupRuntime({ fetchImpl, token }) {
+function setupRuntime({ fetchImpl, token, localStorage }) {
 	global.window = {
 		PaymentAPI: {
 			getApiBaseUrl() {
@@ -24,6 +24,7 @@ function setupRuntime({ fetchImpl, token }) {
 				return true;
 			},
 		},
+		...(localStorage ? { localStorage } : {}),
 	};
 	global.fetch = fetchImpl;
 }
@@ -195,6 +196,113 @@ test("createAgentJob posts to the license server agent route", async () => {
 			args: { source: "qcut_website_chat_agent" },
 		})
 	);
+});
+
+test("createAgentJob attaches the active agent session id", async () => {
+	let requestInit = null;
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (_url, init) => {
+			requestInit = init;
+			return createResponse({
+				status: 201,
+				payload: {
+					job: {
+						id: "job-1",
+						status: "queued",
+						sessionId: "agent-session-1",
+					},
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const job = await AgentChatAPI.createAgentJob({
+		command: "codex exec --skip-git-repo-check --json -",
+		args: {
+			source: "qcut_website_chat_agent",
+			codexPrompt: "Continue the chat.",
+		},
+		sessionId: "agent-session-1",
+	});
+
+	assert.equal(job.sessionId, "agent-session-1");
+	assert.equal(
+		requestInit.body,
+		JSON.stringify({
+			command: "codex exec --skip-git-repo-check --json -",
+			args: {
+				source: "qcut_website_chat_agent",
+				codexPrompt: "Continue the chat.",
+			},
+			sessionId: "agent-session-1",
+		})
+	);
+});
+
+test("createAgentSession posts to the session route", async () => {
+	let requestUrl = "";
+	let requestInit = null;
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url, init) => {
+			requestUrl = url;
+			requestInit = init;
+			return createResponse({
+				status: 201,
+				payload: {
+					session: {
+						id: "agent-session-1",
+						status: "active",
+					},
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const session = await AgentChatAPI.createAgentSession();
+
+	assert.equal(session.id, "agent-session-1");
+	assert.equal(requestUrl, "https://license.test/api/agent/sessions");
+	assert.equal(requestInit.method, "POST");
+	assert.equal(requestInit.body, JSON.stringify({}));
+});
+
+test("ensureAgentSession saves the session id for reset controls", async () => {
+	const storage = new Map();
+	setupRuntime({
+		token: "token-abc",
+		localStorage: {
+			getItem(key) {
+				return storage.get(key) || "";
+			},
+			setItem(key, value) {
+				storage.set(key, value);
+			},
+			removeItem(key) {
+				storage.delete(key);
+			},
+		},
+		fetchImpl: async () =>
+			createResponse({
+				status: 200,
+				payload: {
+					session: {
+						id: "agent-session-1",
+						status: "active",
+					},
+				},
+			}),
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	await AgentChatAPI.ensureAgentSession();
+
+	assert.equal(AgentChatAPI.readStoredAgentSessionId(), "agent-session-1");
+	AgentChatAPI.clearStoredAgentSessionId();
+	assert.equal(AgentChatAPI.readStoredAgentSessionId(), "");
 });
 
 test("getAgentArtifactText reads text artifacts from the license server", async () => {

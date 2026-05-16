@@ -5,6 +5,7 @@ const DEFAULT_LICENSE_SERVER_URL =
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
+const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const CODEX_AGENT_SYSTEM_PROMPT = [
 	"You are running inside QCut's Daytona CLI image.",
 	"The QCut native CLI skill is available at /home/qcut/qcut/.claude/skills/native-cli/SKILL.md.",
@@ -115,6 +116,44 @@ function saveAuthToken({ token }) {
 		return paymentApi.setAuthToken({ token: trimmed });
 	} catch {
 		return false;
+	}
+}
+
+function getLocalStorage() {
+	try {
+		return getRuntimeWindow()?.localStorage || null;
+	} catch {
+		return null;
+	}
+}
+
+function readStoredAgentSessionId() {
+	try {
+		const value = getLocalStorage()?.getItem(AGENT_SESSION_STORAGE_KEY) || "";
+		return typeof value === "string" ? value.trim() : "";
+	} catch {
+		return "";
+	}
+}
+
+function saveStoredAgentSessionId({ sessionId }) {
+	try {
+		const value = typeof sessionId === "string" ? sessionId.trim() : "";
+		if (value.length === 0) {
+			return false;
+		}
+		getLocalStorage()?.setItem(AGENT_SESSION_STORAGE_KEY, value);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function clearStoredAgentSessionId() {
+	try {
+		getLocalStorage()?.removeItem(AGENT_SESSION_STORAGE_KEY);
+	} catch {
+		return;
 	}
 }
 
@@ -310,19 +349,49 @@ function buildAgentRequest({ mode, prompt, messages }) {
 	};
 }
 
-async function createAgentJob({ command, args }) {
+async function createAgentJob({ command, args, sessionId }) {
+	const trimmedSessionId =
+		typeof sessionId === "string" && sessionId.trim().length > 0
+			? sessionId.trim()
+			: "";
 	const payload = await requestAgentApi({
 		path: "/api/agent/jobs",
 		method: "POST",
 		body: {
 			command,
 			args: args || { source: "qcut_website_chat_agent" },
+			...(trimmedSessionId.length > 0 ? { sessionId: trimmedSessionId } : {}),
 		},
 	});
 	if (!payload || typeof payload !== "object" || !payload.job) {
 		throw new Error("Agent job response is invalid");
 	}
 	return payload.job;
+}
+
+async function createAgentSession() {
+	const payload = await requestAgentApi({
+		path: "/api/agent/sessions",
+		method: "POST",
+		body: {},
+	});
+	if (!payload || typeof payload !== "object" || !payload.session) {
+		throw new Error("Agent session response is invalid");
+	}
+	return payload.session;
+}
+
+async function endAgentSession({ sessionId }) {
+	const value = typeof sessionId === "string" ? sessionId.trim() : "";
+	if (value.length === 0) {
+		return null;
+	}
+	const payload = await requestAgentApi({
+		path: `/api/agent/sessions/${encodeURIComponent(value)}/end`,
+		method: "POST",
+		body: {},
+	});
+	return payload?.session || null;
 }
 
 async function getAgentJobDetail({ jobId }) {
@@ -431,6 +500,57 @@ function setDisabled({ id, disabled }) {
 	const element = getElement({ id });
 	if (element) {
 		element.disabled = disabled;
+	}
+}
+
+function renderAgentSession({ session }) {
+	const status = getElement({ id: "agent-session-status" });
+	if (!status) {
+		return;
+	}
+	if (!session) {
+		const storedSessionId = readStoredAgentSessionId();
+		status.textContent =
+			storedSessionId.length > 0 ? `saved ${storedSessionId}` : "none";
+		return;
+	}
+	const sessionId = typeof session.id === "string" ? session.id : "";
+	const sessionStatus =
+		typeof session.status === "string" ? session.status : "active";
+	status.textContent =
+		sessionId.length > 0 ? `${sessionStatus} ${sessionId}` : sessionStatus;
+}
+
+async function ensureAgentSession() {
+	const session = await createAgentSession();
+	if (typeof session?.id === "string" && session.id.trim().length > 0) {
+		saveStoredAgentSessionId({ sessionId: session.id });
+	}
+	renderAgentSession({ session });
+	return session;
+}
+
+async function resetAgentSession() {
+	showError({ message: "" });
+	const sessionId = readStoredAgentSessionId();
+	setDisabled({ id: "agent-new-session", disabled: true });
+	try {
+		if (sessionId.length > 0) {
+			await endAgentSession({ sessionId });
+		}
+		clearStoredAgentSessionId();
+		chatMessages.length = 0;
+		renderChatMessages();
+		renderAgentSession({ session: null });
+	} catch (error) {
+		showError({
+			message:
+				error instanceof Error
+					? `Failed to reset session: ${error.message}`
+					: "Failed to reset session",
+		});
+	} finally {
+		setDisabled({ id: "agent-new-session", disabled: false });
 	}
 }
 
@@ -812,12 +932,16 @@ async function submitAgentJob() {
 			prompt,
 			messages: chatMessages,
 		});
+		const session = mode === "codex" ? await ensureAgentSession() : null;
 		let assistantMessageId = "";
 		const visiblePrompt =
 			typeof prompt === "string" && prompt.trim().length > 0
 				? prompt.trim()
 				: "Summarize the current QCut agent status.";
-		const job = await createAgentJob(request);
+		const job = await createAgentJob({
+			...request,
+			sessionId: session?.id,
+		});
 		if (mode === "codex") {
 			appendChatMessage({
 				role: "user",
@@ -845,17 +969,22 @@ function initAgentChatPage() {
 	const promptInput = getElement({ id: "agent-prompt" });
 	const modeInput = getElement({ id: "agent-mode" });
 	const submitButton = getElement({ id: "agent-submit" });
+	const newSessionButton = getElement({ id: "agent-new-session" });
 	if (!promptInput || !submitButton) {
 		return;
 	}
 
 	setValue({ id: "agent-token", value: readAuthToken() });
+	renderAgentSession({ session: null });
 	setCommandPreview();
 	promptInput.addEventListener("input", setCommandPreview);
 	if (modeInput) {
 		modeInput.addEventListener("change", setCommandPreview);
 	}
 	submitButton.addEventListener("click", submitAgentJob);
+	if (newSessionButton) {
+		newSessionButton.addEventListener("click", resetAgentSession);
+	}
 }
 
 const AgentChatAPI = {
@@ -866,8 +995,12 @@ const AgentChatAPI = {
 	buildCodexCommand,
 	buildImageCommand,
 	CODEX_AGENT_COMMAND,
+	clearStoredAgentSessionId,
 	createAgentJob,
+	createAgentSession,
 	downloadAgentArtifact,
+	endAgentSession,
+	ensureAgentSession,
 	findCodexLastMessageArtifact,
 	formatArtifactSize,
 	getArtifactFilename,
@@ -875,6 +1008,8 @@ const AgentChatAPI = {
 	getAgentJobDetail,
 	isTerminalStatus,
 	normalizePromptSlug,
+	readStoredAgentSessionId,
+	saveStoredAgentSessionId,
 };
 
 if (typeof module !== "undefined" && module.exports) {
