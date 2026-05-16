@@ -85,7 +85,39 @@
         #agent-terminal {
             min-height: 440px;
             height: 440px;
+        }
+        #agent-terminal,
+        #agent-terminal * {
+            font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace !important;
+            font-kerning: none;
+            font-variant-ligatures: none;
+            letter-spacing: 0 !important;
+        }
+        #agent-terminal .xterm {
+            height: 100%;
             padding: 10px;
+            box-sizing: border-box;
+        }
+        #agent-terminal .xterm-screen {
+            contain: strict;
+        }
+        #agent-terminal .xterm-viewport {
+            background-color: #0f0f12 !important;
+            scrollbar-color: #3f3f46 #0f0f12;
+        }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar {
+            width: 10px;
+        }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar-track {
+            background: #0f0f12;
+        }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border: 2px solid #0f0f12;
+            border-radius: 999px;
+        }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
         }
         .terminal-fallback {
             margin: 0;

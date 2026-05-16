@@ -29,6 +29,7 @@ let terminalInstance = null;
 let terminalFitAddon = null;
 let terminalArtifactPollIntervalId = null;
 let activeTerminalSessionId = "";
+let terminalResizeListenerBound = false;
 
 function getRuntimeGlobal() {
 	try {
@@ -1040,6 +1041,53 @@ function getFitAddonGlobal() {
 	return win?.FitAddon?.FitAddon || runtime?.FitAddon?.FitAddon || null;
 }
 
+function fitTerminalNow() {
+	try {
+		terminalFitAddon?.fit();
+		if (terminalInstance?.rows) {
+			terminalInstance.refresh(0, terminalInstance.rows - 1);
+		}
+	} catch {
+		return;
+	}
+}
+
+function scheduleTerminalFit() {
+	const win = getRuntimeWindow();
+	if (!win || typeof win.requestAnimationFrame !== "function") {
+		fitTerminalNow();
+		return;
+	}
+	win.requestAnimationFrame(() => {
+		fitTerminalNow();
+		win.requestAnimationFrame(fitTerminalNow);
+	});
+}
+
+function bindTerminalResizeListener() {
+	const win = getRuntimeWindow();
+	if (!win || terminalResizeListenerBound) {
+		return;
+	}
+	win.addEventListener("resize", () => {
+		scheduleTerminalFit();
+		sendTerminalResize();
+	});
+	terminalResizeListenerBound = true;
+}
+
+function fitTerminalAfterFontsLoad() {
+	const doc = getRuntimeWindow()?.document;
+	const fontsReady = doc?.fonts?.ready;
+	if (!fontsReady || typeof fontsReady.then !== "function") {
+		return;
+	}
+	fontsReady.then(() => {
+		scheduleTerminalFit();
+		sendTerminalResize();
+	});
+}
+
 function ensureTerminalRenderer() {
 	const target = getElement({ id: "agent-terminal" });
 	if (!target || terminalInstance) {
@@ -1058,8 +1106,10 @@ function ensureTerminalRenderer() {
 	terminalInstance = new Terminal({
 		convertEol: true,
 		cursorBlink: true,
-		fontFamily: '"JetBrains Mono", monospace',
+		fontFamily: '"JetBrains Mono", "SFMono-Regular", Consolas, monospace',
 		fontSize: 13,
+		letterSpacing: 0,
+		lineHeight: 1.18,
 		scrollback: 5000,
 		theme: {
 			background: "#0f0f12",
@@ -1073,7 +1123,9 @@ function ensureTerminalRenderer() {
 		terminalInstance.loadAddon(terminalFitAddon);
 	}
 	terminalInstance.open(target);
-	terminalFitAddon?.fit();
+	scheduleTerminalFit();
+	bindTerminalResizeListener();
+	fitTerminalAfterFontsLoad();
 	terminalInstance.onData((data) => sendTerminalInput({ text: data }));
 	return terminalInstance;
 }
@@ -1094,7 +1146,7 @@ function sendTerminalResize() {
 	if (!terminalSocket || terminalSocket.readyState !== 1) {
 		return;
 	}
-	terminalFitAddon?.fit();
+	fitTerminalNow();
 	const cols = Number(terminalInstance?.cols || 100);
 	const rows = Number(terminalInstance?.rows || 30);
 	terminalSocket.send(JSON.stringify({ kind: "resize", cols, rows }));
