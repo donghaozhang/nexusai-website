@@ -20,6 +20,7 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 	"Report the command you ran and the resulting artifact paths.",
 ].join("\n");
 const chatMessages = [];
+let activeJobPollIntervalId = null;
 
 function getRuntimeGlobal() {
 	try {
@@ -271,22 +272,6 @@ async function requestAgentBlob({ path }) {
 	return response.blob();
 }
 
-function normalizePromptSlug({ prompt }) {
-	const normalized =
-		typeof prompt === "string"
-			? prompt
-					.toLowerCase()
-					.replace(/[^a-z0-9]+/g, "-")
-					.replace(/^-+|-+$/g, "")
-					.slice(0, 80)
-			: "";
-	return normalized || "qcut-chat-agent-image";
-}
-
-function buildImageCommand({ prompt }) {
-	return `qcut gen image -t ${normalizePromptSlug({ prompt })} -m flux_dev --json`;
-}
-
 function buildCodexCommand() {
 	return CODEX_AGENT_COMMAND;
 }
@@ -333,19 +318,13 @@ function buildCodexChatPrompt({ messages, prompt }) {
 	].join("\n");
 }
 
-function buildAgentRequest({ mode, prompt, messages }) {
-	if (mode === "codex") {
-		return {
-			command: buildCodexCommand(),
-			args: {
-				source: "qcut_website_chat_agent",
-				codexPrompt: buildCodexChatPrompt({ messages, prompt }),
-			},
-		};
-	}
+function buildAgentRequest({ prompt, messages }) {
 	return {
-		command: buildImageCommand({ prompt }),
-		args: { source: "qcut_website_chat_agent" },
+		command: buildCodexCommand(),
+		args: {
+			source: "qcut_website_chat_agent",
+			codexPrompt: buildCodexChatPrompt({ messages, prompt }),
+		},
 	};
 }
 
@@ -541,6 +520,7 @@ async function resetAgentSession() {
 		clearStoredAgentSessionId();
 		chatMessages.length = 0;
 		renderChatMessages();
+		resetJobState();
 		renderAgentSession({ session: null });
 	} catch (error) {
 		showError({
@@ -621,6 +601,28 @@ function renderJob({ job }) {
 	setText({ id: "agent-job-error", text: job.error || "" });
 	setHidden({ id: "agent-job-empty", hidden: true });
 	setHidden({ id: "agent-job-summary", hidden: false });
+}
+
+function clearActiveJobPoll() {
+	const win = getRuntimeWindow();
+	if (!win || activeJobPollIntervalId === null) {
+		return;
+	}
+	win.clearInterval(activeJobPollIntervalId);
+	activeJobPollIntervalId = null;
+}
+
+function resetJobState() {
+	clearActiveJobPoll();
+	setText({ id: "agent-job-status", text: "idle" });
+	setText({ id: "agent-job-id", text: "-" });
+	setText({ id: "agent-job-exit", text: "-" });
+	setText({ id: "agent-job-runner", text: "-" });
+	setText({ id: "agent-job-error", text: "" });
+	setHidden({ id: "agent-job-empty", hidden: false });
+	setHidden({ id: "agent-job-summary", hidden: true });
+	renderArtifacts({ artifacts: [] });
+	renderEvents({ events: [] });
 }
 
 function getArtifactFilename({ artifact }) {
@@ -830,10 +832,9 @@ function renderEvents({ events }) {
 
 function setCommandPreview() {
 	const prompt = getValue({ id: "agent-prompt" });
-	const mode = getValue({ id: "agent-mode" });
 	setText({
 		id: "agent-command-preview",
-		text: buildAgentRequest({ mode, prompt, messages: chatMessages }).command,
+		text: buildAgentRequest({ prompt, messages: chatMessages }).command,
 	});
 }
 
@@ -882,11 +883,12 @@ async function resolveCodexChatReply({ detail, assistantMessageId }) {
 	}
 }
 
-function pollJob({ jobId, mode, assistantMessageId }) {
+function pollJob({ jobId, assistantMessageId }) {
 	const win = getRuntimeWindow();
 	if (!win) {
 		return;
 	}
+	clearActiveJobPoll();
 	const intervalId = win.setInterval(async () => {
 		try {
 			const detail = await getAgentJobDetail({ jobId });
@@ -894,7 +896,7 @@ function pollJob({ jobId, mode, assistantMessageId }) {
 			renderArtifacts({ artifacts: detail.artifacts });
 			renderEvents({ events: detail.events });
 			const isTerminal = isTerminalStatus({ status: detail.job?.status });
-			if (mode === "codex" && assistantMessageId && !isTerminal) {
+			if (assistantMessageId && !isTerminal) {
 				updateChatMessage({
 					id: assistantMessageId,
 					content: buildLiveCodexStatus({ events: detail.events }),
@@ -903,8 +905,9 @@ function pollJob({ jobId, mode, assistantMessageId }) {
 			}
 			if (isTerminal) {
 				win.clearInterval(intervalId);
+				activeJobPollIntervalId = null;
 				setDisabled({ id: "agent-submit", disabled: false });
-				if (mode === "codex" && assistantMessageId) {
+				if (assistantMessageId) {
 					await resolveCodexChatReply({ detail, assistantMessageId });
 				}
 			}
@@ -914,25 +917,25 @@ function pollJob({ jobId, mode, assistantMessageId }) {
 			});
 		}
 	}, 2500);
+	activeJobPollIntervalId = intervalId;
 }
 
 async function submitAgentJob() {
 	showError({ message: "" });
 	setDisabled({ id: "agent-submit", disabled: true });
+	clearActiveJobPoll();
 
 	try {
-		const mode = getValue({ id: "agent-mode" });
 		const prompt = getValue({ id: "agent-prompt" });
 		const token = getValue({ id: "agent-token" });
 		if (token.trim().length > 0) {
 			saveAuthToken({ token });
 		}
 		const request = buildAgentRequest({
-			mode,
 			prompt,
 			messages: chatMessages,
 		});
-		const session = mode === "codex" ? await ensureAgentSession() : null;
+		const session = await ensureAgentSession();
 		let assistantMessageId = "";
 		const visiblePrompt =
 			typeof prompt === "string" && prompt.trim().length > 0
@@ -942,21 +945,19 @@ async function submitAgentJob() {
 			...request,
 			sessionId: session?.id,
 		});
-		if (mode === "codex") {
-			appendChatMessage({
-				role: "user",
-				content: visiblePrompt,
-			});
-			assistantMessageId = appendChatMessage({
-				role: "assistant",
-				content: "Running Codex in the Daytona sandbox...",
-				status: "pending",
-			});
-		}
+		appendChatMessage({
+			role: "user",
+			content: visiblePrompt,
+		});
+		assistantMessageId = appendChatMessage({
+			role: "assistant",
+			content: "Running Codex in the Daytona sandbox...",
+			status: "pending",
+		});
 		renderJob({ job });
 		renderArtifacts({ artifacts: [] });
 		renderEvents({ events: [] });
-		pollJob({ jobId: job.id, mode, assistantMessageId });
+		pollJob({ jobId: job.id, assistantMessageId });
 	} catch (error) {
 		setDisabled({ id: "agent-submit", disabled: false });
 		showError({
@@ -967,7 +968,6 @@ async function submitAgentJob() {
 
 function initAgentChatPage() {
 	const promptInput = getElement({ id: "agent-prompt" });
-	const modeInput = getElement({ id: "agent-mode" });
 	const submitButton = getElement({ id: "agent-submit" });
 	const newSessionButton = getElement({ id: "agent-new-session" });
 	if (!promptInput || !submitButton) {
@@ -978,9 +978,6 @@ function initAgentChatPage() {
 	renderAgentSession({ session: null });
 	setCommandPreview();
 	promptInput.addEventListener("input", setCommandPreview);
-	if (modeInput) {
-		modeInput.addEventListener("change", setCommandPreview);
-	}
 	submitButton.addEventListener("click", submitAgentJob);
 	if (newSessionButton) {
 		newSessionButton.addEventListener("click", resetAgentSession);
@@ -993,7 +990,6 @@ const AgentChatAPI = {
 	buildAgentRequest,
 	buildCodexChatPrompt,
 	buildCodexCommand,
-	buildImageCommand,
 	CODEX_AGENT_COMMAND,
 	clearStoredAgentSessionId,
 	createAgentJob,
@@ -1007,7 +1003,6 @@ const AgentChatAPI = {
 	getAgentArtifactText,
 	getAgentJobDetail,
 	isTerminalStatus,
-	normalizePromptSlug,
 	readStoredAgentSessionId,
 	saveStoredAgentSessionId,
 };

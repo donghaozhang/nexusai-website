@@ -40,21 +40,10 @@ test.afterEach(() => {
 	delete global.fetch;
 });
 
-test("buildImageCommand normalizes prompt into worker-safe tokens", () => {
-	const AgentChatAPI = loadAgentChatApi();
-	assert.equal(
-		AgentChatAPI.buildImageCommand({
-			prompt: "Small blue square icon on white background!",
-		}),
-		"qcut gen image -t small-blue-square-icon-on-white-background -m flux_dev --json"
-	);
-});
-
 test("buildAgentRequest keeps codex prompts out of the shell command", () => {
 	const AgentChatAPI = loadAgentChatApi();
 	assert.deepEqual(
 		AgentChatAPI.buildAgentRequest({
-			mode: "codex",
 			prompt: "Explain how the Daytona worker runs qcut.",
 		}),
 		{
@@ -303,6 +292,40 @@ test("ensureAgentSession saves the session id for reset controls", async () => {
 	assert.equal(AgentChatAPI.readStoredAgentSessionId(), "agent-session-1");
 	AgentChatAPI.clearStoredAgentSessionId();
 	assert.equal(AgentChatAPI.readStoredAgentSessionId(), "");
+});
+
+test("endAgentSession posts to the session end route", async () => {
+	let requestUrl = "";
+	let requestInit = null;
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url, init) => {
+			requestUrl = url;
+			requestInit = init;
+			return createResponse({
+				status: 200,
+				payload: {
+					session: {
+						id: "agent-session-1",
+						status: "stopping",
+					},
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const session = await AgentChatAPI.endAgentSession({
+		sessionId: "agent-session-1",
+	});
+
+	assert.equal(session.status, "stopping");
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/end"
+	);
+	assert.equal(requestInit.method, "POST");
+	assert.equal(requestInit.body, JSON.stringify({}));
 });
 
 test("getAgentArtifactText reads text artifacts from the license server", async () => {
