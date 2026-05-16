@@ -124,7 +124,7 @@ test("buildTerminalPromptCommand wraps prompts for visible PTY Codex runs", () =
 	assert.match(command, /Generate a small blue icon\./);
 	assert.match(
 		command,
-		/codex exec --skip-git-repo-check --sandbox danger-full-access --output-last-message \/tmp\/qcut-output\/codex-last-message\.md - < \/tmp\/qcut-terminal-prompt\.md/
+		/codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message \/tmp\/qcut-output\/codex-last-message\.md - < \/tmp\/qcut-terminal-prompt\.md/
 	);
 	assert.match(command, /find \/tmp\/qcut-output/);
 });

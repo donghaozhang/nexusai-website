@@ -5,7 +5,7 @@ const DEFAULT_LICENSE_SERVER_URL =
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
 const CODEX_TERMINAL_COMMAND =
-	"codex exec --skip-git-repo-check --sandbox danger-full-access --output-last-message /tmp/qcut-output/codex-last-message.md -";
+	"codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message /tmp/qcut-output/codex-last-message.md -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
 const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const CODEX_AGENT_SYSTEM_PROMPT = [
