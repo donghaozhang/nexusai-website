@@ -515,6 +515,40 @@ test("normalizeSandboxPath keeps absolute sandbox paths safe for URLs", () => {
 	);
 });
 
+test("extractUppyUploadFiles returns real File objects from Uppy queue entries", () => {
+	const AgentChatAPI = loadAgentChatApi();
+	const queued = [
+		{
+			name: "source.txt",
+			type: "text/plain",
+			data: new Blob(["hello"], { type: "text/plain" }),
+		},
+	];
+
+	const files = AgentChatAPI.extractUppyUploadFiles({
+		files: queued,
+		FileCtor: File,
+	});
+
+	assert.equal(files.length, 1);
+	assert.equal(files[0].name, "source.txt");
+	assert.equal(files[0].type, "text/plain");
+	assert.equal(files[0].size, 5);
+});
+
+test("formatUploadProgress shows percent when upload progress is available", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.formatUploadProgress({
+			loaded: 50,
+			total: 100,
+			percent: 50,
+		}),
+		"Uploading to /: 50%"
+	);
+});
+
 test("ensureAgentSession saves the session id for reset controls", async () => {
 	const storage = new Map();
 	setupRuntime({

@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.css">
+    <link rel="stylesheet" href="https://releases.transloadit.com/uppy/v5.2.1/uppy.min.css">
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
     <style>
         .mono { font-family: "JetBrains Mono", monospace; }
@@ -141,6 +142,26 @@
             font-family: "JetBrains Mono", monospace;
             font-size: 13px;
         }
+        .agent-uppy-dashboard {
+            margin-top: 8px;
+        }
+        .agent-uppy-dashboard .uppy-Dashboard-inner {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            border-radius: 12px;
+        }
+        .agent-uppy-dashboard .uppy-Dashboard-AddFiles {
+            border-color: var(--border-color);
+        }
+        .agent-uppy-dashboard .uppy-Dashboard-AddFiles-title,
+        .agent-uppy-dashboard .uppy-DashboardContent-title,
+        .agent-uppy-dashboard .uppy-Dashboard-Item-name {
+            color: var(--text-primary);
+        }
+        .agent-uppy-dashboard .uppy-Dashboard-note,
+        .agent-uppy-dashboard .uppy-Dashboard-Item-status {
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -242,13 +263,14 @@
 
                     <div class="mt-5">
                         <label for="agent-upload-files" class="text-sm font-medium">Upload to sandbox</label>
-                        <div class="mt-2 flex flex-col gap-3 sm:flex-row">
+                        <div id="agent-uppy-dashboard" class="agent-uppy-dashboard"></div>
+                        <div id="agent-upload-fallback" class="mt-2 flex flex-col gap-3 sm:flex-row">
                             <input id="agent-upload-files" type="file" multiple class="agent-input agent-file-input text-sm">
-                            <button id="agent-upload-submit" type="button" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2 sm:w-auto">
-                                <i data-lucide="upload" class="w-4 h-4"></i>
-                                Upload
-                            </button>
                         </div>
+                        <button id="agent-upload-submit" type="button" class="btn-outline mt-3 px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2 sm:w-auto">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                            Upload selected files
+                        </button>
                         <p id="agent-upload-status" class="text-xs text-muted mt-2">Files and images upload into the current sandbox folder below.</p>
                     </div>
 
@@ -340,6 +362,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
     <script src="js/agent-chat.js"></script>
+    <script type="module">
+        try {
+            const { Uppy, Dashboard } = await import("https://releases.transloadit.com/uppy/v5.2.1/uppy.min.mjs");
+            window.AgentChatAPI?.initUppyUploader({ Uppy, Dashboard });
+        } catch (error) {
+            console.warn("Uppy uploader failed to load; native file input remains available.", error);
+        }
+    </script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

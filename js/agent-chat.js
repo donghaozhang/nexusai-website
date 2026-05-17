@@ -2,6 +2,7 @@
 const DEFAULT_LICENSE_SERVER_URL =
 	"https://qcut-license-server.zdhpeter.workers.dev";
 
+const MAX_SESSION_UPLOAD_BYTES = 25 * 1024 * 1024;
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
 const CODEX_TERMINAL_COMMAND =
@@ -36,6 +37,7 @@ let terminalArtifactPollIntervalId = null;
 let activeTerminalSessionId = "";
 let terminalResizeListenerBound = false;
 let currentSandboxPath = "/";
+let uppyUploader = null;
 
 function getRuntimeGlobal() {
 	try {
@@ -175,6 +177,10 @@ function clearStoredAgentSessionId() {
 
 async function parsePayload({ response }) {
 	const rawText = await response.text();
+	return parsePayloadText({ rawText });
+}
+
+function parsePayloadText({ rawText }) {
 	if (rawText.length === 0) {
 		return null;
 	}
@@ -252,6 +258,62 @@ async function requestAgentMultipart({ path, method, formData }) {
 		throw new Error(error || `Request failed (${response.status})`);
 	}
 	return payload;
+}
+
+function getXMLHttpRequestConstructor() {
+	return (
+		getRuntimeWindow()?.XMLHttpRequest ||
+		getRuntimeGlobal()?.XMLHttpRequest ||
+		null
+	);
+}
+
+function requestAgentMultipartWithProgress({
+	path,
+	method,
+	formData,
+	onProgress,
+}) {
+	const XMLHttpRequestCtor = getXMLHttpRequestConstructor();
+	if (!XMLHttpRequestCtor) {
+		return requestAgentMultipart({ path, method, formData });
+	}
+	return new Promise((resolve, reject) => {
+		const xhr = new XMLHttpRequestCtor();
+		xhr.open(method, `${getApiBaseUrl()}${path}`);
+		xhr.setRequestHeader("Accept", "application/json");
+		const token = readAuthToken();
+		if (token.length > 0) {
+			xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+		}
+		if (xhr.upload && typeof onProgress === "function") {
+			xhr.upload.addEventListener("progress", (event) => {
+				const total =
+					event.lengthComputable && event.total > 0 ? event.total : 0;
+				onProgress({
+					loaded: event.loaded,
+					total,
+					percent: total > 0 ? Math.round((event.loaded / total) * 100) : null,
+				});
+			});
+		}
+		xhr.addEventListener("load", () => {
+			const payload = parsePayloadText({ rawText: xhr.responseText || "" });
+			if (xhr.status < 200 || xhr.status >= 300) {
+				const error = getPayloadError({ payload });
+				reject(new Error(error || `Request failed (${xhr.status})`));
+				return;
+			}
+			resolve(payload);
+		});
+		xhr.addEventListener("error", () => {
+			reject(new Error("Upload request failed"));
+		});
+		xhr.addEventListener("abort", () => {
+			reject(new Error("Upload cancelled"));
+		});
+		xhr.send(formData);
+	});
 }
 
 async function requestAgentText({ path }) {
@@ -498,7 +560,12 @@ async function getAgentSessionFiles({ sessionId, path: sandboxPath }) {
 	return Array.isArray(payload?.files) ? payload.files : [];
 }
 
-async function uploadAgentSessionFiles({ sessionId, files, path: sandboxPath }) {
+async function uploadAgentSessionFiles({
+	sessionId,
+	files,
+	path: sandboxPath,
+	onProgress,
+}) {
 	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
 		throw new Error("Agent session id required");
 	}
@@ -520,12 +587,17 @@ async function uploadAgentSessionFiles({ sessionId, files, path: sandboxPath }) 
 	for (const file of uploads) {
 		formData.append("file", file);
 	}
-	const payload = await requestAgentMultipart({
+	const requestMultipart =
+		typeof onProgress === "function"
+			? requestAgentMultipartWithProgress
+			: requestAgentMultipart;
+	const payload = await requestMultipart({
 		path: `/api/agent/sessions/${encodeURIComponent(
 			sessionId.trim()
 		)}/files${query}`,
 		method: "POST",
 		formData,
+		onProgress,
 	});
 	return Array.isArray(payload?.files) ? payload.files : [];
 }
@@ -907,7 +979,142 @@ function getSandboxParentPath({ path }) {
 function setSandboxPath({ path }) {
 	currentSandboxPath = normalizeSandboxPath({ value: path, fallback: "/" });
 	renderSandboxPath();
+	refreshUploadSelectionStatus();
 	void refreshSessionArtifacts();
+}
+
+function extractUppyUploadFiles({ files, FileCtor }) {
+	const UploadFileCtor =
+		FileCtor || getRuntimeWindow()?.File || getRuntimeGlobal()?.File || null;
+	return Array.from(files || []).flatMap((file) => {
+		const data = file?.data;
+		if (!data || typeof file?.name !== "string" || file.name.length === 0) {
+			return [];
+		}
+		if (typeof data.name === "string" && data.name.length > 0) {
+			return [data];
+		}
+		if (
+			UploadFileCtor &&
+			typeof data.arrayBuffer === "function" &&
+			typeof data.size === "number"
+		) {
+			return [
+				new UploadFileCtor([data], file.name, {
+					type:
+						typeof file.type === "string"
+							? file.type
+							: typeof data.type === "string"
+								? data.type
+								: "",
+				}),
+			];
+		}
+		return [];
+	});
+}
+
+function getSelectedUploadFiles({ input }) {
+	const uppyFiles =
+		uppyUploader && typeof uppyUploader.getFiles === "function"
+			? extractUppyUploadFiles({ files: uppyUploader.getFiles() })
+			: [];
+	if (uppyFiles.length > 0) {
+		return uppyFiles;
+	}
+	return Array.from(input?.files || []).filter(Boolean);
+}
+
+function clearSelectedUploadFiles({ input }) {
+	if (uppyUploader) {
+		if (typeof uppyUploader.clear === "function") {
+			uppyUploader.clear();
+		} else if (typeof uppyUploader.cancelAll === "function") {
+			uppyUploader.cancelAll();
+		}
+	}
+	if (input && "value" in input) {
+		input.value = "";
+	}
+}
+
+function formatUploadSelectionStatus({ count }) {
+	if (!Number.isFinite(count) || count <= 0) {
+		return `Files and images upload into ${currentSandboxPath}.`;
+	}
+	return `${count} file${count === 1 ? "" : "s"} queued for ${currentSandboxPath}.`;
+}
+
+function formatUploadProgress({ loaded, total, percent }) {
+	if (Number.isFinite(percent)) {
+		return `Uploading to ${currentSandboxPath}: ${percent}%`;
+	}
+	if (Number.isFinite(loaded) && Number.isFinite(total) && total > 0) {
+		return `Uploading to ${currentSandboxPath}: ${Math.round(
+			(loaded / total) * 100
+		)}%`;
+	}
+	return `Uploading to ${currentSandboxPath}...`;
+}
+
+function getQueuedUppyUploadCount() {
+	return typeof uppyUploader?.getFiles === "function"
+		? uppyUploader.getFiles().length
+		: 0;
+}
+
+function refreshUploadSelectionStatus() {
+	if (!uppyUploader) {
+		return;
+	}
+	setText({
+		id: "agent-upload-status",
+		text: formatUploadSelectionStatus({ count: getQueuedUppyUploadCount() }),
+	});
+}
+
+function initUppyUploader({ Uppy, Dashboard }) {
+	const target = getElement({ id: "agent-uppy-dashboard" });
+	if (!target || typeof Uppy !== "function" || !Dashboard) {
+		return false;
+	}
+	if (uppyUploader && typeof uppyUploader.close === "function") {
+		uppyUploader.close();
+	}
+	uppyUploader = new Uppy({
+		autoProceed: false,
+		restrictions: {
+			maxFileSize: MAX_SESSION_UPLOAD_BYTES,
+			maxNumberOfFiles: 20,
+		},
+	});
+	uppyUploader.use(Dashboard, {
+		target,
+		inline: true,
+		height: 220,
+		disableStatusBar: true,
+		proudlyDisplayPoweredByUppy: false,
+		note: "Files upload into the current sandbox folder selected below.",
+		theme: "auto",
+	});
+	uppyUploader.on("file-added", refreshUploadSelectionStatus);
+	uppyUploader.on("file-removed", refreshUploadSelectionStatus);
+	uppyUploader.on("restriction-failed", (file, error) => {
+		const name =
+			typeof file?.name === "string" && file.name.length > 0
+				? `${file.name}: `
+				: "";
+		setText({
+			id: "agent-upload-status",
+			text:
+				error instanceof Error
+					? `Upload selection failed: ${name}${error.message}`
+					: "Upload selection failed.",
+		});
+	});
+	setHidden({ id: "agent-upload-fallback", hidden: true });
+	refreshUploadSelectionStatus();
+	return true;
 }
 
 function getArtifactFilename({ artifact }) {
@@ -1065,8 +1272,14 @@ function renderArtifacts({ artifacts }) {
 
 	for (const artifact of artifacts) {
 		const isDir = artifact?.meta?.isDir === true;
+		const artifactPath =
+			typeof artifact?.meta?.path === "string" && artifact.meta.path.length > 0
+				? artifact.meta.path
+				: artifact.storagePath || "";
 		const row = doc.createElement("div");
 		row.className = "card rounded-xl p-4";
+		row.dataset.path = artifactPath;
+		row.dataset.kind = isDir ? "folder" : artifact.kind || "file";
 
 		const shell = doc.createElement("div");
 		shell.className =
@@ -1084,7 +1297,7 @@ function renderArtifacts({ artifacts }) {
 		const path = doc.createElement("div");
 		path.className = "mono text-xs mt-1 break-all";
 		path.style.color = "var(--text-muted)";
-		path.textContent = artifact.storagePath || "";
+		path.textContent = artifactPath;
 		content.append(kind, path);
 
 		const actions = doc.createElement("div");
@@ -1099,10 +1312,14 @@ function renderArtifacts({ artifacts }) {
 		downloadButton.className =
 			"btn-outline px-4 py-2 rounded-full text-xs font-medium";
 		downloadButton.textContent = isDir ? "Open" : "Download";
+		downloadButton.setAttribute(
+			"aria-label",
+			isDir ? `Open ${artifactPath}` : `Download ${artifactPath}`
+		);
 		downloadButton.disabled = !canDownloadArtifact({ artifact });
 		downloadButton.addEventListener("click", async () => {
 			if (isDir) {
-				setSandboxPath({ path: artifact?.meta?.path || artifact.storagePath });
+				setSandboxPath({ path: artifactPath });
 				return;
 			}
 			const originalText = downloadButton.textContent;
@@ -1557,8 +1774,8 @@ async function refreshSessionArtifacts() {
 async function uploadSelectedAgentFiles() {
 	showError({ message: "" });
 	const input = getElement({ id: "agent-upload-files" });
-	const files = input?.files;
-	if (!files || files.length === 0) {
+	const files = getSelectedUploadFiles({ input });
+	if (files.length === 0) {
 		setText({ id: "agent-upload-status", text: "Choose a file first." });
 		return;
 	}
@@ -1572,13 +1789,17 @@ async function uploadSelectedAgentFiles() {
 			sessionId,
 			files,
 			path: currentSandboxPath,
+			onProgress: (progress) => {
+				setText({
+					id: "agent-upload-status",
+					text: formatUploadProgress(progress),
+				});
+			},
 		});
 		const names = uploaded
 			.map((file) => getArtifactFilename({ artifact: file }))
 			.filter((name) => name.length > 0);
-		if ("value" in input) {
-			input.value = "";
-		}
+		clearSelectedUploadFiles({ input });
 		setText({
 			id: "agent-upload-status",
 			text:
@@ -1829,6 +2050,8 @@ const AgentChatAPI = {
 	ensureAgentSession,
 	findCodexLastMessageArtifact,
 	formatArtifactSize,
+	formatUploadProgress,
+	formatUploadSelectionStatus,
 	getArtifactFilename,
 	getAgentArtifactText,
 	getAgentJobDetail,
@@ -1836,8 +2059,10 @@ const AgentChatAPI = {
 	getAgentSessionFiles,
 	getLatestCodexAgentMessage,
 	getSandboxParentPath,
+	initUppyUploader,
 	isTerminalStatus,
 	normalizeSandboxPath,
+	extractUppyUploadFiles,
 	readStoredAgentSessionId,
 	saveStoredAgentSessionId,
 	uploadAgentSessionFiles,
