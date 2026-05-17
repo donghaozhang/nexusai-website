@@ -28,6 +28,20 @@
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px oklch(0.62 0.17 25 / 0.14);
         }
+        .agent-file-input {
+            min-height: 46px;
+            padding: 10px 12px;
+        }
+        .agent-file-input::file-selector-button {
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin-right: 12px;
+            padding: 6px 12px;
+            font: inherit;
+            font-size: 12px;
+        }
         .status-chip {
             border: 1px solid var(--border-color);
             background: var(--bg-secondary);
@@ -227,6 +241,18 @@
                     <textarea id="agent-prompt" class="agent-input mt-2 p-4 min-h-32" placeholder="small blue square icon on a clean white background">small blue square icon on a clean white background</textarea>
 
                     <div class="mt-5">
+                        <label for="agent-upload-files" class="text-sm font-medium">Upload to sandbox</label>
+                        <div class="mt-2 flex flex-col gap-3 sm:flex-row">
+                            <input id="agent-upload-files" type="file" multiple class="agent-input agent-file-input text-sm">
+                            <button id="agent-upload-submit" type="button" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2 sm:w-auto">
+                                <i data-lucide="upload" class="w-4 h-4"></i>
+                                Upload
+                            </button>
+                        </div>
+                        <p id="agent-upload-status" class="text-xs text-muted mt-2">Files and images upload into <span class="mono">/tmp/qcut-input</span>; ask Codex to use that path.</p>
+                    </div>
+
+                    <div class="mt-5">
                         <label for="agent-token" class="text-sm font-medium">QCut auth token override</label>
                         <input id="agent-token" type="password" class="agent-input mt-2 px-4 py-3 mono text-sm" placeholder="Optional">
                         <p class="text-xs text-muted mt-2">Leave empty to use the default test agent account configured on the license server.</p>
@@ -267,9 +293,16 @@
 
         <section class="mt-8">
             <div class="card rounded-2xl p-6">
-                <h2 class="text-lg font-semibold mb-4">Artifacts</h2>
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold">Sandbox files</h2>
+                        <p class="text-sm text-muted mt-1">
+                            Virtual folder: uploads in <span class="mono">/tmp/qcut-input</span>, generated files in <span class="mono">/tmp/qcut-output</span>.
+                        </p>
+                    </div>
+                </div>
                 <div id="agent-artifacts" class="space-y-3">
-                    <p class="text-sm text-muted">Artifacts will appear after Codex writes files under /tmp/qcut-output.</p>
+                    <p class="text-sm text-muted">Uploaded files and Codex artifacts will appear here.</p>
                 </div>
             </div>
         </section>

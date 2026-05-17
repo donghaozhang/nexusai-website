@@ -56,7 +56,9 @@ test("buildAgentRequest keeps codex prompts out of the shell command", () => {
 					"Read that skill before running nontrivial QCut CLI workflows or when command syntax is unclear.",
 					"Use shell commands when the user asks you to inspect or run QCut.",
 					"For image generation requests, run the QCut CLI rather than any external image tool.",
-					"Write generated files under /tmp/qcut-output so the worker can upload them.",
+					"Uploaded user files are available under /tmp/qcut-input.",
+					"When the user mentions an uploaded file or image, inspect /tmp/qcut-input first.",
+					"Write generated files under /tmp/qcut-output so the website can list and download them.",
 					"yt-dlp and deno are available for authorized video download probes.",
 					"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 					"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
@@ -88,7 +90,9 @@ test("buildCodexChatPrompt includes prior turns for follow-up messages", () => {
 			"Read that skill before running nontrivial QCut CLI workflows or when command syntax is unclear.",
 			"Use shell commands when the user asks you to inspect or run QCut.",
 			"For image generation requests, run the QCut CLI rather than any external image tool.",
-			"Write generated files under /tmp/qcut-output so the worker can upload them.",
+			"Uploaded user files are available under /tmp/qcut-input.",
+			"When the user mentions an uploaded file or image, inspect /tmp/qcut-input first.",
+			"Write generated files under /tmp/qcut-output so the website can list and download them.",
 			"yt-dlp and deno are available for authorized video download probes.",
 			"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 			"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
@@ -122,10 +126,12 @@ test("buildTerminalPromptCommand wraps prompts for visible PTY Codex runs", () =
 		/cat > \/tmp\/qcut-terminal-prompt\.md <<'TEST_MARKER'/
 	);
 	assert.match(command, /Generate a small blue icon\./);
+	assert.match(command, /mkdir -p \/tmp\/qcut-input \/tmp\/qcut-output/);
 	assert.match(
 		command,
 		/codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message \/tmp\/qcut-output\/codex-last-message\.md - < \/tmp\/qcut-terminal-prompt\.md/
 	);
+	assert.match(command, /find \/tmp\/qcut-input/);
 	assert.match(command, /find \/tmp\/qcut-output/);
 });
 
@@ -404,6 +410,84 @@ test("getAgentSessionArtifacts reads terminal artifacts", async () => {
 	);
 });
 
+test("getAgentSessionFiles reads uploaded and generated sandbox files", async () => {
+	let requestUrl = "";
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return createResponse({
+				status: 200,
+				payload: {
+					files: [
+						{
+							id: "input/source.png",
+							sessionId: "agent-session-1",
+							meta: { filename: "source.png", folder: "input" },
+						},
+					],
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const files = await AgentChatAPI.getAgentSessionFiles({
+		sessionId: "agent-session-1",
+	});
+
+	assert.equal(files[0].id, "input/source.png");
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/files"
+	);
+});
+
+test("uploadAgentSessionFiles posts multipart file data without JSON headers", async () => {
+	let requestUrl = "";
+	let requestInit = null;
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url, init) => {
+			requestUrl = url;
+			requestInit = init;
+			return createResponse({
+				status: 201,
+				payload: {
+					files: [
+						{
+							id: "input/source.png",
+							sessionId: "agent-session-1",
+							meta: { filename: "source.png", folder: "input" },
+						},
+					],
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const files = await AgentChatAPI.uploadAgentSessionFiles({
+		sessionId: "agent-session-1",
+		files: [
+			new File([new Uint8Array([1, 2, 3])], "source.png", {
+				type: "image/png",
+			}),
+		],
+	});
+
+	assert.equal(files[0].id, "input/source.png");
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/files"
+	);
+	assert.equal(requestInit.method, "POST");
+	assert.equal(requestInit.headers.Authorization, "Bearer token-abc");
+	assert.equal(requestInit.headers.Accept, "application/json");
+	assert.equal(requestInit.headers["Content-Type"], undefined);
+	assert.equal(requestInit.body instanceof FormData, true);
+});
+
 test("ensureAgentSession saves the session id for reset controls", async () => {
 	const storage = new Map();
 	setupRuntime({
@@ -584,6 +668,64 @@ test("downloadAgentArtifact fetches binary artifacts and starts a browser downlo
 	assert.equal(revokedUrl, "blob:artifact");
 });
 
+test("downloadAgentArtifact uses virtual session file routes for sandbox files", async () => {
+	let requestUrl = "";
+	const anchor = {
+		download: "",
+		href: "",
+		style: {},
+		click() {},
+		remove() {},
+	};
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return {
+				ok: true,
+				status: 200,
+				async blob() {
+					return new Blob([new Uint8Array([1, 2, 3])], {
+						type: "image/png",
+					});
+				},
+			};
+		},
+	});
+	global.window.document = {
+		body: { appendChild() {} },
+		createElement() {
+			return anchor;
+		},
+	};
+	global.window.URL = {
+		createObjectURL() {
+			return "blob:session-file";
+		},
+		revokeObjectURL() {},
+	};
+	global.window.setTimeout = (callback) => {
+		callback();
+		return 1;
+	};
+	const AgentChatAPI = loadAgentChatApi();
+
+	await AgentChatAPI.downloadAgentArtifact({
+		jobId: null,
+		artifact: {
+			id: "input/source.png",
+			sessionId: "agent-session-1",
+			meta: { filename: "source.png", folder: "input" },
+		},
+	});
+
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/files/input/source.png/download"
+	);
+	assert.equal(anchor.download, "source.png");
+});
+
 test("buildAgentArtifactDownloadPath encodes job and artifact ids", () => {
 	const AgentChatAPI = loadAgentChatApi();
 
@@ -593,6 +735,19 @@ test("buildAgentArtifactDownloadPath encodes job and artifact ids", () => {
 			artifactId: "artifact / 1",
 		}),
 		"/api/agent/jobs/job%20%2F%201/artifacts/artifact%20%2F%201/download"
+	);
+});
+
+test("buildAgentSessionFileDownloadPath encodes session folder and filename", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.buildAgentSessionFileDownloadPath({
+			sessionId: "session / 1",
+			folder: "output",
+			filename: "clip final.mp4",
+		}),
+		"/api/agent/sessions/session%20%2F%201/files/output/clip%20final.mp4/download"
 	);
 });
 

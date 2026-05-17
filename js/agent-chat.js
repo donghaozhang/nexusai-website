@@ -16,7 +16,9 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 	"Read that skill before running nontrivial QCut CLI workflows or when command syntax is unclear.",
 	"Use shell commands when the user asks you to inspect or run QCut.",
 	"For image generation requests, run the QCut CLI rather than any external image tool.",
-	"Write generated files under /tmp/qcut-output so the worker can upload them.",
+	"Uploaded user files are available under /tmp/qcut-input.",
+	"When the user mentions an uploaded file or image, inspect /tmp/qcut-input first.",
+	"Write generated files under /tmp/qcut-output so the website can list and download them.",
 	"yt-dlp and deno are available for authorized video download probes.",
 	"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 	"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
@@ -224,6 +226,32 @@ async function requestAgentApi({ path, method, body }) {
 	return payload;
 }
 
+async function requestAgentMultipart({ path, method, formData }) {
+	const fetcher = getFetch();
+	if (!fetcher) {
+		throw new Error("Fetch API is unavailable");
+	}
+
+	const token = readAuthToken();
+	const authHeaders =
+		token.length === 0 ? {} : { Authorization: `Bearer ${token}` };
+
+	const response = await fetcher(`${getApiBaseUrl()}${path}`, {
+		method,
+		headers: {
+			Accept: "application/json",
+			...authHeaders,
+		},
+		body: formData,
+	});
+	const payload = await parsePayload({ response });
+	if (!response.ok) {
+		const error = getPayloadError({ payload });
+		throw new Error(error || `Request failed (${response.status})`);
+	}
+	return payload;
+}
+
 async function requestAgentText({ path }) {
 	const fetcher = getFetch();
 	if (!fetcher) {
@@ -303,12 +331,14 @@ function buildTerminalPromptCommand({ prompt, messages, marker }) {
 			: createTerminalPromptMarker();
 	return (
 		[
-			"mkdir -p /tmp/qcut-output",
+			"mkdir -p /tmp/qcut-input /tmp/qcut-output",
 			`cat > /tmp/qcut-terminal-prompt.md <<'${promptMarker}'`,
 			buildCodexChatPrompt({ messages, prompt }),
 			promptMarker,
 			`${CODEX_TERMINAL_COMMAND} < /tmp/qcut-terminal-prompt.md`,
-			"printf '\\n[artifacts]\\n'",
+			"printf '\\n[input files]\\n'",
+			`find /tmp/qcut-input -maxdepth 1 -type f -printf '%f (%s bytes)\\n' 2>/dev/null | sort`,
+			"printf '\\n[output files]\\n'",
 			`find /tmp/qcut-output -maxdepth 1 -type f -printf '%f (%s bytes)\\n' 2>/dev/null | sort`,
 		].join("\n") + "\n"
 	);
@@ -448,6 +478,46 @@ async function getAgentSessionArtifacts({ sessionId }) {
 	return Array.isArray(payload?.artifacts) ? payload.artifacts : [];
 }
 
+async function getAgentSessionFiles({ sessionId }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	const payload = await requestAgentApi({
+		path: `/api/agent/sessions/${encodeURIComponent(
+			sessionId.trim()
+		)}/files`,
+		method: "GET",
+	});
+	return Array.isArray(payload?.files) ? payload.files : [];
+}
+
+async function uploadAgentSessionFiles({ sessionId, files }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	const uploads = Array.from(files || []).filter(Boolean);
+	if (uploads.length === 0) {
+		throw new Error("Choose at least one file to upload");
+	}
+	const FormDataCtor =
+		getRuntimeWindow()?.FormData || getRuntimeGlobal()?.FormData || null;
+	if (!FormDataCtor) {
+		throw new Error("FormData API is unavailable");
+	}
+	const formData = new FormDataCtor();
+	for (const file of uploads) {
+		formData.append("file", file);
+	}
+	const payload = await requestAgentMultipart({
+		path: `/api/agent/sessions/${encodeURIComponent(
+			sessionId.trim()
+		)}/files`,
+		method: "POST",
+		formData,
+	});
+	return Array.isArray(payload?.files) ? payload.files : [];
+}
+
 async function endAgentSession({ sessionId }) {
 	const value = typeof sessionId === "string" ? sessionId.trim() : "";
 	if (value.length === 0) {
@@ -509,15 +579,40 @@ function buildAgentSessionArtifactDownloadPath({ sessionId, filename }) {
 	)}/artifacts/${encodeURIComponent(filename.trim())}/download`;
 }
 
+function buildAgentSessionFileDownloadPath({ sessionId, folder, filename }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	if (folder !== "input" && folder !== "output") {
+		throw new Error("Session file folder required");
+	}
+	if (typeof filename !== "string" || filename.trim().length === 0) {
+		throw new Error("Session file filename required");
+	}
+	return `/api/agent/sessions/${encodeURIComponent(
+		sessionId.trim()
+	)}/files/${encodeURIComponent(folder)}/${encodeURIComponent(
+		filename.trim()
+	)}/download`;
+}
+
 async function downloadAgentArtifact({ jobId, artifact }) {
 	const filename = getArtifactFilename({ artifact }) || "qcut-artifact";
+	const folder = artifact?.meta?.folder;
+	const isVirtualSessionFile = folder === "input" || folder === "output";
 	const downloadPath =
 		typeof artifact?.sessionId === "string" &&
 		artifact.sessionId.trim().length > 0
-			? buildAgentSessionArtifactDownloadPath({
-					sessionId: artifact.sessionId,
-					filename,
-				})
+			? isVirtualSessionFile
+				? buildAgentSessionFileDownloadPath({
+						sessionId: artifact.sessionId,
+						folder,
+						filename,
+					})
+				: buildAgentSessionArtifactDownloadPath({
+						sessionId: artifact.sessionId,
+						filename,
+					})
 			: buildAgentArtifactDownloadPath({
 					jobId,
 					artifactId: artifact?.id,
@@ -734,6 +829,7 @@ function resetJobState() {
 	setHidden({ id: "agent-job-empty", hidden: false });
 	setHidden({ id: "agent-job-summary", hidden: true });
 	renderArtifacts({ artifacts: [] });
+	setText({ id: "agent-upload-status", text: "" });
 	renderEvents({ events: [] });
 }
 
@@ -886,7 +982,7 @@ function renderArtifacts({ artifacts }) {
 		const empty = doc.createElement("p");
 		empty.className = "text-sm text-muted";
 		empty.textContent =
-			"Artifacts will appear after Codex writes files under /tmp/qcut-output.";
+			"Uploaded files appear under /tmp/qcut-input. Codex output appears under /tmp/qcut-output.";
 		list.appendChild(empty);
 		return;
 	}
@@ -900,9 +996,12 @@ function renderArtifacts({ artifacts }) {
 			"flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between";
 
 		const content = doc.createElement("div");
+		const folder = artifact?.meta?.folder;
 		const kind = doc.createElement("div");
 		kind.className = "text-sm font-medium";
-		kind.textContent = artifact.kind || "artifact";
+		kind.textContent = folder
+			? `${folder} / ${artifact.kind || "file"}`
+			: artifact.kind || "artifact";
 		const path = doc.createElement("div");
 		path.className = "mono text-xs mt-1 break-all";
 		path.style.color = "var(--text-muted)";
@@ -1315,7 +1414,7 @@ async function refreshSessionArtifacts() {
 		return;
 	}
 	try {
-		const artifacts = await getAgentSessionArtifacts({ sessionId });
+		const artifacts = await getAgentSessionFiles({ sessionId });
 		renderArtifacts({ artifacts });
 	} catch (error) {
 		showError({
@@ -1324,6 +1423,45 @@ async function refreshSessionArtifacts() {
 					? `Artifact refresh failed: ${error.message}`
 					: "Artifact refresh failed",
 		});
+	}
+}
+
+async function uploadSelectedAgentFiles() {
+	showError({ message: "" });
+	const input = getElement({ id: "agent-upload-files" });
+	const files = input?.files;
+	if (!files || files.length === 0) {
+		setText({ id: "agent-upload-status", text: "Choose a file first." });
+		return;
+	}
+	setDisabled({ id: "agent-upload-submit", disabled: true });
+	setText({ id: "agent-upload-status", text: "Connecting sandbox..." });
+	try {
+		await connectAgentTerminal();
+		const sessionId = activeTerminalSessionId || readStoredAgentSessionId();
+		setText({ id: "agent-upload-status", text: "Uploading..." });
+		const uploaded = await uploadAgentSessionFiles({ sessionId, files });
+		const names = uploaded
+			.map((file) => getArtifactFilename({ artifact: file }))
+			.filter((name) => name.length > 0);
+		if ("value" in input) {
+			input.value = "";
+		}
+		setText({
+			id: "agent-upload-status",
+			text:
+				names.length > 0
+					? `Uploaded to /tmp/qcut-input: ${names.join(", ")}`
+					: "Upload finished.",
+		});
+		await refreshSessionArtifacts();
+	} catch (error) {
+		const message =
+			error instanceof Error ? error.message : "File upload failed";
+		setText({ id: "agent-upload-status", text: "" });
+		showError({ message: `File upload failed: ${message}` });
+	} finally {
+		setDisabled({ id: "agent-upload-submit", disabled: false });
 	}
 }
 
@@ -1479,6 +1617,7 @@ function initAgentChatPage() {
 	const refreshArtifactsButton = getElement({
 		id: "agent-refresh-artifacts",
 	});
+	const uploadFilesButton = getElement({ id: "agent-upload-submit" });
 	if (!promptInput || !submitButton) {
 		return;
 	}
@@ -1514,11 +1653,17 @@ function initAgentChatPage() {
 			void refreshSessionArtifacts();
 		});
 	}
+	if (uploadFilesButton) {
+		uploadFilesButton.addEventListener("click", () => {
+			void uploadSelectedAgentFiles();
+		});
+	}
 }
 
 const AgentChatAPI = {
 	buildLiveCodexStatus,
 	buildAgentArtifactDownloadPath,
+	buildAgentSessionFileDownloadPath,
 	buildAgentSessionArtifactDownloadPath,
 	buildAgentRequest,
 	buildCodexChatPrompt,
@@ -1540,10 +1685,12 @@ const AgentChatAPI = {
 	getAgentArtifactText,
 	getAgentJobDetail,
 	getAgentSessionArtifacts,
+	getAgentSessionFiles,
 	getLatestCodexAgentMessage,
 	isTerminalStatus,
 	readStoredAgentSessionId,
 	saveStoredAgentSessionId,
+	uploadAgentSessionFiles,
 };
 
 if (typeof module !== "undefined" && module.exports) {
