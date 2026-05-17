@@ -19,6 +19,7 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 	"Uploaded user files are available under /tmp/qcut-input.",
 	"When the user mentions an uploaded file or image, inspect /tmp/qcut-input first.",
 	"Write generated files under /tmp/qcut-output so the website can list and download them.",
+	"The QCut CLI default output directory is QCUT_OUTPUT_DIR=/tmp/qcut-output in this sandbox.",
 	"yt-dlp and deno are available for authorized video download probes.",
 	"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 	"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
