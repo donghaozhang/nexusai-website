@@ -35,6 +35,7 @@ let terminalFitAddon = null;
 let terminalArtifactPollIntervalId = null;
 let activeTerminalSessionId = "";
 let terminalResizeListenerBound = false;
+let currentSandboxPath = "/";
 
 function getRuntimeGlobal() {
 	try {
@@ -479,20 +480,25 @@ async function getAgentSessionArtifacts({ sessionId }) {
 	return Array.isArray(payload?.artifacts) ? payload.artifacts : [];
 }
 
-async function getAgentSessionFiles({ sessionId }) {
+async function getAgentSessionFiles({ sessionId, path: sandboxPath }) {
 	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
 		throw new Error("Agent session id required");
 	}
+	const path = normalizeSandboxPath({
+		value: sandboxPath,
+		fallback: "",
+	});
+	const query = path.length > 0 ? `?path=${encodeURIComponent(path)}` : "";
 	const payload = await requestAgentApi({
 		path: `/api/agent/sessions/${encodeURIComponent(
 			sessionId.trim()
-		)}/files`,
+		)}/files${query}`,
 		method: "GET",
 	});
 	return Array.isArray(payload?.files) ? payload.files : [];
 }
 
-async function uploadAgentSessionFiles({ sessionId, files }) {
+async function uploadAgentSessionFiles({ sessionId, files, path: sandboxPath }) {
 	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
 		throw new Error("Agent session id required");
 	}
@@ -500,6 +506,11 @@ async function uploadAgentSessionFiles({ sessionId, files }) {
 	if (uploads.length === 0) {
 		throw new Error("Choose at least one file to upload");
 	}
+	const path = normalizeSandboxPath({
+		value: sandboxPath,
+		fallback: "",
+	});
+	const query = path.length > 0 ? `?path=${encodeURIComponent(path)}` : "";
 	const FormDataCtor =
 		getRuntimeWindow()?.FormData || getRuntimeGlobal()?.FormData || null;
 	if (!FormDataCtor) {
@@ -512,7 +523,7 @@ async function uploadAgentSessionFiles({ sessionId, files }) {
 	const payload = await requestAgentMultipart({
 		path: `/api/agent/sessions/${encodeURIComponent(
 			sessionId.trim()
-		)}/files`,
+		)}/files${query}`,
 		method: "POST",
 		formData,
 	});
@@ -597,14 +608,36 @@ function buildAgentSessionFileDownloadPath({ sessionId, folder, filename }) {
 	)}/download`;
 }
 
+function buildAgentSessionFilesystemDownloadPath({ sessionId, path }) {
+	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
+		throw new Error("Agent session id required");
+	}
+	const normalizedPath = normalizeSandboxPath({ value: path, fallback: "" });
+	if (normalizedPath.length === 0 || normalizedPath === "/") {
+		throw new Error("Session file path required");
+	}
+	return `/api/agent/sessions/${encodeURIComponent(
+		sessionId.trim()
+	)}/files/download?path=${encodeURIComponent(normalizedPath)}`;
+}
+
 async function downloadAgentArtifact({ jobId, artifact }) {
 	const filename = getArtifactFilename({ artifact }) || "qcut-artifact";
 	const folder = artifact?.meta?.folder;
+	const filesystemPath =
+		typeof artifact?.meta?.path === "string" ? artifact.meta.path : "";
 	const isVirtualSessionFile = folder === "input" || folder === "output";
+	const isSandboxFilesystemFile =
+		folder === "filesystem" && artifact?.meta?.isDir !== true;
 	const downloadPath =
 		typeof artifact?.sessionId === "string" &&
 		artifact.sessionId.trim().length > 0
-			? isVirtualSessionFile
+			? isSandboxFilesystemFile
+				? buildAgentSessionFilesystemDownloadPath({
+						sessionId: artifact.sessionId,
+						path: filesystemPath || artifact.storagePath,
+					})
+				: isVirtualSessionFile
 				? buildAgentSessionFileDownloadPath({
 						sessionId: artifact.sessionId,
 						folder,
@@ -834,6 +867,49 @@ function resetJobState() {
 	renderEvents({ events: [] });
 }
 
+function normalizeSandboxPath({ value, fallback }) {
+	const defaultValue = typeof fallback === "string" ? fallback : "/";
+	if (typeof value !== "string") {
+		return defaultValue;
+	}
+	const trimmed = value.trim();
+	if (
+		trimmed.length === 0 ||
+		!trimmed.startsWith("/") ||
+		trimmed.includes("\\") ||
+		trimmed.includes("\0")
+	) {
+		return defaultValue;
+	}
+	const segments = trimmed.split("/").filter((segment) => segment.length > 0);
+	if (
+		segments.some((segment) => segment === "." || segment === "..")
+	) {
+		return defaultValue;
+	}
+	return `/${segments.join("/")}`;
+}
+
+function getSandboxParentPath({ path }) {
+	const normalizedPath = normalizeSandboxPath({ value: path, fallback: "/" });
+	if (normalizedPath === "/") {
+		return "/";
+	}
+	const segments = normalizedPath
+		.split("/")
+		.filter((segment) => segment.length > 0);
+	if (segments.length <= 1) {
+		return "/";
+	}
+	return `/${segments.slice(0, -1).join("/")}`;
+}
+
+function setSandboxPath({ path }) {
+	currentSandboxPath = normalizeSandboxPath({ value: path, fallback: "/" });
+	renderSandboxPath();
+	void refreshSessionArtifacts();
+}
+
 function getArtifactFilename({ artifact }) {
 	const filename = artifact?.meta?.filename;
 	if (typeof filename === "string" && filename.length > 0) {
@@ -982,13 +1058,13 @@ function renderArtifacts({ artifacts }) {
 	if (!Array.isArray(artifacts) || artifacts.length === 0) {
 		const empty = doc.createElement("p");
 		empty.className = "text-sm text-muted";
-		empty.textContent =
-			"Uploaded files appear under /tmp/qcut-input. Codex output appears under /tmp/qcut-output.";
+		empty.textContent = `No files in ${currentSandboxPath}.`;
 		list.appendChild(empty);
 		return;
 	}
 
 	for (const artifact of artifacts) {
+		const isDir = artifact?.meta?.isDir === true;
 		const row = doc.createElement("div");
 		row.className = "card rounded-xl p-4";
 
@@ -1000,9 +1076,11 @@ function renderArtifacts({ artifacts }) {
 		const folder = artifact?.meta?.folder;
 		const kind = doc.createElement("div");
 		kind.className = "text-sm font-medium";
-		kind.textContent = folder
-			? `${folder} / ${artifact.kind || "file"}`
-			: artifact.kind || "artifact";
+		kind.textContent = isDir
+			? `folder / ${getArtifactFilename({ artifact })}`
+			: folder
+				? `${folder} / ${artifact.kind || "file"}`
+				: artifact.kind || "artifact";
 		const path = doc.createElement("div");
 		path.className = "mono text-xs mt-1 break-all";
 		path.style.color = "var(--text-muted)";
@@ -1014,15 +1092,19 @@ function renderArtifacts({ artifacts }) {
 
 		const size = doc.createElement("div");
 		size.className = "text-xs text-muted";
-		size.textContent = formatArtifactSize({ artifact });
+		size.textContent = isDir ? "folder" : formatArtifactSize({ artifact });
 
 		const downloadButton = doc.createElement("button");
 		downloadButton.type = "button";
 		downloadButton.className =
 			"btn-outline px-4 py-2 rounded-full text-xs font-medium";
-		downloadButton.textContent = "Download";
+		downloadButton.textContent = isDir ? "Open" : "Download";
 		downloadButton.disabled = !canDownloadArtifact({ artifact });
 		downloadButton.addEventListener("click", async () => {
+			if (isDir) {
+				setSandboxPath({ path: artifact?.meta?.path || artifact.storagePath });
+				return;
+			}
 			const originalText = downloadButton.textContent;
 			downloadButton.disabled = true;
 			downloadButton.textContent = "Downloading";
@@ -1052,7 +1134,47 @@ function renderArtifacts({ artifacts }) {
 	}
 }
 
+function renderSandboxPath() {
+	const path = normalizeSandboxPath({
+		value: currentSandboxPath,
+		fallback: "/",
+	});
+	setText({ id: "agent-fs-current-path", text: path });
+	const breadcrumb = getElement({ id: "agent-fs-breadcrumb" });
+	const doc = getRuntimeWindow()?.document;
+	if (!breadcrumb || !doc) {
+		return;
+	}
+	breadcrumb.innerHTML = "";
+	const rootButton = doc.createElement("button");
+	rootButton.type = "button";
+	rootButton.className = "text-xs mono hover:underline";
+	rootButton.textContent = "/";
+	rootButton.addEventListener("click", () => setSandboxPath({ path: "/" }));
+	breadcrumb.appendChild(rootButton);
+	const segments = path.split("/").filter((segment) => segment.length > 0);
+	let partialPath = "";
+	for (const segment of segments) {
+		partialPath = `${partialPath}/${segment}`;
+		const separator = doc.createElement("span");
+		separator.className = "text-xs text-muted";
+		separator.textContent = " / ";
+		const button = doc.createElement("button");
+		button.type = "button";
+		button.className = "text-xs mono hover:underline";
+		button.textContent = segment;
+		const targetPath = partialPath;
+		button.addEventListener("click", () =>
+			setSandboxPath({ path: targetPath })
+		);
+		breadcrumb.append(separator, button);
+	}
+}
+
 function canDownloadArtifact({ artifact }) {
+	if (artifact?.meta?.isDir === true) {
+		return true;
+	}
 	return Boolean(
 		artifact?.id &&
 			(artifact.jobId ||
@@ -1412,10 +1534,15 @@ function disconnectAgentTerminal() {
 async function refreshSessionArtifacts() {
 	const sessionId = activeTerminalSessionId || readStoredAgentSessionId();
 	if (sessionId.length === 0) {
+		renderSandboxPath();
 		return;
 	}
 	try {
-		const artifacts = await getAgentSessionFiles({ sessionId });
+		renderSandboxPath();
+		const artifacts = await getAgentSessionFiles({
+			sessionId,
+			path: currentSandboxPath,
+		});
 		renderArtifacts({ artifacts });
 	} catch (error) {
 		showError({
@@ -1441,7 +1568,11 @@ async function uploadSelectedAgentFiles() {
 		await connectAgentTerminal();
 		const sessionId = activeTerminalSessionId || readStoredAgentSessionId();
 		setText({ id: "agent-upload-status", text: "Uploading..." });
-		const uploaded = await uploadAgentSessionFiles({ sessionId, files });
+		const uploaded = await uploadAgentSessionFiles({
+			sessionId,
+			files,
+			path: currentSandboxPath,
+		});
 		const names = uploaded
 			.map((file) => getArtifactFilename({ artifact: file }))
 			.filter((name) => name.length > 0);
@@ -1452,7 +1583,7 @@ async function uploadSelectedAgentFiles() {
 			id: "agent-upload-status",
 			text:
 				names.length > 0
-					? `Uploaded to /tmp/qcut-input: ${names.join(", ")}`
+					? `Uploaded to ${currentSandboxPath}: ${names.join(", ")}`
 					: "Upload finished.",
 		});
 		await refreshSessionArtifacts();
@@ -1619,12 +1750,15 @@ function initAgentChatPage() {
 		id: "agent-refresh-artifacts",
 	});
 	const uploadFilesButton = getElement({ id: "agent-upload-submit" });
+	const fsRootButton = getElement({ id: "agent-fs-root" });
+	const fsUpButton = getElement({ id: "agent-fs-up" });
 	if (!promptInput || !submitButton) {
 		return;
 	}
 
 	setValue({ id: "agent-token", value: readAuthToken() });
 	renderAgentSession({ session: null });
+	renderSandboxPath();
 	setCommandPreview();
 	promptInput.addEventListener("input", setCommandPreview);
 	submitButton.addEventListener("click", submitAgentJob);
@@ -1659,11 +1793,24 @@ function initAgentChatPage() {
 			void uploadSelectedAgentFiles();
 		});
 	}
+	if (fsRootButton) {
+		fsRootButton.addEventListener("click", () => {
+			setSandboxPath({ path: "/" });
+		});
+	}
+	if (fsUpButton) {
+		fsUpButton.addEventListener("click", () => {
+			setSandboxPath({
+				path: getSandboxParentPath({ path: currentSandboxPath }),
+			});
+		});
+	}
 }
 
 const AgentChatAPI = {
 	buildLiveCodexStatus,
 	buildAgentArtifactDownloadPath,
+	buildAgentSessionFilesystemDownloadPath,
 	buildAgentSessionFileDownloadPath,
 	buildAgentSessionArtifactDownloadPath,
 	buildAgentRequest,
@@ -1688,7 +1835,9 @@ const AgentChatAPI = {
 	getAgentSessionArtifacts,
 	getAgentSessionFiles,
 	getLatestCodexAgentMessage,
+	getSandboxParentPath,
 	isTerminalStatus,
+	normalizeSandboxPath,
 	readStoredAgentSessionId,
 	saveStoredAgentSessionId,
 	uploadAgentSessionFiles,

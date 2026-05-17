@@ -436,12 +436,13 @@ test("getAgentSessionFiles reads uploaded and generated sandbox files", async ()
 
 	const files = await AgentChatAPI.getAgentSessionFiles({
 		sessionId: "agent-session-1",
+		path: "/tmp/qcut-output",
 	});
 
 	assert.equal(files[0].id, "input/source.png");
 	assert.equal(
 		requestUrl,
-		"https://license.test/api/agent/sessions/agent-session-1/files"
+		"https://license.test/api/agent/sessions/agent-session-1/files?path=%2Ftmp%2Fqcut-output"
 	);
 });
 
@@ -471,6 +472,7 @@ test("uploadAgentSessionFiles posts multipart file data without JSON headers", a
 
 	const files = await AgentChatAPI.uploadAgentSessionFiles({
 		sessionId: "agent-session-1",
+		path: "/tmp/qcut-input",
 		files: [
 			new File([new Uint8Array([1, 2, 3])], "source.png", {
 				type: "image/png",
@@ -481,13 +483,36 @@ test("uploadAgentSessionFiles posts multipart file data without JSON headers", a
 	assert.equal(files[0].id, "input/source.png");
 	assert.equal(
 		requestUrl,
-		"https://license.test/api/agent/sessions/agent-session-1/files"
+		"https://license.test/api/agent/sessions/agent-session-1/files?path=%2Ftmp%2Fqcut-input"
 	);
 	assert.equal(requestInit.method, "POST");
 	assert.equal(requestInit.headers.Authorization, "Bearer token-abc");
 	assert.equal(requestInit.headers.Accept, "application/json");
 	assert.equal(requestInit.headers["Content-Type"], undefined);
 	assert.equal(requestInit.body instanceof FormData, true);
+});
+
+test("normalizeSandboxPath keeps absolute sandbox paths safe for URLs", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.normalizeSandboxPath({
+			value: "/tmp/qcut-output/",
+			fallback: "/",
+		}),
+		"/tmp/qcut-output"
+	);
+	assert.equal(
+		AgentChatAPI.normalizeSandboxPath({
+			value: "/tmp/../secret",
+			fallback: "/",
+		}),
+		"/"
+	);
+	assert.equal(
+		AgentChatAPI.getSandboxParentPath({ path: "/tmp/qcut-output" }),
+		"/tmp"
+	);
 });
 
 test("ensureAgentSession saves the session id for reset controls", async () => {
@@ -728,6 +753,70 @@ test("downloadAgentArtifact uses virtual session file routes for sandbox files",
 	assert.equal(anchor.download, "source.png");
 });
 
+test("downloadAgentArtifact uses full filesystem path routes for sandbox explorer files", async () => {
+	let requestUrl = "";
+	const anchor = {
+		download: "",
+		href: "",
+		style: {},
+		click() {},
+		remove() {},
+	};
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return {
+				ok: true,
+				status: 200,
+				async blob() {
+					return new Blob([new Uint8Array([1, 2, 3])], {
+						type: "image/png",
+					});
+				},
+			};
+		},
+	});
+	global.window.document = {
+		body: { appendChild() {} },
+		createElement() {
+			return anchor;
+		},
+	};
+	global.window.URL = {
+		createObjectURL() {
+			return "blob:filesystem-file";
+		},
+		revokeObjectURL() {},
+	};
+	global.window.setTimeout = (callback) => {
+		callback();
+		return 1;
+	};
+	const AgentChatAPI = loadAgentChatApi();
+
+	await AgentChatAPI.downloadAgentArtifact({
+		jobId: null,
+		artifact: {
+			id: "/tmp/qcut-output/result.png",
+			sessionId: "agent-session-1",
+			storagePath: "/tmp/qcut-output/result.png",
+			meta: {
+				filename: "result.png",
+				folder: "filesystem",
+				isDir: false,
+				path: "/tmp/qcut-output/result.png",
+			},
+		},
+	});
+
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/files/download?path=%2Ftmp%2Fqcut-output%2Fresult.png"
+	);
+	assert.equal(anchor.download, "result.png");
+});
+
 test("buildAgentArtifactDownloadPath encodes job and artifact ids", () => {
 	const AgentChatAPI = loadAgentChatApi();
 
@@ -750,6 +839,18 @@ test("buildAgentSessionFileDownloadPath encodes session folder and filename", ()
 			filename: "clip final.mp4",
 		}),
 		"/api/agent/sessions/session%20%2F%201/files/output/clip%20final.mp4/download"
+	);
+});
+
+test("buildAgentSessionFilesystemDownloadPath encodes full sandbox paths", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.buildAgentSessionFilesystemDownloadPath({
+			sessionId: "session / 1",
+			path: "/tmp/qcut-output/clip final.mp4",
+		}),
+		"/api/agent/sessions/session%20%2F%201/files/download?path=%2Ftmp%2Fqcut-output%2Fclip%20final.mp4"
 	);
 });
 
