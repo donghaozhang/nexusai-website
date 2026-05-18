@@ -379,6 +379,40 @@ test("createAgentPtyToken posts to the terminal token route", async () => {
 	assert.equal(requestInit.body, JSON.stringify({}));
 });
 
+test("createAgentPtyToken retries while the terminal sandbox starts", async () => {
+	const requestUrls = [];
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrls.push(url);
+			if (requestUrls.length === 1) {
+				return createResponse({
+					status: 202,
+					payload: { status: "starting", retry_after_ms: 0 },
+				});
+			}
+			return createResponse({
+				status: 200,
+				payload: {
+					session: { id: "agent-session-1" },
+					ws_url: "wss://relay.test/pty?token=abc",
+				},
+			});
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const payload = await AgentChatAPI.createAgentPtyToken({
+		sessionId: "agent-session-1",
+	});
+
+	assert.equal(payload.ws_url, "wss://relay.test/pty?token=abc");
+	assert.deepEqual(requestUrls, [
+		"https://license.test/api/agent/sessions/agent-session-1/pty-token",
+		"https://license.test/api/agent/sessions/agent-session-1/pty-token",
+	]);
+});
+
 test("getAgentSessionArtifacts reads terminal artifacts", async () => {
 	let requestUrl = "";
 	setupRuntime({

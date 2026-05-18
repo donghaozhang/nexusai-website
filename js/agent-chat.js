@@ -9,6 +9,8 @@ const CODEX_TERMINAL_COMMAND =
 	"codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message /tmp/qcut-output/codex-last-message.md -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
 const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
+const AGENT_PTY_TOKEN_MAX_WAIT_MS = 6 * 60 * 1000;
+const AGENT_PTY_TOKEN_DEFAULT_RETRY_MS = 3000;
 const BRACKETED_PASTE_START = "\u001b[200~";
 const BRACKETED_PASTE_END = "\u001b[201~";
 const CODEX_AGENT_SYSTEM_PROMPT = [
@@ -232,6 +234,28 @@ async function requestAgentApi({ path, method, body }) {
 		throw new Error(error || `Request failed (${response.status})`);
 	}
 	return payload;
+}
+
+function waitForAgentTerminalRetry({ retryAfterMs }) {
+	return new Promise((resolve) => {
+		const win = typeof window === "undefined" ? null : window;
+		const scheduleTimeout =
+			win && typeof win.setTimeout === "function"
+				? win.setTimeout.bind(win)
+				: setTimeout;
+		scheduleTimeout(resolve, retryAfterMs);
+	});
+}
+
+function getAgentTerminalRetryDelay({ payload }) {
+	if (!payload || typeof payload !== "object") {
+		return AGENT_PTY_TOKEN_DEFAULT_RETRY_MS;
+	}
+	const retryAfterMs = Number(payload.retry_after_ms);
+	if (!Number.isFinite(retryAfterMs)) {
+		return AGENT_PTY_TOKEN_DEFAULT_RETRY_MS;
+	}
+	return Math.max(0, Math.min(retryAfterMs, 10_000));
 }
 
 async function requestAgentMultipart({ path, method, formData }) {
@@ -508,13 +532,18 @@ async function createAgentSession() {
 	return payload.session;
 }
 
-async function createAgentPtyToken({ sessionId }) {
+async function createAgentPtyToken({ sessionId, startedAtMs }) {
 	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
 		throw new Error("Agent session id required");
 	}
+	const normalizedSessionId = sessionId.trim();
+	const startedAt =
+		typeof startedAtMs === "number" && Number.isFinite(startedAtMs)
+			? startedAtMs
+			: Date.now();
 	const payload = await requestAgentApi({
 		path: `/api/agent/sessions/${encodeURIComponent(
-			sessionId.trim()
+			normalizedSessionId
 		)}/pty-token`,
 		method: "POST",
 		body: {},
@@ -524,7 +553,19 @@ async function createAgentPtyToken({ sessionId }) {
 		typeof payload !== "object" ||
 		typeof payload.ws_url !== "string"
 	) {
-		throw new Error("Agent terminal response is invalid");
+		if (payload?.status !== "starting") {
+			throw new Error("Agent terminal response is invalid");
+		}
+		if (Date.now() - startedAt > AGENT_PTY_TOKEN_MAX_WAIT_MS) {
+			throw new Error("Agent terminal did not become ready in time");
+		}
+		await waitForAgentTerminalRetry({
+			retryAfterMs: getAgentTerminalRetryDelay({ payload }),
+		});
+		return createAgentPtyToken({
+			sessionId: normalizedSessionId,
+			startedAtMs: startedAt,
+		});
 	}
 	return payload;
 }
