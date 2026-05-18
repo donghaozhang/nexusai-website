@@ -1615,7 +1615,13 @@ function getTextDecoder() {
 }
 
 function setTerminalStatus({ text }) {
-	setText({ id: "agent-terminal-status", text });
+	const status = String(text || "disconnected").toLowerCase();
+	const element = getElement({ id: "agent-terminal-status" });
+	if (!element) {
+		return;
+	}
+	element.textContent = status;
+	element.dataset.status = status;
 }
 
 function getTerminalStatus() {
