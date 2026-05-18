@@ -42,6 +42,8 @@ let terminalResizeListenerBound = false;
 let currentSandboxPath = DEFAULT_SANDBOX_ARTIFACT_PATH;
 let uppyUploader = null;
 let artifactContextMenu = null;
+let terminalStartupBuffer = "";
+let terminalUpdatePromptSkipped = false;
 
 function getRuntimeGlobal() {
 	try {
@@ -1757,6 +1759,25 @@ function writeTerminal({ text }) {
 	}
 }
 
+function handleTerminalOutput({ text }) {
+	writeTerminal({ text });
+	maybeSkipCodexUpdatePrompt({ text });
+}
+
+function maybeSkipCodexUpdatePrompt({ text }) {
+	if (terminalUpdatePromptSkipped || typeof text !== "string") {
+		return;
+	}
+	terminalStartupBuffer = `${terminalStartupBuffer}${text}`.slice(-4000);
+	if (
+		terminalStartupBuffer.includes("Update available") &&
+		terminalStartupBuffer.includes("Press enter to continue")
+	) {
+		terminalUpdatePromptSkipped = true;
+		sendTerminalInput({ text: "\r" });
+	}
+}
+
 function resetTerminalOutput({ message }) {
 	const text = typeof message === "string" ? message : "";
 	if (terminalInstance) {
@@ -1841,6 +1862,8 @@ async function connectAgentTerminal() {
 		return waitForTerminalSocketOpen({ socket: terminalSocket });
 	}
 	terminalSocket = null;
+	terminalStartupBuffer = "";
+	terminalUpdatePromptSkipped = false;
 	setTerminalStatus({ text: "connecting" });
 	showError({ message: "" });
 	const WebSocketCtor = getWebSocketConstructor();
@@ -1871,13 +1894,13 @@ async function connectAgentTerminal() {
 		const Decoder = getTextDecoder();
 		if (!Decoder) {
 			return;
-		}
-		if (typeof event.data === "string") {
-			writeTerminal({ text: event.data });
-			return;
-		}
-		writeTerminal({ text: new Decoder().decode(event.data) });
-	});
+			}
+			if (typeof event.data === "string") {
+				handleTerminalOutput({ text: event.data });
+				return;
+			}
+			handleTerminalOutput({ text: new Decoder().decode(event.data) });
+		});
 	socket.addEventListener("close", () => {
 		if (terminalSocket !== socket) {
 			return;
