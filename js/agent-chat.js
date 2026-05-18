@@ -1309,9 +1309,10 @@ function renderArtifacts({ artifacts }) {
 	}
 	hideArtifactContextMenu();
 	list.innerHTML = "";
+	list.className = "sandbox-file-grid mt-5";
 	if (!Array.isArray(artifacts) || artifacts.length === 0) {
 		const empty = doc.createElement("p");
-		empty.className = "text-sm text-muted";
+		empty.className = "sandbox-file-empty";
 		empty.textContent = `No files in ${currentSandboxPath}.`;
 		list.appendChild(empty);
 		return;
@@ -1324,97 +1325,112 @@ function renderArtifacts({ artifacts }) {
 				? artifact.meta.path
 				: artifact.storagePath || "";
 		const row = doc.createElement("div");
-		row.className = "card rounded-xl p-4";
+		row.className = "sandbox-file-tile";
 		row.dataset.path = artifactPath;
 		row.dataset.kind = isDir ? "folder" : artifact.kind || "file";
 		row.tabIndex = 0;
-		row.style.cursor = isDir ? "pointer" : "default";
+		row.title = artifactPath;
+		row.setAttribute("role", "button");
+		row.setAttribute(
+			"aria-label",
+			isDir ? `Open folder ${artifactPath}` : `Download file ${artifactPath}`
+		);
 		row.addEventListener("contextmenu", (event) => {
 			showArtifactContextMenu({ event, artifact, artifactPath, isDir });
 		});
-		if (isDir) {
-			row.addEventListener("click", (event) => {
-				if (event.target?.closest?.("button")) {
-					return;
-				}
-				setSandboxPath({ path: artifactPath });
-			});
-			row.addEventListener("keydown", (event) => {
-				if (event.key !== "Enter" && event.key !== " ") {
-					return;
-				}
-				event.preventDefault();
-				setSandboxPath({ path: artifactPath });
-			});
-		}
-
-		const shell = doc.createElement("div");
-		shell.className =
-			"flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between";
-
-		const content = doc.createElement("div");
-		const folder = artifact?.meta?.folder;
-		const kind = doc.createElement("div");
-		kind.className = "text-sm font-medium";
-		kind.textContent = isDir
-			? `folder / ${getArtifactFilename({ artifact })}`
-			: folder
-				? `${folder} / ${artifact.kind || "file"}`
-				: artifact.kind || "artifact";
-		const path = doc.createElement("div");
-		path.className = "mono text-xs mt-1 break-all";
-		path.style.color = "var(--text-muted)";
-		path.textContent = artifactPath;
-		content.append(kind, path);
-
-		const actions = doc.createElement("div");
-		actions.className = "flex shrink-0 items-center gap-3";
-
-		const size = doc.createElement("div");
-		size.className = "text-xs text-muted";
-		size.textContent = isDir ? "folder" : formatArtifactSize({ artifact });
-
-		const downloadButton = doc.createElement("button");
-		downloadButton.type = "button";
-		downloadButton.className =
-			"btn-outline px-4 py-2 rounded-full text-xs font-medium";
-		downloadButton.textContent = isDir ? "Open" : "Download";
-		downloadButton.setAttribute(
-			"aria-label",
-			isDir ? `Open ${artifactPath}` : `Download ${artifactPath}`
-		);
-		downloadButton.disabled = !canDownloadArtifact({ artifact });
-		downloadButton.addEventListener("click", async () => {
+		row.addEventListener("click", (event) => {
+			if (event.target?.closest?.("button")) {
+				return;
+			}
 			if (isDir) {
 				setSandboxPath({ path: artifactPath });
 				return;
 			}
-			const originalText = downloadButton.textContent;
-			downloadButton.disabled = true;
-			downloadButton.textContent = "Downloading";
-			showError({ message: "" });
-			try {
-				await downloadAgentArtifact({
-					jobId: artifact.jobId,
-					artifact,
-				});
-			} catch (error) {
-				showError({
-					message:
-						error instanceof Error
-							? `Artifact download failed: ${error.message}`
-							: "Artifact download failed",
-				});
-			} finally {
-				downloadButton.disabled = !canDownloadArtifact({ artifact });
-				downloadButton.textContent = originalText;
+		});
+		row.addEventListener("keydown", (event) => {
+			if (event.key !== "Enter" && event.key !== " ") {
+				return;
 			}
+			event.preventDefault();
+			if (isDir) {
+				setSandboxPath({ path: artifactPath });
+				return;
+			}
+			void downloadArtifactFromContextMenu({ artifact });
 		});
 
-		actions.append(size, downloadButton);
-		shell.append(content, actions);
-		row.appendChild(shell);
+		row.appendChild(createSandboxFileIcon({ doc, artifact, isDir }));
+
+		const name = doc.createElement("div");
+		name.className = "sandbox-file-name";
+		name.textContent = getArtifactFilename({ artifact }) || artifactPath;
+		row.appendChild(name);
+
+		const meta = doc.createElement("div");
+		meta.className = "sandbox-file-meta";
+		meta.textContent = isDir ? "folder" : formatArtifactSize({ artifact });
+		row.appendChild(meta);
+
+		const downloadButton = doc.createElement("button");
+		downloadButton.type = "button";
+		downloadButton.className = "sandbox-tile-action";
+		downloadButton.title = isDir ? "Download folder" : "Download file";
+		downloadButton.setAttribute(
+			"aria-label",
+			isDir ? `Download folder ${artifactPath}` : `Download file ${artifactPath}`
+		);
+		downloadButton.disabled = !canDownloadArtifact({ artifact });
+		const downloadIcon = doc.createElement("i");
+		downloadIcon.setAttribute("data-lucide", "download");
+		downloadIcon.className = "w-3.5 h-3.5";
+		downloadButton.appendChild(downloadIcon);
+		downloadButton.addEventListener("click", (event) => {
+			event.stopPropagation();
+			void downloadArtifactFromContextMenu({ artifact });
+		});
+		row.appendChild(downloadButton);
 		list.appendChild(row);
+	}
+	refreshLucideIcons();
+}
+
+function createSandboxFileIcon({ doc, artifact, isDir }) {
+	if (isDir) {
+		const icon = doc.createElement("div");
+		icon.className = "sandbox-folder-icon";
+		return icon;
+	}
+	const kind = artifact?.kind || "file";
+	const icon = doc.createElement("div");
+	icon.className = "sandbox-file-icon";
+	icon.dataset.kind = kind;
+	const glyph = doc.createElement("i");
+	glyph.setAttribute("data-lucide", getSandboxFileIconName({ kind }));
+	glyph.className = "w-7 h-7";
+	icon.appendChild(glyph);
+	return icon;
+}
+
+function getSandboxFileIconName({ kind }) {
+	if (kind === "image") {
+		return "image";
+	}
+	if (kind === "video") {
+		return "film";
+	}
+	if (kind === "audio") {
+		return "music";
+	}
+	if (kind === "json") {
+		return "braces";
+	}
+	return "file-text";
+}
+
+function refreshLucideIcons() {
+	const runtime = getRuntimeGlobal();
+	if (typeof runtime?.lucide?.createIcons === "function") {
+		runtime.lucide.createIcons();
 	}
 }
 
@@ -1433,13 +1449,9 @@ function showArtifactContextMenu({ event, artifact, artifactPath, isDir }) {
 		return;
 	}
 	const menu = doc.createElement("div");
-	menu.className = "card rounded-xl p-2";
-	menu.style.position = "fixed";
+	menu.className = "sandbox-context-menu";
 	menu.style.left = `${event.clientX}px`;
 	menu.style.top = `${event.clientY}px`;
-	menu.style.zIndex = "1000";
-	menu.style.minWidth = "180px";
-	menu.style.boxShadow = "0 18px 45px rgba(0, 0, 0, 0.14)";
 
 	if (isDir) {
 		menu.appendChild(
@@ -1472,7 +1484,6 @@ function createArtifactContextMenuButton({ label, onSelect }) {
 	const doc = getRuntimeWindow()?.document;
 	const button = doc.createElement("button");
 	button.type = "button";
-	button.className = "w-full text-left px-3 py-2 rounded-lg text-sm";
 	button.textContent = label;
 	button.addEventListener("click", () => {
 		hideArtifactContextMenu();
