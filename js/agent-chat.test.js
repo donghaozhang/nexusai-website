@@ -146,6 +146,26 @@ test("buildInteractiveCodexInput pastes prompts into the persistent Codex sessio
 	assert.equal(input, "\u001b[200~Generate a small blue icon.\u001b[201~\r");
 });
 
+test("buildCommandPreviewText sanitizes and flags long Codex input", () => {
+	const AgentChatAPI = loadAgentChatApi();
+	const preview = AgentChatAPI.buildCommandPreviewText({
+		prompt: `Generate storyboard frames.\u001b[200~\n${"shot ".repeat(240)}`,
+	});
+
+	assert.match(preview, /^Interactive Codex input:\n/);
+	assert.doesNotMatch(preview, /\u001b\[200~/);
+	assert.equal(AgentChatAPI.isLongCommandPreview({ text: preview }), true);
+});
+
+test("isLongCommandPreview keeps short Codex input uncollapsed", () => {
+	const AgentChatAPI = loadAgentChatApi();
+	const preview = AgentChatAPI.buildCommandPreviewText({
+		prompt: "Generate a small blue icon.",
+	});
+
+	assert.equal(AgentChatAPI.isLongCommandPreview({ text: preview }), false);
+});
+
 test("findCodexLastMessageArtifact selects the Codex final response", () => {
 	const AgentChatAPI = loadAgentChatApi();
 	assert.deepEqual(

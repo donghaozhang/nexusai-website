@@ -162,6 +162,66 @@
         .agent-uppy-dashboard .uppy-Dashboard-Item-status {
             color: var(--text-muted);
         }
+        .agent-command-preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .agent-command-preview-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--bg-primary);
+            color: var(--text-muted);
+            padding: 6px 10px;
+            font-size: 12px;
+            line-height: 1;
+            transition: color 0.15s var(--ease-out-quart), border-color 0.15s var(--ease-out-quart), background 0.15s var(--ease-out-quart);
+        }
+        .agent-command-preview-toggle:hover,
+        .agent-command-preview-toggle:focus-visible {
+            border-color: var(--color-primary);
+            color: var(--text-primary);
+            outline: none;
+        }
+        .agent-command-preview-toggle.hidden {
+            display: none;
+        }
+        .agent-command-preview-shell {
+            max-height: 220px;
+            overflow: auto;
+            border-radius: 12px;
+            scrollbar-color: #9ca3af transparent;
+        }
+        .agent-command-preview-shell.is-collapsed {
+            max-height: 132px;
+        }
+        .agent-command-preview-shell.is-expanded {
+            max-height: 520px;
+        }
+        .agent-command-preview-shell::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .agent-command-preview-shell::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .agent-command-preview-shell::-webkit-scrollbar-thumb {
+            border: 2px solid transparent;
+            border-radius: 999px;
+            background: #9ca3af;
+            background-clip: content-box;
+        }
+        .agent-command-preview {
+            min-width: 100%;
+            margin: 0;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
         .sandbox-file-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
@@ -410,8 +470,16 @@
                     </div>
 
                     <div class="mt-5">
-                        <div class="text-xs uppercase tracking-wider text-muted mb-2">Codex input</div>
-                        <pre id="agent-command-preview" class="cmd-code p-4 overflow-x-auto"></pre>
+                        <div class="agent-command-preview-header mb-2">
+                            <div class="text-xs uppercase tracking-wider text-muted">Codex input</div>
+                            <button id="agent-command-preview-toggle" type="button" class="agent-command-preview-toggle hidden" aria-expanded="false">
+                                <i data-lucide="chevrons-up-down" class="w-4 h-4"></i>
+                                <span id="agent-command-preview-toggle-label">Expand</span>
+                            </button>
+                        </div>
+                        <div id="agent-command-preview-shell" class="agent-command-preview-shell">
+                            <pre id="agent-command-preview" class="cmd-code agent-command-preview p-4"></pre>
+                        </div>
                     </div>
 
                     <div class="mt-6 flex flex-col sm:flex-row gap-3">

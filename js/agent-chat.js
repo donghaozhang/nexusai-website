@@ -12,6 +12,7 @@ const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const AGENT_PTY_TOKEN_MAX_WAIT_MS = 6 * 60 * 1000;
 const AGENT_PTY_TOKEN_DEFAULT_RETRY_MS = 3000;
 const DEFAULT_SANDBOX_ARTIFACT_PATH = "/tmp/qcut-output";
+const COMMAND_PREVIEW_COLLAPSE_THRESHOLD = 900;
 const BRACKETED_PASTE_START = "\u001b[200~";
 const BRACKETED_PASTE_END = "\u001b[201~";
 const CODEX_AGENT_SYSTEM_PROMPT = [
@@ -44,6 +45,7 @@ let uppyUploader = null;
 let artifactContextMenu = null;
 let terminalStartupBuffer = "";
 let terminalUpdatePromptSkipped = false;
+let commandPreviewExpanded = false;
 
 function getRuntimeGlobal() {
 	try {
@@ -1999,17 +2001,66 @@ async function uploadSelectedAgentFiles() {
 	}
 }
 
+function buildCommandPreviewText({ prompt }) {
+	return `Interactive Codex input:\n${sanitizeTerminalPaste({
+		text:
+			typeof prompt === "string" && prompt.trim().length > 0
+				? prompt.trim()
+				: "Summarize the current QCut agent status.",
+	})}`;
+}
+
+function isLongCommandPreview({ text }) {
+	return (
+		typeof text === "string" &&
+		text.length > COMMAND_PREVIEW_COLLAPSE_THRESHOLD
+	);
+}
+
+function syncCommandPreviewState() {
+	const preview = getElement({ id: "agent-command-preview" });
+	const shell = getElement({ id: "agent-command-preview-shell" });
+	const toggle = getElement({ id: "agent-command-preview-toggle" });
+	if (!preview || !shell || !toggle) {
+		return;
+	}
+	const shouldCollapse = isLongCommandPreview({
+		text: preview.textContent || "",
+	});
+	if (!shouldCollapse) {
+		commandPreviewExpanded = false;
+	}
+	toggle.classList.toggle("hidden", !shouldCollapse);
+	shell.classList.toggle(
+		"is-collapsed",
+		shouldCollapse && !commandPreviewExpanded
+	);
+	shell.classList.toggle(
+		"is-expanded",
+		shouldCollapse && commandPreviewExpanded
+	);
+	toggle.setAttribute(
+		"aria-expanded",
+		String(shouldCollapse && commandPreviewExpanded)
+	);
+	setText({
+		id: "agent-command-preview-toggle-label",
+		text: commandPreviewExpanded ? "Collapse" : "Expand",
+	});
+}
+
+function toggleCommandPreview() {
+	commandPreviewExpanded = !commandPreviewExpanded;
+	syncCommandPreviewState();
+}
+
 function setCommandPreview() {
 	const prompt = getValue({ id: "agent-prompt" });
 	setText({
 		id: "agent-command-preview",
-		text: `Interactive Codex input:\n${sanitizeTerminalPaste({
-			text:
-				typeof prompt === "string" && prompt.trim().length > 0
-					? prompt.trim()
-					: "Summarize the current QCut agent status.",
-		})}`,
+		text: buildCommandPreviewText({ prompt }),
 	});
+	syncCommandPreviewState();
 }
 
 function showError({ message }) {
@@ -2154,6 +2205,9 @@ function initAgentChatPage() {
 	const uploadFilesButton = getElement({ id: "agent-upload-submit" });
 	const fsRootButton = getElement({ id: "agent-fs-root" });
 	const fsUpButton = getElement({ id: "agent-fs-up" });
+	const commandPreviewToggle = getElement({
+		id: "agent-command-preview-toggle",
+	});
 	if (!promptInput || !submitButton) {
 		return;
 	}
@@ -2163,6 +2217,9 @@ function initAgentChatPage() {
 	renderSandboxPath();
 	setCommandPreview();
 	promptInput.addEventListener("input", setCommandPreview);
+	if (commandPreviewToggle) {
+		commandPreviewToggle.addEventListener("click", toggleCommandPreview);
+	}
 	submitButton.addEventListener("click", submitAgentJob);
 	if (newSessionButton) {
 		newSessionButton.addEventListener("click", resetAgentSession);
@@ -2215,6 +2272,7 @@ const AgentChatAPI = {
 	buildAgentSessionFilesystemDownloadPath,
 	buildAgentSessionFileDownloadPath,
 	buildAgentSessionArtifactDownloadPath,
+	buildCommandPreviewText,
 	buildAgentRequest,
 	buildCodexChatPrompt,
 	buildCodexCommand,
@@ -2241,6 +2299,7 @@ const AgentChatAPI = {
 	getLatestCodexAgentMessage,
 	getSandboxParentPath,
 	initUppyUploader,
+	isLongCommandPreview,
 	isTerminalStatus,
 	normalizeSandboxPath,
 	extractUppyUploadFiles,
