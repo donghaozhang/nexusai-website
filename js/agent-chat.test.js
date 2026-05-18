@@ -579,7 +579,7 @@ test("formatUploadProgress shows percent when upload progress is available", () 
 			total: 100,
 			percent: 50,
 		}),
-		"Uploading to /: 50%"
+		"Uploading to /tmp/qcut-output: 50%"
 	);
 });
 

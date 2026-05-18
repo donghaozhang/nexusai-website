@@ -11,6 +11,7 @@ const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
 const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const AGENT_PTY_TOKEN_MAX_WAIT_MS = 6 * 60 * 1000;
 const AGENT_PTY_TOKEN_DEFAULT_RETRY_MS = 3000;
+const DEFAULT_SANDBOX_ARTIFACT_PATH = "/tmp/qcut-output";
 const BRACKETED_PASTE_START = "\u001b[200~";
 const BRACKETED_PASTE_END = "\u001b[201~";
 const CODEX_AGENT_SYSTEM_PROMPT = [
@@ -38,7 +39,7 @@ let terminalFitAddon = null;
 let terminalArtifactPollIntervalId = null;
 let activeTerminalSessionId = "";
 let terminalResizeListenerBound = false;
-let currentSandboxPath = "/";
+let currentSandboxPath = DEFAULT_SANDBOX_ARTIFACT_PATH;
 let uppyUploader = null;
 
 function getRuntimeGlobal() {
@@ -2047,7 +2048,7 @@ function initAgentChatPage() {
 	}
 	if (refreshArtifactsButton) {
 		refreshArtifactsButton.addEventListener("click", () => {
-			void refreshSessionArtifacts();
+			setSandboxPath({ path: DEFAULT_SANDBOX_ARTIFACT_PATH });
 		});
 	}
 	if (uploadFilesButton) {
