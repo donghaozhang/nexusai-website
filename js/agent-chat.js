@@ -41,6 +41,7 @@ let activeTerminalSessionId = "";
 let terminalResizeListenerBound = false;
 let currentSandboxPath = DEFAULT_SANDBOX_ARTIFACT_PATH;
 let uppyUploader = null;
+let artifactContextMenu = null;
 
 function getRuntimeGlobal() {
 	try {
@@ -722,7 +723,7 @@ function buildAgentSessionFileDownloadPath({ sessionId, folder, filename }) {
 	)}/download`;
 }
 
-function buildAgentSessionFilesystemDownloadPath({ sessionId, path }) {
+function buildAgentSessionFilesystemDownloadPath({ sessionId, path, archive }) {
 	if (typeof sessionId !== "string" || sessionId.trim().length === 0) {
 		throw new Error("Agent session id required");
 	}
@@ -730,29 +731,32 @@ function buildAgentSessionFilesystemDownloadPath({ sessionId, path }) {
 	if (normalizedPath.length === 0 || normalizedPath === "/") {
 		throw new Error("Session file path required");
 	}
+	const archiveQuery = archive === "tar" ? "&archive=tar" : "";
 	return `/api/agent/sessions/${encodeURIComponent(
 		sessionId.trim()
-	)}/files/download?path=${encodeURIComponent(normalizedPath)}`;
+	)}/files/download?path=${encodeURIComponent(normalizedPath)}${archiveQuery}`;
 }
 
 async function downloadAgentArtifact({ jobId, artifact }) {
-	const filename = getArtifactFilename({ artifact }) || "qcut-artifact";
+	const isDir = artifact?.meta?.isDir === true;
+	const baseFilename = getArtifactFilename({ artifact }) || "qcut-artifact";
+	const filename = isDir ? `${baseFilename}.tar.gz` : baseFilename;
 	const folder = artifact?.meta?.folder;
 	const filesystemPath =
 		typeof artifact?.meta?.path === "string" ? artifact.meta.path : "";
 	const isVirtualSessionFile = folder === "input" || folder === "output";
-	const isSandboxFilesystemFile =
-		folder === "filesystem" && artifact?.meta?.isDir !== true;
+	const isSandboxFilesystemPath = folder === "filesystem";
 	const downloadPath =
 		typeof artifact?.sessionId === "string" &&
 		artifact.sessionId.trim().length > 0
-			? isSandboxFilesystemFile
+			? isSandboxFilesystemPath
 				? buildAgentSessionFilesystemDownloadPath({
 						sessionId: artifact.sessionId,
 						path: filesystemPath || artifact.storagePath,
+						archive: isDir ? "tar" : "",
 					})
 				: isVirtualSessionFile
-				? buildAgentSessionFileDownloadPath({
+					? buildAgentSessionFileDownloadPath({
 						sessionId: artifact.sessionId,
 						folder,
 						filename,
@@ -1303,6 +1307,7 @@ function renderArtifacts({ artifacts }) {
 	if (!list) {
 		return;
 	}
+	hideArtifactContextMenu();
 	list.innerHTML = "";
 	if (!Array.isArray(artifacts) || artifacts.length === 0) {
 		const empty = doc.createElement("p");
@@ -1322,6 +1327,26 @@ function renderArtifacts({ artifacts }) {
 		row.className = "card rounded-xl p-4";
 		row.dataset.path = artifactPath;
 		row.dataset.kind = isDir ? "folder" : artifact.kind || "file";
+		row.tabIndex = 0;
+		row.style.cursor = isDir ? "pointer" : "default";
+		row.addEventListener("contextmenu", (event) => {
+			showArtifactContextMenu({ event, artifact, artifactPath, isDir });
+		});
+		if (isDir) {
+			row.addEventListener("click", (event) => {
+				if (event.target?.closest?.("button")) {
+					return;
+				}
+				setSandboxPath({ path: artifactPath });
+			});
+			row.addEventListener("keydown", (event) => {
+				if (event.key !== "Enter" && event.key !== " ") {
+					return;
+				}
+				event.preventDefault();
+				setSandboxPath({ path: artifactPath });
+			});
+		}
 
 		const shell = doc.createElement("div");
 		shell.className =
@@ -1390,6 +1415,86 @@ function renderArtifacts({ artifacts }) {
 		shell.append(content, actions);
 		row.appendChild(shell);
 		list.appendChild(row);
+	}
+}
+
+function hideArtifactContextMenu() {
+	if (artifactContextMenu?.parentNode) {
+		artifactContextMenu.parentNode.removeChild(artifactContextMenu);
+	}
+	artifactContextMenu = null;
+}
+
+function showArtifactContextMenu({ event, artifact, artifactPath, isDir }) {
+	event.preventDefault();
+	hideArtifactContextMenu();
+	const doc = getRuntimeWindow()?.document;
+	if (!doc) {
+		return;
+	}
+	const menu = doc.createElement("div");
+	menu.className = "card rounded-xl p-2";
+	menu.style.position = "fixed";
+	menu.style.left = `${event.clientX}px`;
+	menu.style.top = `${event.clientY}px`;
+	menu.style.zIndex = "1000";
+	menu.style.minWidth = "180px";
+	menu.style.boxShadow = "0 18px 45px rgba(0, 0, 0, 0.14)";
+
+	if (isDir) {
+		menu.appendChild(
+			createArtifactContextMenuButton({
+				label: "Open folder",
+				onSelect: () => setSandboxPath({ path: artifactPath }),
+			})
+		);
+	}
+	menu.appendChild(
+		createArtifactContextMenuButton({
+			label: isDir ? "Download folder" : "Download file",
+			onSelect: () => {
+				void downloadArtifactFromContextMenu({ artifact });
+			},
+		})
+	);
+
+	doc.body.appendChild(menu);
+	artifactContextMenu = menu;
+	const closeMenu = () => hideArtifactContextMenu();
+	const win = getRuntimeWindow();
+	win?.setTimeout(() => {
+		doc.addEventListener("click", closeMenu, { once: true });
+		doc.addEventListener("keydown", closeMenu, { once: true });
+	}, 0);
+}
+
+function createArtifactContextMenuButton({ label, onSelect }) {
+	const doc = getRuntimeWindow()?.document;
+	const button = doc.createElement("button");
+	button.type = "button";
+	button.className = "w-full text-left px-3 py-2 rounded-lg text-sm";
+	button.textContent = label;
+	button.addEventListener("click", () => {
+		hideArtifactContextMenu();
+		onSelect();
+	});
+	return button;
+}
+
+async function downloadArtifactFromContextMenu({ artifact }) {
+	showError({ message: "" });
+	try {
+		await downloadAgentArtifact({
+			jobId: artifact.jobId,
+			artifact,
+		});
+	} catch (error) {
+		showError({
+			message:
+				error instanceof Error
+					? `Artifact download failed: ${error.message}`
+					: "Artifact download failed",
+		});
 	}
 }
 

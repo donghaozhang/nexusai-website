@@ -885,6 +885,70 @@ test("downloadAgentArtifact uses full filesystem path routes for sandbox explore
 	assert.equal(anchor.download, "result.png");
 });
 
+test("downloadAgentArtifact downloads sandbox folders as archives", async () => {
+	let requestUrl = "";
+	const anchor = {
+		download: "",
+		href: "",
+		style: {},
+		click() {},
+		remove() {},
+	};
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return {
+				ok: true,
+				status: 200,
+				async blob() {
+					return new Blob([new Uint8Array([1, 2, 3])], {
+						type: "application/gzip",
+					});
+				},
+			};
+		},
+	});
+	global.window.document = {
+		body: { appendChild() {} },
+		createElement() {
+			return anchor;
+		},
+	};
+	global.window.URL = {
+		createObjectURL() {
+			return "blob:filesystem-folder";
+		},
+		revokeObjectURL() {},
+	};
+	global.window.setTimeout = (callback) => {
+		callback();
+		return 1;
+	};
+	const AgentChatAPI = loadAgentChatApi();
+
+	await AgentChatAPI.downloadAgentArtifact({
+		jobId: null,
+		artifact: {
+			id: "/tmp/qcut-output/renders",
+			sessionId: "agent-session-1",
+			storagePath: "/tmp/qcut-output/renders",
+			meta: {
+				filename: "renders",
+				folder: "filesystem",
+				isDir: true,
+				path: "/tmp/qcut-output/renders",
+			},
+		},
+	});
+
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/agent-session-1/files/download?path=%2Ftmp%2Fqcut-output%2Frenders&archive=tar"
+	);
+	assert.equal(anchor.download, "renders.tar.gz");
+});
+
 test("buildAgentArtifactDownloadPath encodes job and artifact ids", () => {
 	const AgentChatAPI = loadAgentChatApi();
 
@@ -919,6 +983,14 @@ test("buildAgentSessionFilesystemDownloadPath encodes full sandbox paths", () =>
 			path: "/tmp/qcut-output/clip final.mp4",
 		}),
 		"/api/agent/sessions/session%20%2F%201/files/download?path=%2Ftmp%2Fqcut-output%2Fclip%20final.mp4"
+	);
+	assert.equal(
+		AgentChatAPI.buildAgentSessionFilesystemDownloadPath({
+			sessionId: "session / 1",
+			path: "/tmp/qcut-output/renders",
+			archive: "tar",
+		}),
+		"/api/agent/sessions/session%20%2F%201/files/download?path=%2Ftmp%2Fqcut-output%2Frenders&archive=tar"
 	);
 });
 
