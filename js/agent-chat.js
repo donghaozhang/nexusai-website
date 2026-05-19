@@ -25,7 +25,7 @@ const CODEX_AGENT_SYSTEM_PROMPT = [
 	"When the user mentions an uploaded file or image, inspect /tmp/qcut-input first.",
 	"Write generated files under /tmp/qcut-output so the website can list and download them.",
 	"The QCut CLI default output directory is QCUT_OUTPUT_DIR=/tmp/qcut-output in this sandbox.",
-	"The default image model is gpt_image_2_gmi. For image generation, do not pass --model/-m unless the user explicitly asks for a specific model.",
+	"The default image model is gpt_image_2_ima. For image generation, do not pass --model/-m unless the user explicitly asks for a specific model.",
 	"yt-dlp and deno are available for authorized video download probes.",
 	"For long-running shell commands, stream user-visible stdout with tee -a /tmp/qcut-output/codex-live-stdout.log.",
 	"Put temporary tools, caches, and package installs under /tmp/qcut-tools or /tmp, not /tmp/qcut-output.",
