@@ -618,13 +618,11 @@
     <script src="js/payment.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
-    <script src="js/agent-chat/01-runtime-api.js"></script>
-    <script src="js/agent-chat/02-ui-files.js"></script>
-    <script src="js/agent-chat/03-terminal-job.js"></script>
-    <script src="js/agent-chat/04-bootstrap.js"></script>
+    <script src="js/agent-chat.js"></script>
     <script type="module">
         try {
             const { Uppy, Dashboard } = await import("https://releases.transloadit.com/uppy/v5.2.1/uppy.min.mjs");
+            await window.AgentChatReady;
             window.AgentChatAPI?.initUppyUploader({ Uppy, Dashboard });
         } catch (error) {
             console.warn("Uppy uploader failed to load; native file input remains available.", error);

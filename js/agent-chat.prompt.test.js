@@ -1,36 +1,54 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { readFileSync } = require("node:fs");
+const vm = require("node:vm");
 const {
 	createResponse,
 	setupRuntime,
 	loadAgentChatApi,
 } = require("./agent-chat.test-utils.js");
 
-test("chat-agent page loads split script parts before module setup", () => {
+test("chat-agent page waits for the split script loader before module setup", () => {
 	const html = readFileSync(require.resolve("../chat-agent.html"), "utf8");
-	const runtimeIndex = html.indexOf(
-		'<script src="js/agent-chat/01-runtime-api.js"></script>'
-	);
-	const uiIndex = html.indexOf(
-		'<script src="js/agent-chat/02-ui-files.js"></script>'
-	);
-	const terminalIndex = html.indexOf(
-		'<script src="js/agent-chat/03-terminal-job.js"></script>'
-	);
-	const bootstrapIndex = html.indexOf(
-		'<script src="js/agent-chat/04-bootstrap.js"></script>'
-	);
+	const loaderIndex = html.indexOf('<script src="js/agent-chat.js"></script>');
 	const uppyIndex = html.indexOf('<script type="module">');
 
-	assert.ok(runtimeIndex > -1);
-	assert.ok(runtimeIndex < uiIndex);
-	assert.ok(uiIndex < terminalIndex);
-	assert.ok(terminalIndex < bootstrapIndex);
-	assert.ok(bootstrapIndex < uppyIndex);
+	assert.ok(loaderIndex > -1);
+	assert.ok(loaderIndex < uppyIndex);
+	assert.match(html, /await window\.AgentChatReady/);
+});
+
+test("agent-chat browser loader evaluates split parts in one scope", async () => {
+	const loaderSource = readFileSync(require.resolve("./agent-chat.js"), "utf8");
+	const context = {
+		URL,
+		console,
+		fetch: async (url) => {
+			const filename = String(url).split("/").pop();
+			return {
+				ok: true,
+				status: 200,
+				text: async () =>
+					readFileSync(require.resolve(`./agent-chat/${filename}`), "utf8"),
+			};
+		},
+		document: {
+			readyState: "loading",
+			currentScript: {
+				src: "https://qcut.ai/js/agent-chat.js",
+			},
+		},
+		window: {
+			addEventListener() {},
+		},
+	};
+
+	vm.runInNewContext(loaderSource, context);
+	await context.window.AgentChatReady;
+
 	assert.equal(
-		html.includes('<script src="js/agent-chat.js"></script>'),
-		false
+		typeof context.window.AgentChatAPI?.buildAgentRequest,
+		"function"
 	);
 });
 

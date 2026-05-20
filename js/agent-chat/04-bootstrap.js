@@ -121,5 +121,9 @@ if (
 	typeof window.addEventListener === "function"
 ) {
 	window.AgentChatAPI = AgentChatAPI;
-	window.addEventListener("DOMContentLoaded", initAgentChatPage);
+	if (document.readyState === "loading") {
+		window.addEventListener("DOMContentLoaded", initAgentChatPage);
+	} else {
+		initAgentChatPage();
+	}
 }

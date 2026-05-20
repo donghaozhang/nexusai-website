@@ -32,7 +32,23 @@ ${source}
 	const baseUrl = currentScript?.src
 		? new URL("./agent-chat/", currentScript.src).toString()
 		: "js/agent-chat/";
-	for (const part of PARTS) {
-		document.write(`<script src="${baseUrl}${part}"></` + "script>");
-	}
+	const loadParts = async () => {
+		const source = (
+			await Promise.all(
+				PARTS.map(async (part) => {
+					const response = await fetch(`${baseUrl}${part}`);
+					if (!response.ok) {
+						throw new Error(`Failed to load ${part}: ${response.status}`);
+					}
+					return response.text();
+				})
+			)
+		).join("\n");
+		Function(`${source}\n//# sourceURL=agent-chat.parts.js`)();
+	};
+	const runtimeWindow = typeof window !== "undefined" ? window : globalThis;
+	runtimeWindow.AgentChatReady = loadParts().catch((error) => {
+		console.error("Agent chat failed to load.", error);
+		throw error;
+	});
 })();
