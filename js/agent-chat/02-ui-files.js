@@ -885,12 +885,19 @@ async function previewArtifactFromTile({ artifact }) {
 
 async function openArtifactPreviewFromContextMenu({ artifact }) {
 	showError({ message: "" });
+	const win = getRuntimeWindow();
+	const previewWindow =
+		typeof win?.open === "function" ? win.open("about:blank", "_blank") : null;
 	try {
 		await openAgentArtifactPreviewInNewTab({
 			jobId: artifact?.jobId,
 			artifact,
+			previewWindow,
 		});
 	} catch (error) {
+		if (previewWindow && typeof previewWindow.close === "function") {
+			previewWindow.close();
+		}
 		showError({
 			message:
 				error instanceof Error

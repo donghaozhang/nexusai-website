@@ -932,11 +932,26 @@ async function loadAgentArtifactPreview({ jobId, artifact }) {
 	};
 }
 
-async function openAgentArtifactPreviewInNewTab({ jobId, artifact }) {
+async function openAgentArtifactPreviewInNewTab({
+	jobId,
+	artifact,
+	previewWindow,
+}) {
 	const preview = await loadAgentArtifactPreview({ jobId, artifact });
 	const win = getRuntimeWindow();
-	if (!win?.URL || typeof win.open !== "function") {
+	if (!win?.URL) {
 		throw new Error("Browser new tab APIs are unavailable");
+	}
+	const targetWindow =
+		previewWindow ||
+		(typeof win.open === "function" ? win.open("about:blank", "_blank") : null);
+	if (!targetWindow) {
+		throw new Error("The browser blocked the preview tab");
+	}
+	try {
+		targetWindow.opener = null;
+	} catch {
+		// Ignore cross-browser opener protections.
 	}
 	const blob =
 		preview.kind === "image"
@@ -951,11 +966,7 @@ async function openAgentArtifactPreviewInNewTab({ jobId, artifact }) {
 					{ type: "text/html" }
 				);
 	const objectUrl = win.URL.createObjectURL(blob);
-	const opened = win.open(objectUrl, "_blank", "noopener,noreferrer");
-	if (!opened) {
-		win.URL.revokeObjectURL(objectUrl);
-		throw new Error("The browser blocked the preview tab");
-	}
+	targetWindow.location.href = objectUrl;
 	win.setTimeout(() => win.URL.revokeObjectURL(objectUrl), 60_000);
 	return objectUrl;
 }

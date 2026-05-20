@@ -541,7 +541,7 @@ test("openAgentArtifactPreviewInNewTab opens text previews as blob HTML", async 
 	global.window.open = (url, target) => {
 		openedUrl = url;
 		assert.equal(target, "_blank");
-		return {};
+		return { location: { href: "" } };
 	};
 	global.window.setTimeout = (callback) => {
 		callback();
@@ -568,8 +568,59 @@ test("openAgentArtifactPreviewInNewTab opens text previews as blob HTML", async 
 		"https://license.test/api/agent/sessions/session-1/files/download?path=%2Ftmp%2Fqcut-output%2Fnotes.md"
 	);
 	assert.equal(objectUrl, "blob:preview-tab");
-	assert.equal(openedUrl, "blob:preview-tab");
+	assert.equal(openedUrl, "about:blank");
 	assert.equal(revokedUrl, "blob:preview-tab");
+});
+
+test("openAgentArtifactPreviewInNewTab can use a pre-opened user tab", async () => {
+	let previewHref = "";
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async () => ({
+			ok: true,
+			status: 200,
+			async blob() {
+				return new Blob(["hello"], {
+					type: "text/plain",
+				});
+			},
+		}),
+	});
+	global.window.URL = {
+		createObjectURL() {
+			return "blob:pre-opened-preview";
+		},
+		revokeObjectURL() {},
+	};
+	global.window.setTimeout = (callback) => {
+		callback();
+		return 1;
+	};
+	const previewWindow = {
+		location: {
+			set href(value) {
+				previewHref = value;
+			},
+		},
+	};
+	const AgentChatAPI = loadAgentChatApi();
+
+	await AgentChatAPI.openAgentArtifactPreviewInNewTab({
+		jobId: null,
+		previewWindow,
+		artifact: {
+			sessionId: "session-1",
+			bytes: 5,
+			storagePath: "/tmp/qcut-output/notes.txt",
+			meta: {
+				filename: "notes.txt",
+				folder: "filesystem",
+				path: "/tmp/qcut-output/notes.txt",
+			},
+		},
+	});
+
+	assert.equal(previewHref, "blob:pre-opened-preview");
 });
 
 test("loadAgentArtifactPreview blocks oversized text before downloading", async () => {
