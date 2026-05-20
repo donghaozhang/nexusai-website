@@ -370,6 +370,31 @@ test("buildAgentArtifactDownloadRequest reuses filesystem download routing", () 
 	});
 });
 
+test("getArtifactCopyPath prefers sandbox filesystem paths", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.getArtifactCopyPath({
+			artifact: {
+				id: "artifact-1",
+				storagePath: "storage/result.json",
+				meta: { path: "/tmp/qcut-output/result.json" },
+			},
+		}),
+		"/tmp/qcut-output/result.json"
+	);
+	assert.equal(
+		AgentChatAPI.getArtifactCopyPath({
+			artifact: {
+				id: "artifact-2",
+				storagePath: "storage/result.json",
+				meta: {},
+			},
+		}),
+		"storage/result.json"
+	);
+});
+
 test("getArtifactPreviewKind detects image and text artifacts", () => {
 	const AgentChatAPI = loadAgentChatApi();
 
@@ -409,6 +434,19 @@ test("getArtifactPreviewKind detects image and text artifacts", () => {
 		}),
 		"none"
 	);
+});
+
+test("buildStandalonePreviewHtml escapes preview content", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	const html = AgentChatAPI.buildStandalonePreviewHtml({
+		filename: 'result"<json>.md',
+		text: '<script>alert("x")</script>',
+	});
+
+	assert.match(html, /result&quot;&lt;json&gt;\.md/);
+	assert.match(html, /&lt;script&gt;alert\(&quot;x&quot;\)&lt;\/script&gt;/);
+	assert.doesNotMatch(html, /<script>alert/);
 });
 
 test("formatPreviewText pretty prints valid JSON", () => {
@@ -470,6 +508,68 @@ test("loadAgentArtifactPreview fetches and formats text previews", async () => {
 	assert.equal(preview.kind, "json");
 	assert.equal(preview.filename, "result.json");
 	assert.equal(preview.text, '{\n  "ok": true\n}');
+});
+
+test("openAgentArtifactPreviewInNewTab opens text previews as blob HTML", async () => {
+	let requestUrl = "";
+	let openedUrl = "";
+	let revokedUrl = "";
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return {
+				ok: true,
+				status: 200,
+				async blob() {
+					return new Blob(["# Hello"], {
+						type: "text/markdown",
+					});
+				},
+			};
+		},
+	});
+	global.window.URL = {
+		createObjectURL(blob) {
+			assert.equal(blob.type, "text/html");
+			return "blob:preview-tab";
+		},
+		revokeObjectURL(url) {
+			revokedUrl = url;
+		},
+	};
+	global.window.open = (url, target) => {
+		openedUrl = url;
+		assert.equal(target, "_blank");
+		return {};
+	};
+	global.window.setTimeout = (callback) => {
+		callback();
+		return 1;
+	};
+	const AgentChatAPI = loadAgentChatApi();
+
+	const objectUrl = await AgentChatAPI.openAgentArtifactPreviewInNewTab({
+		jobId: null,
+		artifact: {
+			sessionId: "session-1",
+			bytes: 7,
+			storagePath: "/tmp/qcut-output/notes.md",
+			meta: {
+				filename: "notes.md",
+				folder: "filesystem",
+				path: "/tmp/qcut-output/notes.md",
+			},
+		},
+	});
+
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/session-1/files/download?path=%2Ftmp%2Fqcut-output%2Fnotes.md"
+	);
+	assert.equal(objectUrl, "blob:preview-tab");
+	assert.equal(openedUrl, "blob:preview-tab");
+	assert.equal(revokedUrl, "blob:preview-tab");
 });
 
 test("loadAgentArtifactPreview blocks oversized text before downloading", async () => {

@@ -735,6 +735,7 @@ function showArtifactContextMenu({ event, artifact, artifactPath, isDir }) {
 				onSelect: () => setSandboxPath({ path: artifactPath }),
 			})
 		);
+		menu.appendChild(createArtifactContextMenuSeparator());
 	}
 	if (!isDir && canPreviewArtifact({ artifact })) {
 		menu.appendChild(
@@ -745,12 +746,44 @@ function showArtifactContextMenu({ event, artifact, artifactPath, isDir }) {
 				},
 			})
 		);
+		menu.appendChild(
+			createArtifactContextMenuButton({
+				label: "Open preview in new tab",
+				onSelect: () => {
+					void openArtifactPreviewFromContextMenu({ artifact });
+				},
+			})
+		);
+		menu.appendChild(createArtifactContextMenuSeparator());
 	}
 	menu.appendChild(
 		createArtifactContextMenuButton({
-			label: isDir ? "Download folder" : "Download file",
+			label: isDir ? "Download folder to local" : "Download to local",
 			onSelect: () => {
 				void downloadArtifactFromContextMenu({ artifact });
+			},
+		})
+	);
+	menu.appendChild(createArtifactContextMenuSeparator());
+	menu.appendChild(
+		createArtifactContextMenuButton({
+			label: "Copy path",
+			onSelect: () => {
+				void copyArtifactValueFromContextMenu({
+					label: "path",
+					value: getArtifactCopyPath({ artifact }),
+				});
+			},
+		})
+	);
+	menu.appendChild(
+		createArtifactContextMenuButton({
+			label: isDir ? "Copy folder name" : "Copy filename",
+			onSelect: () => {
+				void copyArtifactValueFromContextMenu({
+					label: isDir ? "folder name" : "filename",
+					value: getArtifactFilename({ artifact }),
+				});
 			},
 		})
 	);
@@ -777,6 +810,61 @@ function createArtifactContextMenuButton({ label, onSelect }) {
 	return button;
 }
 
+function createArtifactContextMenuSeparator() {
+	const doc = getRuntimeWindow()?.document;
+	const separator = doc.createElement("div");
+	separator.className = "sandbox-context-menu-separator";
+	separator.setAttribute("role", "separator");
+	return separator;
+}
+
+async function copyArtifactValueFromContextMenu({ label, value }) {
+	showError({ message: "" });
+	try {
+		await copyTextToClipboard({ text: value });
+		setText({
+			id: "agent-upload-status",
+			text: `Copied ${label}: ${value}`,
+		});
+	} catch (error) {
+		showError({
+			message:
+				error instanceof Error
+					? `Copy failed: ${error.message}`
+					: "Copy failed",
+		});
+	}
+}
+
+async function copyTextToClipboard({ text }) {
+	const value = typeof text === "string" ? text : "";
+	if (value.length === 0) {
+		throw new Error("Nothing to copy");
+	}
+	const win = getRuntimeWindow();
+	const clipboard = win?.navigator?.clipboard;
+	if (clipboard && typeof clipboard.writeText === "function") {
+		await clipboard.writeText(value);
+		return;
+	}
+	const doc = win?.document;
+	if (!doc || typeof doc.execCommand !== "function") {
+		throw new Error("Clipboard API is unavailable");
+	}
+	const textarea = doc.createElement("textarea");
+	textarea.value = value;
+	textarea.setAttribute("readonly", "");
+	textarea.style.position = "fixed";
+	textarea.style.left = "-9999px";
+	doc.body.appendChild(textarea);
+	textarea.select();
+	const copied = doc.execCommand("copy");
+	textarea.remove();
+	if (!copied) {
+		throw new Error("Clipboard copy was rejected");
+	}
+}
+
 async function previewArtifactFromTile({ artifact }) {
 	showError({ message: "" });
 	try {
@@ -791,6 +879,23 @@ async function previewArtifactFromTile({ artifact }) {
 				error instanceof Error
 					? `Artifact preview failed: ${error.message}`
 					: "Artifact preview failed",
+		});
+	}
+}
+
+async function openArtifactPreviewFromContextMenu({ artifact }) {
+	showError({ message: "" });
+	try {
+		await openAgentArtifactPreviewInNewTab({
+			jobId: artifact?.jobId,
+			artifact,
+		});
+	} catch (error) {
+		showError({
+			message:
+				error instanceof Error
+					? `Open preview failed: ${error.message}`
+					: "Open preview failed",
 		});
 	}
 }

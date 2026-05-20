@@ -830,6 +830,19 @@ function canPreviewArtifact({ artifact }) {
 	return getArtifactPreviewKind({ artifact }) !== "none";
 }
 
+function getArtifactCopyPath({ artifact }) {
+	const metaPath = artifact?.meta?.path;
+	if (typeof metaPath === "string" && metaPath.length > 0) {
+		return metaPath;
+	}
+	const storagePath = artifact?.storagePath;
+	if (typeof storagePath === "string" && storagePath.length > 0) {
+		return storagePath;
+	}
+	const id = artifact?.id;
+	return typeof id === "string" ? id : "";
+}
+
 function formatPreviewText({ filename, text }) {
 	const extension = getArtifactExtension({
 		artifact: { meta: { filename } },
@@ -853,6 +866,35 @@ function assertTextPreviewSize({ artifact }) {
 			)} MB. Download the file to inspect it.`
 		);
 	}
+}
+
+function escapePreviewHtml({ text }) {
+	return String(text)
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
+		.replaceAll('"', "&quot;")
+		.replaceAll("'", "&#39;");
+}
+
+function buildStandalonePreviewHtml({ filename, text }) {
+	return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapePreviewHtml({ text: filename || "QCut preview" })}</title>
+<style>
+body{margin:0;background:#faf9f7;color:#18181b;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+header{position:sticky;top:0;border-bottom:1px solid #dedbd5;background:#faf9f7;padding:14px 20px;font-weight:650}
+pre{box-sizing:border-box;width:100%;max-width:1120px;margin:0 auto;padding:24px;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.6 "JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+</style>
+</head>
+<body>
+<header>${escapePreviewHtml({ text: filename || "QCut preview" })}</header>
+<pre>${escapePreviewHtml({ text })}</pre>
+</body>
+</html>`;
 }
 
 async function loadAgentArtifactPreview({ jobId, artifact }) {
@@ -888,6 +930,34 @@ async function loadAgentArtifactPreview({ jobId, artifact }) {
 			text: rawText,
 		}),
 	};
+}
+
+async function openAgentArtifactPreviewInNewTab({ jobId, artifact }) {
+	const preview = await loadAgentArtifactPreview({ jobId, artifact });
+	const win = getRuntimeWindow();
+	if (!win?.URL || typeof win.open !== "function") {
+		throw new Error("Browser new tab APIs are unavailable");
+	}
+	const blob =
+		preview.kind === "image"
+			? preview.blob
+			: new Blob(
+					[
+						buildStandalonePreviewHtml({
+							filename: preview.filename,
+							text: preview.text || "",
+						}),
+					],
+					{ type: "text/html" }
+				);
+	const objectUrl = win.URL.createObjectURL(blob);
+	const opened = win.open(objectUrl, "_blank", "noopener,noreferrer");
+	if (!opened) {
+		win.URL.revokeObjectURL(objectUrl);
+		throw new Error("The browser blocked the preview tab");
+	}
+	win.setTimeout(() => win.URL.revokeObjectURL(objectUrl), 60_000);
+	return objectUrl;
 }
 
 async function downloadAgentArtifact({ jobId, artifact }) {
