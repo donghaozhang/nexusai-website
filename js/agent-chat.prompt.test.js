@@ -1,35 +1,37 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { readFileSync } = require("node:fs");
-const vm = require("node:vm");
 const {
 	createResponse,
 	setupRuntime,
 	loadAgentChatApi,
 } = require("./agent-chat.test-utils.js");
 
-test("agent-chat loader synchronously injects browser script parts", () => {
-	const writes = [];
-	const loaderSource = readFileSync(require.resolve("./agent-chat.js"), "utf8");
+test("chat-agent page loads split script parts before module setup", () => {
+	const html = readFileSync(require.resolve("../chat-agent.html"), "utf8");
+	const runtimeIndex = html.indexOf(
+		'<script src="js/agent-chat/01-runtime-api.js"></script>'
+	);
+	const uiIndex = html.indexOf(
+		'<script src="js/agent-chat/02-ui-files.js"></script>'
+	);
+	const terminalIndex = html.indexOf(
+		'<script src="js/agent-chat/03-terminal-job.js"></script>'
+	);
+	const bootstrapIndex = html.indexOf(
+		'<script src="js/agent-chat/04-bootstrap.js"></script>'
+	);
+	const uppyIndex = html.indexOf('<script type="module">');
 
-	vm.runInNewContext(loaderSource, {
-		URL,
-		document: {
-			currentScript: {
-				src: "https://qcut.ai/js/agent-chat.js",
-			},
-			write(html) {
-				writes.push(html);
-			},
-		},
-	});
-
-	assert.deepEqual(writes, [
-		'<script src="https://qcut.ai/js/agent-chat/01-runtime-api.js"></script>',
-		'<script src="https://qcut.ai/js/agent-chat/02-ui-files.js"></script>',
-		'<script src="https://qcut.ai/js/agent-chat/03-terminal-job.js"></script>',
-		'<script src="https://qcut.ai/js/agent-chat/04-bootstrap.js"></script>',
-	]);
+	assert.ok(runtimeIndex > -1);
+	assert.ok(runtimeIndex < uiIndex);
+	assert.ok(uiIndex < terminalIndex);
+	assert.ok(terminalIndex < bootstrapIndex);
+	assert.ok(bootstrapIndex < uppyIndex);
+	assert.equal(
+		html.includes('<script src="js/agent-chat.js"></script>'),
+		false
+	);
 });
 
 test("buildAgentRequest keeps codex prompts out of the shell command", () => {
