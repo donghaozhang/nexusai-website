@@ -12,6 +12,25 @@ const AGENT_PTY_TOKEN_MAX_WAIT_MS = 6 * 60 * 1000;
 const AGENT_PTY_TOKEN_DEFAULT_RETRY_MS = 3000;
 const DEFAULT_SANDBOX_ARTIFACT_PATH = "/tmp/qcut-output";
 const COMMAND_PREVIEW_COLLAPSE_THRESHOLD = 900;
+const TEXT_PREVIEW_MAX_BYTES = 1024 * 1024;
+const IMAGE_THUMBNAIL_MAX_BYTES = 10 * 1024 * 1024;
+const IMAGE_PREVIEW_EXTENSIONS = new Set([
+	"gif",
+	"jpeg",
+	"jpg",
+	"png",
+	"webp",
+]);
+const TEXT_PREVIEW_EXTENSIONS = new Set([
+	"csv",
+	"json",
+	"log",
+	"markdown",
+	"md",
+	"txt",
+	"yaml",
+	"yml",
+]);
 const BRACKETED_PASTE_START = "\u001b[200~";
 const BRACKETED_PASTE_END = "\u001b[201~";
 const CODEX_AGENT_SYSTEM_PROMPT = [
@@ -46,6 +65,8 @@ let artifactContextMenu = null;
 let terminalStartupBuffer = "";
 let terminalUpdatePromptSkipped = false;
 let commandPreviewExpanded = false;
+let artifactPreviewObjectUrl = "";
+let sandboxThumbnailObjectUrls = [];
 
 function getRuntimeGlobal() {
 	try {
@@ -741,7 +762,7 @@ function buildAgentSessionFilesystemDownloadPath({ sessionId, path, archive }) {
 	)}/files/download?path=${encodeURIComponent(normalizedPath)}${archiveQuery}`;
 }
 
-async function downloadAgentArtifact({ jobId, artifact }) {
+function buildAgentArtifactDownloadRequest({ jobId, artifact }) {
 	const isDir = artifact?.meta?.isDir === true;
 	const baseFilename = getArtifactFilename({ artifact }) || "qcut-artifact";
 	const filename = isDir ? `${baseFilename}.tar.gz` : baseFilename;
@@ -773,8 +794,106 @@ async function downloadAgentArtifact({ jobId, artifact }) {
 					jobId,
 					artifactId: artifact?.id,
 				});
+	return { filename, path: downloadPath };
+}
+
+function getArtifactExtension({ artifact }) {
+	const filename = getArtifactFilename({ artifact }) || artifact?.storagePath || "";
+	const dotIndex = filename.lastIndexOf(".");
+	if (dotIndex < 0 || dotIndex === filename.length - 1) {
+		return "";
+	}
+	return filename.slice(dotIndex + 1).toLowerCase();
+}
+
+function getArtifactPreviewKind({ artifact }) {
+	if (!artifact || artifact?.meta?.isDir === true) {
+		return "none";
+	}
+	const extension = getArtifactExtension({ artifact });
+	if (IMAGE_PREVIEW_EXTENSIONS.has(extension) || artifact.kind === "image") {
+		return "image";
+	}
+	if (TEXT_PREVIEW_EXTENSIONS.has(extension)) {
+		return extension === "json" ? "json" : "text";
+	}
+	if (artifact.kind === "json") {
+		return "json";
+	}
+	if (artifact.kind === "log") {
+		return "text";
+	}
+	return "none";
+}
+
+function canPreviewArtifact({ artifact }) {
+	return getArtifactPreviewKind({ artifact }) !== "none";
+}
+
+function formatPreviewText({ filename, text }) {
+	const extension = getArtifactExtension({
+		artifact: { meta: { filename } },
+	});
+	if (extension !== "json") {
+		return text;
+	}
+	try {
+		return JSON.stringify(JSON.parse(text), null, 2);
+	} catch {
+		return text;
+	}
+}
+
+function assertTextPreviewSize({ artifact }) {
+	const bytes = Number(artifact?.bytes || 0);
+	if (Number.isFinite(bytes) && bytes > TEXT_PREVIEW_MAX_BYTES) {
+		throw new Error(
+			`Preview is limited to ${(TEXT_PREVIEW_MAX_BYTES / (1024 * 1024)).toFixed(
+				0
+			)} MB. Download the file to inspect it.`
+		);
+	}
+}
+
+async function loadAgentArtifactPreview({ jobId, artifact }) {
+	const previewKind = getArtifactPreviewKind({ artifact });
+	if (previewKind === "none") {
+		throw new Error("This file type cannot be previewed");
+	}
+	if (previewKind === "text" || previewKind === "json") {
+		assertTextPreviewSize({ artifact });
+	}
+	const downloadRequest = buildAgentArtifactDownloadRequest({ jobId, artifact });
+	const blob = await requestAgentBlob({ path: downloadRequest.path });
+	if (previewKind === "image") {
+		return {
+			blob,
+			filename: downloadRequest.filename,
+			kind: previewKind,
+		};
+	}
+	if (blob.size > TEXT_PREVIEW_MAX_BYTES) {
+		throw new Error(
+			`Preview is limited to ${(TEXT_PREVIEW_MAX_BYTES / (1024 * 1024)).toFixed(
+				0
+			)} MB. Download the file to inspect it.`
+		);
+	}
+	const rawText = await blob.text();
+	return {
+		filename: downloadRequest.filename,
+		kind: previewKind,
+		text: formatPreviewText({
+			filename: downloadRequest.filename,
+			text: rawText,
+		}),
+	};
+}
+
+async function downloadAgentArtifact({ jobId, artifact }) {
+	const downloadRequest = buildAgentArtifactDownloadRequest({ jobId, artifact });
 	const blob = await requestAgentBlob({
-		path: downloadPath,
+		path: downloadRequest.path,
 	});
 	const win = getRuntimeWindow();
 	const doc = win?.document;
@@ -786,7 +905,7 @@ async function downloadAgentArtifact({ jobId, artifact }) {
 	try {
 		const anchor = doc.createElement("a");
 		anchor.href = objectUrl;
-		anchor.download = filename;
+		anchor.download = downloadRequest.filename;
 		anchor.style.display = "none";
 		doc.body.appendChild(anchor);
 		anchor.click();

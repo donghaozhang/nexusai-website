@@ -348,6 +348,157 @@ test("buildAgentSessionFilesystemDownloadPath encodes full sandbox paths", () =>
 	);
 });
 
+test("buildAgentArtifactDownloadRequest reuses filesystem download routing", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	const request = AgentChatAPI.buildAgentArtifactDownloadRequest({
+		jobId: null,
+		artifact: {
+			sessionId: "session-1",
+			storagePath: "/tmp/qcut-output/scenes.json",
+			meta: {
+				filename: "scenes.json",
+				folder: "filesystem",
+				path: "/tmp/qcut-output/scenes.json",
+			},
+		},
+	});
+
+	assert.deepEqual(request, {
+		filename: "scenes.json",
+		path: "/api/agent/sessions/session-1/files/download?path=%2Ftmp%2Fqcut-output%2Fscenes.json",
+	});
+});
+
+test("getArtifactPreviewKind detects image and text artifacts", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.getArtifactPreviewKind({
+			artifact: {
+				kind: "image",
+				meta: { filename: "portrait.png" },
+			},
+		}),
+		"image"
+	);
+	assert.equal(
+		AgentChatAPI.getArtifactPreviewKind({
+			artifact: {
+				kind: "log",
+				meta: { filename: "notes.md" },
+			},
+		}),
+		"text"
+	);
+	assert.equal(
+		AgentChatAPI.getArtifactPreviewKind({
+			artifact: {
+				kind: "json",
+				meta: { filename: "scenes.json" },
+			},
+		}),
+		"json"
+	);
+	assert.equal(
+		AgentChatAPI.getArtifactPreviewKind({
+			artifact: {
+				kind: "video",
+				meta: { filename: "clip.mp4" },
+			},
+		}),
+		"none"
+	);
+});
+
+test("formatPreviewText pretty prints valid JSON", () => {
+	const AgentChatAPI = loadAgentChatApi();
+
+	assert.equal(
+		AgentChatAPI.formatPreviewText({
+			filename: "scenes.json",
+			text: '{"title":"Demo","scenes":[1]}',
+		}),
+		'{\n  "title": "Demo",\n  "scenes": [\n    1\n  ]\n}'
+	);
+	assert.equal(
+		AgentChatAPI.formatPreviewText({
+			filename: "notes.txt",
+			text: '{"title":"Raw"}',
+		}),
+		'{"title":"Raw"}'
+	);
+});
+
+test("loadAgentArtifactPreview fetches and formats text previews", async () => {
+	let requestUrl = "";
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async (url) => {
+			requestUrl = url;
+			return {
+				ok: true,
+				status: 200,
+				async blob() {
+					return new Blob(['{"ok":true}'], {
+						type: "application/json",
+					});
+				},
+			};
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	const preview = await AgentChatAPI.loadAgentArtifactPreview({
+		jobId: null,
+		artifact: {
+			sessionId: "session-1",
+			bytes: 11,
+			storagePath: "/tmp/qcut-output/result.json",
+			meta: {
+				filename: "result.json",
+				folder: "filesystem",
+				path: "/tmp/qcut-output/result.json",
+			},
+		},
+	});
+
+	assert.equal(
+		requestUrl,
+		"https://license.test/api/agent/sessions/session-1/files/download?path=%2Ftmp%2Fqcut-output%2Fresult.json"
+	);
+	assert.equal(preview.kind, "json");
+	assert.equal(preview.filename, "result.json");
+	assert.equal(preview.text, '{\n  "ok": true\n}');
+});
+
+test("loadAgentArtifactPreview blocks oversized text before downloading", async () => {
+	setupRuntime({
+		token: "token-abc",
+		fetchImpl: async () => {
+			throw new Error("fetch should not run");
+		},
+	});
+	const AgentChatAPI = loadAgentChatApi();
+
+	await assert.rejects(
+		AgentChatAPI.loadAgentArtifactPreview({
+			jobId: null,
+			artifact: {
+				sessionId: "session-1",
+				bytes: 2 * 1024 * 1024,
+				storagePath: "/tmp/qcut-output/big.log",
+				meta: {
+					filename: "big.log",
+					folder: "filesystem",
+					path: "/tmp/qcut-output/big.log",
+				},
+			},
+		}),
+		/Preview is limited/
+	);
+});
+
 test("createAgentJob can use the server-side default agent account", async () => {
 	let requestInit = null;
 	setupRuntime({

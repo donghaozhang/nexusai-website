@@ -512,6 +512,7 @@ function renderArtifacts({ artifacts }) {
 		return;
 	}
 	hideArtifactContextMenu();
+	revokeSandboxThumbnailObjectUrls();
 	list.innerHTML = "";
 	list.className = "sandbox-file-grid mt-5";
 	if (!Array.isArray(artifacts) || artifacts.length === 0) {
@@ -550,6 +551,9 @@ function renderArtifacts({ artifacts }) {
 				setSandboxPath({ path: artifactPath });
 				return;
 			}
+			if (canPreviewArtifact({ artifact })) {
+				void previewArtifactFromTile({ artifact });
+			}
 		});
 		row.addEventListener("keydown", (event) => {
 			if (event.key !== "Enter" && event.key !== " ") {
@@ -560,10 +564,14 @@ function renderArtifacts({ artifacts }) {
 				setSandboxPath({ path: artifactPath });
 				return;
 			}
+			if (canPreviewArtifact({ artifact })) {
+				void previewArtifactFromTile({ artifact });
+				return;
+			}
 			void downloadArtifactFromContextMenu({ artifact });
 		});
 
-		row.appendChild(createSandboxFileIcon({ doc, artifact, isDir }));
+		row.appendChild(createSandboxFilePreview({ doc, artifact, isDir }));
 
 		const name = doc.createElement("div");
 		name.className = "sandbox-file-name";
@@ -598,6 +606,67 @@ function renderArtifacts({ artifacts }) {
 		list.appendChild(row);
 	}
 	refreshLucideIcons();
+}
+
+function revokeSandboxThumbnailObjectUrls() {
+	const win = getRuntimeWindow();
+	if (!win?.URL) {
+		sandboxThumbnailObjectUrls = [];
+		return;
+	}
+	for (const objectUrl of sandboxThumbnailObjectUrls) {
+		win.URL.revokeObjectURL(objectUrl);
+	}
+	sandboxThumbnailObjectUrls = [];
+}
+
+function createSandboxFilePreview({ doc, artifact, isDir }) {
+	if (isDir || getArtifactPreviewKind({ artifact }) !== "image") {
+		return createSandboxFileIcon({ doc, artifact, isDir });
+	}
+	const bytes = Number(artifact?.bytes || 0);
+	if (Number.isFinite(bytes) && bytes > IMAGE_THUMBNAIL_MAX_BYTES) {
+		return createSandboxFileIcon({ doc, artifact, isDir });
+	}
+	const frame = doc.createElement("div");
+	frame.className = "sandbox-image-thumb is-loading";
+	const icon = doc.createElement("i");
+	icon.setAttribute("data-lucide", "image");
+	icon.className = "w-7 h-7";
+	frame.appendChild(icon);
+	loadSandboxImageThumbnail({ artifact, frame });
+	return frame;
+}
+
+function loadSandboxImageThumbnail({ artifact, frame }) {
+	void (async () => {
+		try {
+			const request = buildAgentArtifactDownloadRequest({
+				jobId: artifact?.jobId,
+				artifact,
+			});
+			const blob = await requestAgentBlob({ path: request.path });
+			const win = getRuntimeWindow();
+			const doc = win?.document;
+			if (!win?.URL || !doc || !frame.isConnected) {
+				return;
+			}
+			const objectUrl = win.URL.createObjectURL(blob);
+			sandboxThumbnailObjectUrls.push(objectUrl);
+			const image = doc.createElement("img");
+			image.alt = getArtifactFilename({ artifact }) || "Preview image";
+			image.loading = "lazy";
+			image.src = objectUrl;
+			frame.replaceChildren(image);
+			frame.classList.remove("is-loading");
+		} catch {
+			const doc = frame.ownerDocument;
+			frame.replaceChildren(
+				createSandboxFileIcon({ doc, artifact, isDir: false })
+			);
+			frame.classList.remove("is-loading");
+		}
+	})();
 }
 
 function createSandboxFileIcon({ doc, artifact, isDir }) {
@@ -667,6 +736,16 @@ function showArtifactContextMenu({ event, artifact, artifactPath, isDir }) {
 			})
 		);
 	}
+	if (!isDir && canPreviewArtifact({ artifact })) {
+		menu.appendChild(
+			createArtifactContextMenuButton({
+				label: "Preview",
+				onSelect: () => {
+					void previewArtifactFromTile({ artifact });
+				},
+			})
+		);
+	}
 	menu.appendChild(
 		createArtifactContextMenuButton({
 			label: isDir ? "Download folder" : "Download file",
@@ -696,6 +775,188 @@ function createArtifactContextMenuButton({ label, onSelect }) {
 		onSelect();
 	});
 	return button;
+}
+
+async function previewArtifactFromTile({ artifact }) {
+	showError({ message: "" });
+	try {
+		const preview = await loadAgentArtifactPreview({
+			jobId: artifact?.jobId,
+			artifact,
+		});
+		showArtifactPreview({ preview });
+	} catch (error) {
+		showError({
+			message:
+				error instanceof Error
+					? `Artifact preview failed: ${error.message}`
+					: "Artifact preview failed",
+		});
+	}
+}
+
+function closeArtifactPreview() {
+	const modal = getElement({ id: "sandbox-preview-modal" });
+	if (modal) {
+		modal.classList.add("hidden");
+	}
+	const win = getRuntimeWindow();
+	if (artifactPreviewObjectUrl.length > 0 && win?.URL) {
+		win.URL.revokeObjectURL(artifactPreviewObjectUrl);
+	}
+	artifactPreviewObjectUrl = "";
+}
+
+function ensureArtifactPreviewModal() {
+	const existing = getElement({ id: "sandbox-preview-modal" });
+	if (existing) {
+		return existing;
+	}
+	const doc = getRuntimeWindow()?.document;
+	if (!doc) {
+		return null;
+	}
+	const modal = doc.createElement("div");
+	modal.id = "sandbox-preview-modal";
+	modal.className = "sandbox-preview-modal hidden";
+	modal.setAttribute("role", "dialog");
+	modal.setAttribute("aria-modal", "true");
+
+	const panel = doc.createElement("div");
+	panel.className = "sandbox-preview-panel";
+	const header = doc.createElement("div");
+	header.className = "sandbox-preview-header";
+	const title = doc.createElement("div");
+	title.id = "sandbox-preview-title";
+	title.className = "sandbox-preview-title";
+	const closeButton = doc.createElement("button");
+	closeButton.type = "button";
+	closeButton.className = "sandbox-preview-close";
+	closeButton.title = "Close preview";
+	closeButton.setAttribute("aria-label", "Close preview");
+	const closeIcon = doc.createElement("i");
+	closeIcon.setAttribute("data-lucide", "x");
+	closeIcon.className = "w-5 h-5";
+	closeButton.appendChild(closeIcon);
+	closeButton.addEventListener("click", closeArtifactPreview);
+	header.append(title, closeButton);
+
+	const body = doc.createElement("div");
+	body.id = "sandbox-preview-body";
+	body.className = "sandbox-preview-body";
+	panel.append(header, body);
+	modal.appendChild(panel);
+	modal.addEventListener("click", (event) => {
+		if (event.target === modal) {
+			closeArtifactPreview();
+		}
+	});
+	doc.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") {
+			closeArtifactPreview();
+		}
+	});
+	doc.body.appendChild(modal);
+	return modal;
+}
+
+function showArtifactPreview({ preview }) {
+	const modal = ensureArtifactPreviewModal();
+	const doc = getRuntimeWindow()?.document;
+	const win = getRuntimeWindow();
+	if (!modal || !doc) {
+		return;
+	}
+	closeArtifactPreview();
+	const title = modal.querySelector("#sandbox-preview-title");
+	const body = modal.querySelector("#sandbox-preview-body");
+	if (!title || !body) {
+		return;
+	}
+	title.textContent = preview.filename || "Preview";
+	body.innerHTML = "";
+	if (preview.kind === "image") {
+		if (!win?.URL) {
+			throw new Error("Browser preview APIs are unavailable");
+		}
+		artifactPreviewObjectUrl = win.URL.createObjectURL(preview.blob);
+		const image = doc.createElement("img");
+		image.className = "sandbox-preview-image";
+		image.alt = preview.filename || "Preview image";
+		image.src = artifactPreviewObjectUrl;
+		body.appendChild(image);
+	} else if (preview.kind === "json") {
+		renderCodePreview({ doc, body, text: preview.text || "" });
+	} else {
+		renderTextPreview({
+			doc,
+			body,
+			filename: preview.filename || "",
+			text: preview.text || "",
+		});
+	}
+	modal.classList.remove("hidden");
+	refreshLucideIcons();
+}
+
+function renderTextPreview({ doc, body, filename, text }) {
+	const lowerFilename = filename.toLowerCase();
+	if (lowerFilename.endsWith(".md") || lowerFilename.endsWith(".markdown")) {
+		renderMarkdownPreview({ doc, body, text });
+		return;
+	}
+	renderCodePreview({ doc, body, text });
+}
+
+function renderMarkdownPreview({ doc, body, text }) {
+	const container = doc.createElement("div");
+	container.className = "sandbox-preview-markdown";
+	const lines = String(text).split(/\r?\n/);
+	let codeBlock = null;
+	for (const line of lines) {
+		if (line.trimStart().startsWith("```")) {
+			if (codeBlock) {
+				container.appendChild(codeBlock);
+				codeBlock = null;
+			} else {
+				codeBlock = doc.createElement("pre");
+			}
+			continue;
+		}
+		if (codeBlock) {
+			codeBlock.textContent += `${line}\n`;
+			continue;
+		}
+		const headingMatch = line.match(/^(#{1,3})\s+(.+)$/);
+		if (headingMatch) {
+			const heading = doc.createElement(`h${headingMatch[1].length + 1}`);
+			heading.textContent = headingMatch[2];
+			container.appendChild(heading);
+			continue;
+		}
+		const bulletMatch = line.match(/^[-*]\s+(.+)$/);
+		if (bulletMatch) {
+			const paragraph = doc.createElement("p");
+			paragraph.className = "sandbox-preview-bullet";
+			paragraph.textContent = `• ${bulletMatch[1]}`;
+			container.appendChild(paragraph);
+			continue;
+		}
+		const paragraph = doc.createElement("p");
+		paragraph.textContent = line.length > 0 ? line : " ";
+		container.appendChild(paragraph);
+	}
+	if (codeBlock) {
+		container.appendChild(codeBlock);
+	}
+	body.appendChild(container);
+}
+
+function renderCodePreview({ doc, body, text }) {
+	const pre = doc.createElement("pre");
+	pre.className = "sandbox-preview-code";
+	pre.textContent = text;
+	body.appendChild(pre);
 }
 
 async function downloadArtifactFromContextMenu({ artifact }) {
