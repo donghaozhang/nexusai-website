@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>360 Panorama Viewer</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f8b82e'/%3E%3Cpath d='M8 16a8 8 0 0 1 13.7-5.7M24 16a8 8 0 0 1-13.7 5.7' fill='none' stroke='%23050509' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+    <style>
+      :root {
+        color-scheme: dark;
+        --panel: rgba(10, 12, 18, 0.62);
+        --panel-border: rgba(255, 255, 255, 0.18);
+        --text: #f6f2e8;
+        --muted: rgba(246, 242, 232, 0.68);
+        --accent: #f8b82e;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #050509;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      #viewer {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+        cursor: grab;
+      }
+
+      #viewer:active {
+        cursor: grabbing;
+      }
+
+      .topbar {
+        position: fixed;
+        top: max(16px, env(safe-area-inset-top));
+        left: 50%;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        padding: 8px 10px;
+        color: var(--text);
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 8px;
+        backdrop-filter: blur(18px);
+        transform: translateX(-50%);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        padding: 0 6px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .mark {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 22px rgba(248, 184, 46, 0.78);
+      }
+
+      .divider {
+        width: 1px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .icon-button {
+        display: inline-grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        appearance: none;
+      }
+
+      .icon-button:hover {
+        background: rgba(248, 184, 46, 0.18);
+        border-color: rgba(248, 184, 46, 0.46);
+      }
+
+      .icon-button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .icon-button svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+
+      .icon-button[aria-pressed="true"] {
+        color: #171309;
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .loading {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        place-items: center;
+        color: var(--text);
+        background: radial-gradient(circle at center, #18111f 0%, #050509 68%);
+        transition: opacity 240ms ease, visibility 240ms ease;
+      }
+
+      .loading.is-hidden {
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      .loading-inner {
+        display: grid;
+        gap: 14px;
+        justify-items: center;
+      }
+
+      .spinner {
+        width: 42px;
+        height: 42px;
+        border: 3px solid rgba(255, 255, 255, 0.16);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 900ms linear infinite;
+      }
+
+      .loading-text {
+        min-width: 12ch;
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0;
+        text-align: center;
+      }
+
+      .error {
+        max-width: min(520px, calc(100vw - 36px));
+        padding: 18px;
+        color: var(--text);
+        text-align: center;
+        background: rgba(138, 26, 35, 0.52);
+        border: 1px solid rgba(255, 120, 120, 0.34);
+        border-radius: 8px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 560px) {
+        .topbar {
+          top: max(10px, env(safe-area-inset-top));
+          gap: 6px;
+          max-width: calc(100vw - 20px);
+          padding: 6px;
+        }
+
+        .brand {
+          max-width: 132px;
+          overflow: hidden;
+          font-size: 12px;
+          text-overflow: ellipsis;
+        }
+
+        .icon-button {
+          width: 34px;
+          height: 34px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="viewer" tabindex="0" aria-label="360 度全景查看器"></canvas>
+
+    <div class="topbar" aria-label="查看器控制">
+      <div class="brand">
+        <span class="mark" aria-hidden="true"></span>
+        <span>360 Viewer</span>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+      <button class="icon-button" id="autoRotate" type="button" title="自动旋转" aria-label="自动旋转" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12a9 9 0 0 1-15.4 6.4"></path>
+          <path d="M3 12A9 9 0 0 1 18.4 5.6"></path>
+          <path d="M3 18v-5h5"></path>
+          <path d="M21 6v5h-5"></path>
+        </svg>
+      </button>
+      <button class="icon-button" id="resetView" type="button" title="重置视角" aria-label="重置视角">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+          <path d="M3 4v6h6"></path>
+        </svg>
+      </button>
+      <button class="icon-button" id="fullscreen" type="button" title="全屏" aria-label="全屏">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+          <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+          <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
+          <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="loading" id="loading">
+      <div class="loading-inner">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="loading-text" id="loadingText">Loading panorama</div>
+      </div>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+      const PANORAMA_URL = "./assets/lakers-arena-panorama.png";
+      const canvas = document.querySelector("#viewer");
+      const loading = document.querySelector("#loading");
+      const loadingText = document.querySelector("#loadingText");
+      const autoRotateButton = document.querySelector("#autoRotate");
+      const resetButton = document.querySelector("#resetView");
+      const fullscreenButton = document.querySelector("#fullscreen");
+      const keyboardStep = THREE.MathUtils.degToRad(3);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 1100);
+      camera.position.set(0, 0, 0.1);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        preserveDrawingBuffer: true,
+        powerPreference: "high-performance"
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enablePan = false;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.35;
+      controls.rotateSpeed = -0.28;
+      controls.minDistance = 0.1;
+      controls.maxDistance = 0.1;
+      controls.minPolarAngle = Math.PI * 0.08;
+      controls.maxPolarAngle = Math.PI * 0.92;
+
+      const geometry = new THREE.SphereGeometry(500, 96, 64);
+      geometry.scale(-1, 1, 1);
+
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load(
+        PANORAMA_URL,
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+          texture.minFilter = THREE.LinearFilter;
+          texture.magFilter = THREE.LinearFilter;
+
+          const material = new THREE.MeshBasicMaterial({ map: texture });
+          const panorama = new THREE.Mesh(geometry, material);
+          scene.add(panorama);
+          loading.classList.add("is-hidden");
+        },
+        undefined,
+        () => {
+          loading.innerHTML = '<div class="error">全景图加载失败，请确认 assets/lakers-arena-panorama.png 存在。</div>';
+        }
+      );
+
+      function resetView() {
+        camera.fov = 72;
+        camera.updateProjectionMatrix();
+        controls.reset();
+        controls.target.set(0, 0, 0);
+        camera.position.set(0, 0, 0.1);
+      }
+
+      function resize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+      }
+
+      function setZoom(deltaY) {
+        camera.fov = THREE.MathUtils.clamp(camera.fov + deltaY * 0.035, 36, 92);
+        camera.updateProjectionMatrix();
+      }
+
+      function setAutoRotate(enabled) {
+        controls.autoRotate = enabled;
+        autoRotateButton.setAttribute("aria-pressed", String(controls.autoRotate));
+      }
+
+      function rotateView(deltaTheta, deltaPhi) {
+        const offset = camera.position.clone().sub(controls.target);
+        const spherical = new THREE.Spherical().setFromVector3(offset);
+        spherical.theta += deltaTheta;
+        spherical.phi = THREE.MathUtils.clamp(
+          spherical.phi + deltaPhi,
+          controls.minPolarAngle,
+          controls.maxPolarAngle
+        );
+        spherical.makeSafe();
+        camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(spherical));
+        camera.lookAt(controls.target);
+        controls.update();
+      }
+
+      autoRotateButton.addEventListener("click", () => {
+        setAutoRotate(!controls.autoRotate);
+      });
+
+      resetButton.addEventListener("click", resetView);
+
+      fullscreenButton.addEventListener("click", async () => {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      });
+
+      canvas.addEventListener(
+        "wheel",
+        (event) => {
+          event.preventDefault();
+          setZoom(event.deltaY);
+        },
+        { passive: false }
+      );
+
+      canvas.addEventListener("pointerdown", () => {
+        canvas.focus({ preventScroll: true });
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+          return;
+        }
+
+        event.preventDefault();
+        setAutoRotate(false);
+
+        if (event.key === "ArrowLeft") rotateView(keyboardStep, 0);
+        if (event.key === "ArrowRight") rotateView(-keyboardStep, 0);
+        if (event.key === "ArrowUp") rotateView(0, -keyboardStep);
+        if (event.key === "ArrowDown") rotateView(0, keyboardStep);
+      });
+
+      window.addEventListener("resize", resize);
+
+      function animate() {
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      loadingText.textContent = "Loading panorama";
+      animate();
+    </script>
+  </body>
+</html>
