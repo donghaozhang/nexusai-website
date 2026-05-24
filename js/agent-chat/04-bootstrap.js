@@ -15,19 +15,20 @@ function initAgentChatPage() {
 	const commandPreviewToggle = getElement({
 		id: "agent-command-preview-toggle",
 	});
-	if (!promptInput || !submitButton) {
-		return;
-	}
 
 	setValue({ id: "agent-token", value: readAuthToken() });
 	renderAgentSession({ session: null });
 	renderSandboxPath();
-	setCommandPreview();
-	promptInput.addEventListener("input", setCommandPreview);
+	if (promptInput) {
+		setCommandPreview();
+		promptInput.addEventListener("input", setCommandPreview);
+	}
 	if (commandPreviewToggle) {
 		commandPreviewToggle.addEventListener("click", toggleCommandPreview);
 	}
-	submitButton.addEventListener("click", submitAgentJob);
+	if (submitButton) {
+		submitButton.addEventListener("click", submitAgentJob);
+	}
 	if (newSessionButton) {
 		newSessionButton.addEventListener("click", resetAgentSession);
 	}

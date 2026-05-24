@@ -51,37 +51,6 @@
             font-size: 12px;
             color: var(--text-muted);
         }
-        .agent-chat-log {
-            min-height: 240px;
-            max-height: 420px;
-            overflow-y: auto;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 14px;
-        }
-        .agent-chat-message {
-            max-width: 88%;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 14px;
-            font-size: 14px;
-            line-height: 1.55;
-        }
-        .agent-chat-message + .agent-chat-message {
-            margin-top: 12px;
-        }
-        .agent-chat-user {
-            margin-left: auto;
-            background: var(--color-primary-light);
-        }
-        .agent-chat-assistant {
-            margin-right: auto;
-            background: var(--bg-primary);
-        }
-        .agent-chat-pending {
-            color: var(--text-muted);
-        }
         .agent-terminal-shell {
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -200,87 +169,6 @@
         .agent-uppy-dashboard .uppy-Dashboard-note,
         .agent-uppy-dashboard .uppy-Dashboard-Item-status {
             color: var(--text-muted);
-        }
-        .agent-command-preview-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        .agent-command-preview-toggle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: 1px solid var(--border-color);
-            border-radius: 999px;
-            background: var(--bg-primary);
-            color: var(--text-muted);
-            padding: 6px 10px;
-            font-size: 12px;
-            line-height: 1;
-            transition: color 0.15s var(--ease-out-quart), border-color 0.15s var(--ease-out-quart), background 0.15s var(--ease-out-quart);
-        }
-        .agent-command-preview-toggle:hover,
-        .agent-command-preview-toggle:focus-visible {
-            border-color: var(--color-primary);
-            color: var(--text-primary);
-            outline: none;
-        }
-        .agent-command-preview-toggle.hidden {
-            display: none;
-        }
-        .agent-command-preview-shell {
-            max-height: 220px;
-            overflow-x: auto;
-            overflow-y: scroll;
-            border-radius: 12px;
-            scrollbar-color: #6b7280 oklch(0.88 0.008 55);
-            scrollbar-gutter: stable;
-        }
-        .agent-command-preview-shell.is-collapsed {
-            max-height: 132px;
-        }
-        .agent-command-preview-shell.is-expanded {
-            max-height: 520px;
-        }
-        .agent-command-preview-shell::-webkit-scrollbar {
-            width: 14px;
-            height: 12px;
-        }
-        .agent-command-preview-shell::-webkit-scrollbar-track {
-            border-left: 1px solid var(--border-color);
-            background: oklch(0.88 0.008 55);
-        }
-        .agent-command-preview-shell::-webkit-scrollbar-thumb {
-            border: 2px solid transparent;
-            border-radius: 999px;
-            background: #6b7280;
-            background-clip: content-box;
-        }
-        .agent-command-preview-shell::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-            background-clip: content-box;
-        }
-        .dark .agent-command-preview-shell {
-            scrollbar-color: #71717a #27272a;
-        }
-        .dark .agent-command-preview-shell::-webkit-scrollbar-track {
-            background: #27272a;
-        }
-        .dark .agent-command-preview-shell::-webkit-scrollbar-thumb {
-            background: #71717a;
-            background-clip: content-box;
-        }
-        .dark .agent-command-preview-shell::-webkit-scrollbar-thumb:hover {
-            background: #a1a1aa;
-            background-clip: content-box;
-        }
-        .agent-command-preview {
-            min-width: 100%;
-            margin: 0;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
         }
         .sandbox-file-grid {
             display: grid;
@@ -649,13 +537,6 @@
                         </div>
                     </div>
 
-                    <div id="agent-chat-log" class="agent-chat-log mb-5">
-                        <p class="text-sm text-muted">Submitted prompts will appear here. The live Codex output is in the terminal above.</p>
-                    </div>
-
-                    <label for="agent-prompt" class="text-sm font-medium">Message</label>
-                    <textarea id="agent-prompt" class="agent-input mt-2 p-4 min-h-32" placeholder="small blue square icon on a clean white background">small blue square icon on a clean white background</textarea>
-
                     <div class="mt-5">
                         <label for="agent-upload-files" class="text-sm font-medium">Upload to sandbox</label>
                         <div id="agent-uppy-dashboard" class="agent-uppy-dashboard"></div>
@@ -675,24 +556,7 @@
                         <p class="text-xs text-muted mt-2">Leave empty to use the default test agent account configured on the license server.</p>
                     </div>
 
-                    <div class="mt-5">
-                        <div class="agent-command-preview-header mb-2">
-                            <div class="text-xs uppercase tracking-wider text-muted">Codex input</div>
-                            <button id="agent-command-preview-toggle" type="button" class="agent-command-preview-toggle hidden" aria-expanded="false">
-                                <i data-lucide="chevrons-up-down" class="w-4 h-4"></i>
-                                <span id="agent-command-preview-toggle-label">Expand</span>
-                            </button>
-                        </div>
-                        <div id="agent-command-preview-shell" class="agent-command-preview-shell">
-                            <pre id="agent-command-preview" class="cmd-code agent-command-preview p-4"></pre>
-                        </div>
-                    </div>
-
                     <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                        <button id="agent-submit" type="button" class="btn-dark px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
-                            <i data-lucide="send" class="w-4 h-4"></i>
-                            Send
-                        </button>
                         <button id="agent-refresh-artifacts" type="button" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                             Artifacts

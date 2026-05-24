@@ -52,6 +52,84 @@ test("agent-chat browser loader evaluates split parts in one scope", async () =>
 	);
 });
 
+test("agent chat initializes when terminal input is the only prompt surface", () => {
+	const listenersById = new Map();
+	const textById = new Map();
+	const valueById = new Map();
+	const createElement = ({ id }) => ({
+		id,
+		classList: {
+			toggle() {},
+		},
+		setAttribute() {},
+		addEventListener(eventName, listener) {
+			listenersById.set(`${id}:${eventName}`, listener);
+		},
+		get textContent() {
+			return textById.get(id) || "";
+		},
+		set textContent(value) {
+			textById.set(id, value);
+		},
+		get value() {
+			return valueById.get(id) || "";
+		},
+		set value(value) {
+			valueById.set(id, value);
+		},
+	});
+	const elements = new Map(
+		[
+			"agent-token",
+			"agent-session-status",
+			"agent-fs-current-path",
+			"agent-new-session",
+			"agent-terminal-connect",
+			"agent-terminal-disconnect",
+			"agent-refresh-artifacts",
+			"agent-upload-submit",
+			"agent-fs-root",
+			"agent-fs-up",
+		].map((id) => [id, createElement({ id })])
+	);
+	const document = {
+		readyState: "complete",
+		getElementById(id) {
+			return elements.get(id) || null;
+		},
+	};
+	global.document = document;
+	global.window = {
+		document,
+		PaymentAPI: {
+			getAuthToken() {
+				return "token-from-payment";
+			},
+		},
+		addEventListener() {},
+	};
+
+	try {
+		const AgentChatAPI = loadAgentChatApi();
+
+		assert.equal(typeof AgentChatAPI.buildAgentRequest, "function");
+		assert.equal(valueById.get("agent-token"), "token-from-payment");
+		assert.equal(textById.get("agent-fs-current-path"), "/tmp/qcut-output");
+		assert.equal(
+			typeof listenersById.get("agent-terminal-connect:click"),
+			"function"
+		);
+		assert.equal(
+			typeof listenersById.get("agent-refresh-artifacts:click"),
+			"function"
+		);
+		assert.equal(listenersById.has("agent-prompt:input"), false);
+		assert.equal(listenersById.has("agent-submit:click"), false);
+	} finally {
+		delete global.document;
+	}
+});
+
 test("buildAgentRequest keeps codex prompts out of the shell command", () => {
 	const AgentChatAPI = loadAgentChatApi();
 	assert.deepEqual(
