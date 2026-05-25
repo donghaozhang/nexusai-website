@@ -18,6 +18,17 @@ test("chat-agent page waits for the split script loader before module setup", ()
 	assert.match(html, /await window\.AgentChatReady/);
 });
 
+test("generate page reuses the split agent-chat loader", () => {
+	const html = readFileSync(require.resolve("../generate/index.html"), "utf8");
+	const loaderIndex = html.indexOf('<script src="../js/agent-chat.js"></script>');
+	const uppyIndex = html.indexOf('<script type="module">');
+
+	assert.ok(loaderIndex > -1);
+	assert.ok(loaderIndex < uppyIndex);
+	assert.match(html, /id="generate-command"/);
+	assert.match(html, /await window\.AgentChatReady/);
+});
+
 test("agent-chat browser loader evaluates split parts in one scope", async () => {
 	const loaderSource = readFileSync(require.resolve("./agent-chat.js"), "utf8");
 	const context = {
@@ -227,35 +238,6 @@ test("buildTerminalPromptCommand wraps prompts for visible PTY Codex runs", () =
 	);
 	assert.match(command, /find \/tmp\/qcut-input/);
 	assert.match(command, /find \/tmp\/qcut-output/);
-});
-
-test("buildInteractiveCodexInput pastes prompts into the persistent Codex session", () => {
-	const AgentChatAPI = loadAgentChatApi();
-	const input = AgentChatAPI.buildInteractiveCodexInput({
-		prompt: "Generate a small blue icon.",
-	});
-
-	assert.equal(input, "\u001b[200~Generate a small blue icon.\u001b[201~\r");
-});
-
-test("buildCommandPreviewText sanitizes and flags long Codex input", () => {
-	const AgentChatAPI = loadAgentChatApi();
-	const preview = AgentChatAPI.buildCommandPreviewText({
-		prompt: `Generate storyboard frames.\u001b[200~\n${"shot ".repeat(240)}`,
-	});
-
-	assert.match(preview, /^Interactive Codex input:\n/);
-	assert.doesNotMatch(preview, /\u001b\[200~/);
-	assert.equal(AgentChatAPI.isLongCommandPreview({ text: preview }), true);
-});
-
-test("isLongCommandPreview keeps short Codex input uncollapsed", () => {
-	const AgentChatAPI = loadAgentChatApi();
-	const preview = AgentChatAPI.buildCommandPreviewText({
-		prompt: "Generate a small blue icon.",
-	});
-
-	assert.equal(AgentChatAPI.isLongCommandPreview({ text: preview }), false);
 });
 
 test("findCodexLastMessageArtifact selects the Codex final response", () => {

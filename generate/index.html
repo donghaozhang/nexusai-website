@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCut Generate Studio</title>
+    <meta name="description" content="Generate QCut images, storyboards, and movie assets in a Daytona-backed Codex terminal.">
+    <link rel="icon" type="image/png" href="../assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.css">
+    <link rel="stylesheet" href="https://releases.transloadit.com/uppy/v5.2.1/uppy.min.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+    <style>
+        .mono { font-family: "JetBrains Mono", monospace; }
+        .status-chip {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .generate-input,
+        .generate-select {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: border-color 0.2s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart);
+        }
+        .generate-input:focus,
+        .generate-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px oklch(0.62 0.17 25 / 0.14);
+        }
+        .generate-command {
+            min-height: 116px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+        }
+        .agent-terminal-shell {
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #0f0f12;
+        }
+        .agent-terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgb(255 255 255 / 0.1);
+            color: rgb(255 255 255 / 0.72);
+        }
+        .agent-terminal-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        #agent-terminal-status {
+            display: inline-flex;
+            min-height: 30px;
+            align-items: center;
+            border: 1px solid rgb(255 255 255 / 0.22);
+            border-radius: 999px;
+            background: rgb(255 255 255 / 0.08);
+            color: #f4f4f5;
+            padding: 4px 9px;
+        }
+        #agent-terminal-status[data-status="connected"] {
+            border-color: rgb(74 222 128 / 0.48);
+            background: rgb(34 197 94 / 0.18);
+            color: #bbf7d0;
+        }
+        #agent-terminal-status[data-status="connecting"] {
+            border-color: rgb(251 191 36 / 0.5);
+            background: rgb(251 191 36 / 0.16);
+            color: #fde68a;
+        }
+        .agent-terminal-button {
+            border-color: rgb(255 255 255 / 0.4);
+            background: rgb(255 255 255 / 0.1);
+            color: #ffffff;
+        }
+        .agent-terminal-button:hover,
+        .agent-terminal-button:focus-visible {
+            border-color: rgb(255 255 255 / 0.76);
+            background: rgb(255 255 255 / 0.18);
+            color: #ffffff;
+            outline: none;
+        }
+        #agent-terminal {
+            min-height: 460px;
+            height: 460px;
+        }
+        #agent-terminal,
+        #agent-terminal * {
+            font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace !important;
+            font-kerning: none;
+            font-variant-ligatures: none;
+            letter-spacing: 0 !important;
+        }
+        #agent-terminal .xterm {
+            height: 100%;
+            padding: 10px 12px 12px;
+        }
+        #agent-terminal .xterm-screen {
+            height: 100%;
+        }
+        #agent-terminal .xterm-viewport {
+            background-color: #0f0f12 !important;
+            scrollbar-color: rgb(255 255 255 / 0.34) transparent;
+        }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar { width: 11px; }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar-track { background: rgb(255 255 255 / 0.05); }
+        #agent-terminal .xterm-viewport::-webkit-scrollbar-thumb {
+            background: rgb(255 255 255 / 0.32);
+            border-radius: 999px;
+            border: 2px solid #0f0f12;
+        }
+        .terminal-fallback {
+            color: rgb(255 255 255 / 0.72);
+            padding: 16px;
+            white-space: pre-wrap;
+        }
+        .agent-uppy-dashboard .uppy-Dashboard-inner {
+            width: 100% !important;
+            min-height: 168px !important;
+            border-radius: 12px !important;
+            border-color: var(--border-color) !important;
+            background: var(--bg-secondary) !important;
+        }
+        .agent-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+        }
+        .agent-file-input {
+            min-height: 46px;
+            padding: 10px 12px;
+        }
+        .sandbox-file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+            gap: 14px;
+        }
+        .sandbox-file-tile {
+            position: relative;
+            min-height: 132px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            padding: 12px 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="../index.html" class="flex items-center space-x-2">
+                        <img src="../assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="../index.html#features" class="nav-link text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="../releases.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="../cli.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">CLI</a>
+                        <a href="./" class="nav-link text-sm font-medium" style="color: var(--text-primary);">Generate</a>
+                        <a href="../chat-agent.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Chat Agent</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="generate-theme-toggle" type="button" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Light theme</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Dark theme</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="hidden sm:inline-flex btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 pt-24 pb-16">
+        <section class="mb-8">
+            <div class="inline-flex items-center gap-2 status-chip mb-4">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                Daytona-backed generation workspace
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-semibold leading-tight mb-4">QCut Generate Studio</h1>
+            <p class="text-lg text-muted max-w-3xl">
+                Build QCut CLI generation commands, run them in the persistent Codex terminal, upload references, and download everything written under <span class="mono text-sm">/tmp/qcut-output</span>.
+            </p>
+        </section>
+
+        <section class="grid gap-8 lg:grid-cols-[360px_minmax(0,1fr)]">
+            <aside class="card rounded-2xl p-6 self-start">
+                <div class="flex items-start justify-between gap-4 mb-5">
+                    <div>
+                        <h2 class="text-xl font-semibold">Generate command</h2>
+                        <p class="text-sm text-muted mt-1">Prepare a CLI command, then paste it into the terminal.</p>
+                    </div>
+                    <span class="status-chip" id="agent-job-status">idle</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="generate-kind" class="text-sm font-medium">Mode</label>
+                        <select id="generate-kind" class="generate-select mt-2 px-4 py-3 text-sm">
+                            <option value="image">Image</option>
+                            <option value="portraits">Flow portraits</option>
+                            <option value="storyboard">Flow storyboard</option>
+                            <option value="novel2movie">Novel to movie preview</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="generate-prompt" class="text-sm font-medium">Prompt or input path</label>
+                        <textarea id="generate-prompt" class="generate-input mt-2 px-4 py-3 text-sm" rows="5">cinematic portrait of an Asian K-pop supermodel, soft studio light, editorial fashion</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label for="generate-model" class="text-sm font-medium">Image model</label>
+                            <input id="generate-model" class="generate-input mt-2 px-3 py-3 mono text-xs" value="gpt_image_2_ima">
+                        </div>
+                        <div>
+                            <label for="generate-limit" class="text-sm font-medium">Limit</label>
+                            <input id="generate-limit" class="generate-input mt-2 px-3 py-3 mono text-xs" value="5">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium mb-2">Terminal command</div>
+                        <pre id="generate-command" class="generate-command mono text-xs p-3"></pre>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <button id="generate-copy-command" type="button" class="btn-dark px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            Copy command
+                        </button>
+                        <button id="agent-terminal-connect" type="button" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="terminal" class="w-4 h-4"></i>
+                            Connect terminal
+                        </button>
+                    </div>
+                    <p id="generate-copy-status" class="text-xs text-muted">Use the terminal directly after connecting.</p>
+                </div>
+            </aside>
+
+            <section class="space-y-6">
+                <div class="card rounded-2xl p-6">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
+                        <div>
+                            <div class="text-xs uppercase tracking-wider text-muted">Session</div>
+                            <div id="agent-session-status" class="mono text-xs mt-1 break-all">none</div>
+                        </div>
+                        <button id="agent-new-session" type="button" class="btn-outline px-4 py-2 rounded-full text-xs font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            New
+                        </button>
+                    </div>
+
+                    <div class="agent-terminal-shell">
+                        <div class="agent-terminal-header">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="terminal" class="w-4 h-4"></i>
+                                <span class="mono text-xs">Daytona PTY</span>
+                            </div>
+                            <div class="agent-terminal-controls">
+                                <span id="agent-terminal-status" class="mono text-xs" data-status="disconnected" aria-live="polite">disconnected</span>
+                                <button id="agent-terminal-disconnect" type="button" class="btn-outline agent-terminal-button px-3 py-1.5 rounded-full text-xs font-medium">Disconnect</button>
+                            </div>
+                        </div>
+                        <div id="agent-terminal" aria-label="QCut generation terminal">
+                            <pre id="agent-terminal-fallback" class="terminal-fallback">Connect to open a real terminal.</pre>
+                        </div>
+                    </div>
+
+                    <div id="agent-error" class="hidden mt-4 p-3 rounded-xl text-sm" style="background: var(--color-error-light); color: var(--color-error);"></div>
+                </div>
+
+                <div class="card rounded-2xl p-6">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                        <div class="grow">
+                            <label for="agent-upload-files" class="text-sm font-medium">Upload references</label>
+                            <div id="agent-uppy-dashboard" class="agent-uppy-dashboard mt-2"></div>
+                            <div id="agent-upload-fallback" class="mt-2 flex flex-col gap-3 sm:flex-row">
+                                <input id="agent-upload-files" type="file" multiple class="agent-input agent-file-input text-sm">
+                            </div>
+                            <p id="agent-upload-status" class="text-xs text-muted mt-2">Files upload into the current sandbox folder.</p>
+                        </div>
+                        <button id="agent-upload-submit" type="button" class="btn-outline px-5 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                            Upload selected files
+                        </button>
+                    </div>
+                    <div class="hidden">
+                        <label for="agent-token">QCut auth token override</label>
+                        <input id="agent-token" type="password">
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="mt-8">
+            <div class="card rounded-2xl p-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold">Generated files</h2>
+                        <p class="text-sm text-muted mt-1">
+                            Browse and download the active Daytona sandbox filesystem.
+                        </p>
+                    </div>
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <div class="text-xs uppercase tracking-wider text-muted">Current path</div>
+                            <div id="agent-fs-current-path" class="mono text-xs mt-1 break-all">/tmp/qcut-output</div>
+                            <div id="agent-fs-breadcrumb" class="mt-2 flex flex-wrap items-center gap-1"></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="agent-refresh-artifacts" type="button" class="btn-outline px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                Refresh
+                            </button>
+                            <button id="agent-fs-root" type="button" class="btn-outline px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                <i data-lucide="hard-drive" class="w-3.5 h-3.5"></i>
+                                Root
+                            </button>
+                            <button id="agent-fs-up" type="button" class="btn-outline px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                <i data-lucide="corner-left-up" class="w-3.5 h-3.5"></i>
+                                Up
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="agent-artifacts" class="sandbox-file-grid mt-5">
+                    <p class="text-sm text-muted">Generated files will appear here.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t" style="border-color: var(--border-color);">
+        <div class="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <img src="../assets/qcut-logo.png" alt="QCut" class="h-6 w-6">
+                <span class="text-sm text-muted">QCut Generate Studio</span>
+            </div>
+            <a href="https://github.com/donghaozhang/qcut" target="_blank" class="text-sm text-muted hover:text-primary transition-colors">GitHub</a>
+        </div>
+    </footer>
+
+    <script src="../theme.js"></script>
+    <script src="../js/payment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
+    <script src="../js/agent-chat.js"></script>
+    <script>
+        function quoteShell({ value }) {
+            return `'${String(value).replace(/'/g, `'\\''`)}'`;
+        }
+        function buildGenerateCommand() {
+            const kind = document.getElementById("generate-kind")?.value || "image";
+            const prompt = document.getElementById("generate-prompt")?.value?.trim() || "cinematic image";
+            const model = document.getElementById("generate-model")?.value?.trim() || "gpt_image_2_ima";
+            const limit = document.getElementById("generate-limit")?.value?.trim() || "5";
+            if (kind === "portraits") {
+                return `qcut flow portraits --text ${quoteShell({ value: prompt })} --max-characters ${limit} --views front --image-model ${quoteShell({ value: model })} -o /tmp/qcut-output/portraits --json`;
+            }
+            if (kind === "storyboard") {
+                return `qcut flow storyboard --script ${quoteShell({ value: prompt })} --image-model ${quoteShell({ value: model })} --style cinematic -o /tmp/qcut-output/storyboard --json`;
+            }
+            if (kind === "novel2movie") {
+                return `qcut flow novel2movie --novel ${quoteShell({ value: prompt })} --max-images ${limit} --storyboard-only -o /tmp/qcut-output --json`;
+            }
+            return `qcut gen image -t ${quoteShell({ value: prompt })} --model ${quoteShell({ value: model })} -o /tmp/qcut-output --json`;
+        }
+        function renderGenerateCommand() {
+            const command = buildGenerateCommand();
+            const target = document.getElementById("generate-command");
+            if (target) target.textContent = command;
+        }
+        async function copyGenerateCommand() {
+            const status = document.getElementById("generate-copy-status");
+            try {
+                await navigator.clipboard.writeText(buildGenerateCommand());
+                if (status) status.textContent = "Command copied. Paste it into the connected terminal.";
+            } catch {
+                if (status) status.textContent = "Copy failed. Select the command text manually.";
+            }
+        }
+        for (const id of ["generate-kind", "generate-prompt", "generate-model", "generate-limit"]) {
+            document.getElementById(id)?.addEventListener("input", renderGenerateCommand);
+            document.getElementById(id)?.addEventListener("change", renderGenerateCommand);
+        }
+        document.getElementById("generate-copy-command")?.addEventListener("click", () => {
+            void copyGenerateCommand();
+        });
+        document.getElementById("generate-theme-toggle")?.addEventListener("click", () => {
+            toggleTheme();
+        });
+        renderGenerateCommand();
+    </script>
+    <script type="module">
+        try {
+            const { Uppy, Dashboard } = await import("https://releases.transloadit.com/uppy/v5.2.1/uppy.min.mjs");
+            await window.AgentChatReady;
+            window.AgentChatAPI?.initUppyUploader({ Uppy, Dashboard });
+        } catch (error) {
+            console.warn("Uppy uploader failed to load; native file input remains available.", error);
+        }
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

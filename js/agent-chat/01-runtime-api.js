@@ -11,7 +11,6 @@ const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const AGENT_PTY_TOKEN_MAX_WAIT_MS = 6 * 60 * 1000;
 const AGENT_PTY_TOKEN_DEFAULT_RETRY_MS = 3000;
 const DEFAULT_SANDBOX_ARTIFACT_PATH = "/tmp/qcut-output";
-const COMMAND_PREVIEW_COLLAPSE_THRESHOLD = 900;
 const TEXT_PREVIEW_MAX_BYTES = 1024 * 1024;
 const IMAGE_THUMBNAIL_MAX_BYTES = 10 * 1024 * 1024;
 const IMAGE_PREVIEW_EXTENSIONS = new Set([
@@ -31,8 +30,6 @@ const TEXT_PREVIEW_EXTENSIONS = new Set([
 	"yaml",
 	"yml",
 ]);
-const BRACKETED_PASTE_START = "\u001b[200~";
-const BRACKETED_PASTE_END = "\u001b[201~";
 const CODEX_AGENT_SYSTEM_PROMPT = [
 	"You are running inside QCut's Daytona CLI image.",
 	"The QCut native CLI skill is available at /home/qcut/qcut/.claude/skills/native-cli/SKILL.md.",
@@ -64,7 +61,6 @@ let uppyUploader = null;
 let artifactContextMenu = null;
 let terminalStartupBuffer = "";
 let terminalUpdatePromptSkipped = false;
-let commandPreviewExpanded = false;
 let artifactPreviewObjectUrl = "";
 let sandboxThumbnailObjectUrls = [];
 
@@ -457,22 +453,6 @@ function buildTerminalPromptCommand({ prompt, messages, marker }) {
 			`find /tmp/qcut-output -maxdepth 1 -type f -printf '%f (%s bytes)\\n' 2>/dev/null | sort`,
 		].join("\n") + "\n"
 	);
-}
-
-function buildInteractiveCodexInput({ prompt }) {
-	const currentPrompt =
-		typeof prompt === "string" && prompt.trim().length > 0
-			? prompt.trim()
-			: "Summarize the current QCut agent status.";
-	return `${BRACKETED_PASTE_START}${sanitizeTerminalPaste({
-		text: currentPrompt,
-	})}${BRACKETED_PASTE_END}\r`;
-}
-
-function sanitizeTerminalPaste({ text }) {
-	return String(text)
-		.replaceAll(BRACKETED_PASTE_START, "")
-		.replaceAll(BRACKETED_PASTE_END, "");
 }
 
 function buildCodexChatPrompt({ messages, prompt }) {

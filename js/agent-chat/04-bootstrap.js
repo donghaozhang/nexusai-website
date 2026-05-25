@@ -1,6 +1,4 @@
 function initAgentChatPage() {
-	const promptInput = getElement({ id: "agent-prompt" });
-	const submitButton = getElement({ id: "agent-submit" });
 	const newSessionButton = getElement({ id: "agent-new-session" });
 	const terminalConnectButton = getElement({ id: "agent-terminal-connect" });
 	const terminalDisconnectButton = getElement({
@@ -12,23 +10,10 @@ function initAgentChatPage() {
 	const uploadFilesButton = getElement({ id: "agent-upload-submit" });
 	const fsRootButton = getElement({ id: "agent-fs-root" });
 	const fsUpButton = getElement({ id: "agent-fs-up" });
-	const commandPreviewToggle = getElement({
-		id: "agent-command-preview-toggle",
-	});
 
 	setValue({ id: "agent-token", value: readAuthToken() });
 	renderAgentSession({ session: null });
 	renderSandboxPath();
-	if (promptInput) {
-		setCommandPreview();
-		promptInput.addEventListener("input", setCommandPreview);
-	}
-	if (commandPreviewToggle) {
-		commandPreviewToggle.addEventListener("click", toggleCommandPreview);
-	}
-	if (submitButton) {
-		submitButton.addEventListener("click", submitAgentJob);
-	}
 	if (newSessionButton) {
 		newSessionButton.addEventListener("click", resetAgentSession);
 	}
@@ -78,11 +63,9 @@ const AgentChatAPI = {
 	buildAgentSessionFilesystemDownloadPath,
 	buildAgentSessionFileDownloadPath,
 	buildAgentSessionArtifactDownloadPath,
-	buildCommandPreviewText,
 	buildAgentRequest,
 	buildCodexChatPrompt,
 	buildCodexCommand,
-	buildInteractiveCodexInput,
 	buildTerminalPromptCommand,
 	buildStandalonePreviewHtml,
 	CODEX_AGENT_COMMAND,
@@ -112,7 +95,6 @@ const AgentChatAPI = {
 	getLatestCodexAgentMessage,
 	getSandboxParentPath,
 	initUppyUploader,
-	isLongCommandPreview,
 	isTerminalStatus,
 	normalizeSandboxPath,
 	extractUppyUploadFiles,
