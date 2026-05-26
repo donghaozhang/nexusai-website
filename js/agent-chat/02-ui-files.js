@@ -74,6 +74,7 @@ async function resetAgentSession() {
 	showError({ message: "" });
 	disconnectAgentTerminal();
 	const sessionId = readStoredAgentSessionId();
+	activeTerminalSessionId = "";
 	setDisabled({ id: "agent-new-session", disabled: true });
 	try {
 		if (sessionId.length > 0) {

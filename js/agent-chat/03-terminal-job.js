@@ -517,7 +517,8 @@ function shouldCreateFreshTerminalSession({ error }) {
 	const normalized = message.toLowerCase();
 	return (
 		normalized.includes("session_not_active") ||
-		normalized.includes("session not active")
+		normalized.includes("session not active") ||
+		normalized.includes("session_not_found")
 	);
 }
 
