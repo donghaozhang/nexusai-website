@@ -13,13 +13,7 @@ const AGENT_PTY_TOKEN_DEFAULT_RETRY_MS = 3000;
 const DEFAULT_SANDBOX_ARTIFACT_PATH = "/tmp/qcut-output";
 const TEXT_PREVIEW_MAX_BYTES = 1024 * 1024;
 const IMAGE_THUMBNAIL_MAX_BYTES = 10 * 1024 * 1024;
-const IMAGE_PREVIEW_EXTENSIONS = new Set([
-	"gif",
-	"jpeg",
-	"jpg",
-	"png",
-	"webp",
-]);
+const IMAGE_PREVIEW_EXTENSIONS = new Set(["gif", "jpeg", "jpg", "png", "webp"]);
 const TEXT_PREVIEW_EXTENSIONS = new Set([
 	"csv",
 	"json",
@@ -61,6 +55,18 @@ let uppyUploader = null;
 let artifactContextMenu = null;
 let terminalStartupBuffer = "";
 let terminalUpdatePromptSkipped = false;
+let terminalSocketSequence = 0;
+let terminalInputSequence = 0;
+let terminalInputAckTimeoutId = null;
+let terminalLastAckedInputId = 0;
+let terminalDebugState = {
+	socketId: 0,
+	socketState: "disconnected",
+	lastInput: "none",
+	lastAck: "none",
+	lastOutput: "none",
+	lastError: "",
+};
 let artifactPreviewObjectUrl = "";
 let sandboxThumbnailObjectUrls = [];
 
@@ -778,7 +784,8 @@ function buildAgentArtifactDownloadRequest({ jobId, artifact }) {
 }
 
 function getArtifactExtension({ artifact }) {
-	const filename = getArtifactFilename({ artifact }) || artifact?.storagePath || "";
+	const filename =
+		getArtifactFilename({ artifact }) || artifact?.storagePath || "";
 	const dotIndex = filename.lastIndexOf(".");
 	if (dotIndex < 0 || dotIndex === filename.length - 1) {
 		return "";
@@ -885,7 +892,10 @@ async function loadAgentArtifactPreview({ jobId, artifact }) {
 	if (previewKind === "text" || previewKind === "json") {
 		assertTextPreviewSize({ artifact });
 	}
-	const downloadRequest = buildAgentArtifactDownloadRequest({ jobId, artifact });
+	const downloadRequest = buildAgentArtifactDownloadRequest({
+		jobId,
+		artifact,
+	});
 	const blob = await requestAgentBlob({ path: downloadRequest.path });
 	if (previewKind === "image") {
 		return {
@@ -952,7 +962,10 @@ async function openAgentArtifactPreviewInNewTab({
 }
 
 async function downloadAgentArtifact({ jobId, artifact }) {
-	const downloadRequest = buildAgentArtifactDownloadRequest({ jobId, artifact });
+	const downloadRequest = buildAgentArtifactDownloadRequest({
+		jobId,
+		artifact,
+	});
 	const blob = await requestAgentBlob({
 		path: downloadRequest.path,
 	});

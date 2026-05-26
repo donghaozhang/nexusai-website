@@ -531,6 +531,7 @@
                             <div class="agent-terminal-controls">
                                 <span id="agent-terminal-status" class="mono text-xs" data-status="disconnected" aria-live="polite">disconnected</span>
                                 <button id="agent-terminal-connect" type="button" class="btn-outline agent-terminal-button px-3 py-1.5 rounded-full text-xs font-medium">Connect</button>
+                                <button id="agent-terminal-reconnect" type="button" class="btn-outline agent-terminal-button px-3 py-1.5 rounded-full text-xs font-medium">Reconnect</button>
                                 <button id="agent-terminal-disconnect" type="button" class="btn-outline agent-terminal-button px-3 py-1.5 rounded-full text-xs font-medium">Disconnect</button>
                             </div>
                         </div>
@@ -538,6 +539,7 @@
                             <pre id="agent-terminal-fallback" class="terminal-fallback">Connect to open a real terminal.</pre>
                         </div>
                     </div>
+                    <p id="agent-terminal-debug" class="mono text-xs text-muted -mt-3 mb-5" aria-live="polite">socket #0 disconnected · input none · output none</p>
 
                     <div class="mt-5">
                         <label for="agent-upload-files" class="text-sm font-medium">Upload to sandbox</label>

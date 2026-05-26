@@ -1,6 +1,9 @@
 function initAgentChatPage() {
 	const newSessionButton = getElement({ id: "agent-new-session" });
 	const terminalConnectButton = getElement({ id: "agent-terminal-connect" });
+	const terminalReconnectButton = getElement({
+		id: "agent-terminal-reconnect",
+	});
 	const terminalDisconnectButton = getElement({
 		id: "agent-terminal-disconnect",
 	});
@@ -25,6 +28,18 @@ function initAgentChatPage() {
 						error instanceof Error
 							? `Terminal connect failed: ${error.message}`
 							: "Terminal connect failed",
+				});
+			});
+		});
+	}
+	if (terminalReconnectButton) {
+		terminalReconnectButton.addEventListener("click", () => {
+			void reconnectAgentTerminal().catch((error) => {
+				showError({
+					message:
+						error instanceof Error
+							? `Terminal reconnect failed: ${error.message}`
+							: "Terminal reconnect failed",
 				});
 			});
 		});
@@ -99,6 +114,7 @@ const AgentChatAPI = {
 	normalizeSandboxPath,
 	extractUppyUploadFiles,
 	readStoredAgentSessionId,
+	reconnectAgentTerminal,
 	saveStoredAgentSessionId,
 	uploadAgentSessionFiles,
 };

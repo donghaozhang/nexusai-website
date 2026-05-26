@@ -48,6 +48,159 @@ function getTextDecoder() {
 	);
 }
 
+function getTextEncoder() {
+	return (
+		getRuntimeWindow()?.TextEncoder || getRuntimeGlobal()?.TextEncoder || null
+	);
+}
+
+function getByteLength({ text }) {
+	if (typeof text !== "string") {
+		return 0;
+	}
+	const Encoder = getTextEncoder();
+	if (!Encoder) {
+		return text.length;
+	}
+	return new Encoder().encode(text).byteLength;
+}
+
+function getReadyStateLabel({ socket }) {
+	if (!socket) {
+		return "none";
+	}
+	if (socket.readyState === 0) {
+		return "connecting";
+	}
+	if (socket.readyState === 1) {
+		return "open";
+	}
+	if (socket.readyState === 2) {
+		return "closing";
+	}
+	return "closed";
+}
+
+function startsWithJsonObjectMessage({ text }) {
+	for (const char of String(text || "")) {
+		if (char === "{") {
+			return true;
+		}
+		if (char !== " " && char !== "\n" && char !== "\r" && char !== "\t") {
+			return false;
+		}
+	}
+	return false;
+}
+
+function parseTerminalServerControlMessage({ text }) {
+	if (!startsWithJsonObjectMessage({ text })) {
+		return null;
+	}
+	let value = null;
+	try {
+		value = JSON.parse(text);
+	} catch {
+		return null;
+	}
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		return null;
+	}
+	if (
+		value.kind !== "pty_input_ack" &&
+		value.kind !== "pty_input_error" &&
+		value.kind !== "pty_input_timeout"
+	) {
+		return null;
+	}
+	return value;
+}
+
+function formatTerminalDebugTime() {
+	try {
+		return new Date().toLocaleTimeString();
+	} catch {
+		return "";
+	}
+}
+
+function updateTerminalDebug({ patch }) {
+	terminalDebugState = { ...terminalDebugState, ...patch };
+	const parts = [
+		`socket #${terminalDebugState.socketId} ${terminalDebugState.socketState}`,
+		`input ${terminalDebugState.lastInput}`,
+		`ack ${terminalDebugState.lastAck}`,
+		`output ${terminalDebugState.lastOutput}`,
+	];
+	if (terminalDebugState.lastError) {
+		parts.push(`error ${terminalDebugState.lastError}`);
+	}
+	setText({ id: "agent-terminal-debug", text: parts.join(" · ") });
+}
+
+function clearTerminalInputAckWatch() {
+	const win = getRuntimeWindow();
+	if (!win || terminalInputAckTimeoutId === null) {
+		return;
+	}
+	win.clearTimeout(terminalInputAckTimeoutId);
+	terminalInputAckTimeoutId = null;
+}
+
+function scheduleTerminalInputAckWatch({ inputId }) {
+	const win = getRuntimeWindow();
+	clearTerminalInputAckWatch();
+	if (!win || typeof win.setTimeout !== "function") {
+		return;
+	}
+	terminalInputAckTimeoutId = win.setTimeout(() => {
+		terminalInputAckTimeoutId = null;
+		if (
+			terminalLastAckedInputId >= inputId ||
+			terminalSocket?.readyState !== 1
+		) {
+			return;
+		}
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastError: `no relay ack for input #${inputId}; use Reconnect`,
+			},
+		});
+	}, 7000);
+}
+
+function handleTerminalServerControlMessage({ message }) {
+	const messageIndex = Number(message.messageIndex || 0);
+	const bytes = Number(message.bytes || 0);
+	const elapsedMs = Number(message.elapsedMs || 0);
+	if (messageIndex > terminalLastAckedInputId) {
+		terminalLastAckedInputId = messageIndex;
+	}
+	if (terminalLastAckedInputId >= terminalInputSequence) {
+		clearTerminalInputAckWatch();
+	}
+	const suffix = elapsedMs > 0 ? ` in ${elapsedMs}ms` : "";
+	if (message.kind === "pty_input_ack") {
+		updateTerminalDebug({
+			patch: {
+				lastAck: `#${messageIndex} ${bytes} bytes${suffix} at ${formatTerminalDebugTime()}`,
+				lastError: "",
+			},
+		});
+		return;
+	}
+	updateTerminalDebug({
+		patch: {
+			lastAck: `#${messageIndex} ${message.kind} at ${formatTerminalDebugTime()}`,
+			lastError:
+				typeof message.error === "string" && message.error.length > 0
+					? message.error
+					: message.kind,
+		},
+	});
+}
+
 function setTerminalStatus({ text }) {
 	const status = String(text || "disconnected").toLowerCase();
 	const element = getElement({ id: "agent-terminal-status" });
@@ -185,7 +338,9 @@ function ensureTerminalRenderer() {
 	scheduleTerminalFit();
 	bindTerminalResizeListener();
 	fitTerminalAfterFontsLoad();
-	terminalInstance.onData((data) => sendTerminalInput({ text: data }));
+	terminalInstance.onData((data) => {
+		sendTerminalInput({ text: data, source: "xterm" });
+	});
 	return terminalInstance;
 }
 
@@ -202,6 +357,16 @@ function writeTerminal({ text }) {
 }
 
 function handleTerminalOutput({ text }) {
+	const controlMessage = parseTerminalServerControlMessage({ text });
+	if (controlMessage) {
+		handleTerminalServerControlMessage({ message: controlMessage });
+		return;
+	}
+	updateTerminalDebug({
+		patch: {
+			lastOutput: `${getByteLength({ text })} bytes at ${formatTerminalDebugTime()}`,
+		},
+	});
 	writeTerminal({ text });
 	maybeSkipCodexUpdatePrompt({ text });
 }
@@ -216,7 +381,7 @@ function maybeSkipCodexUpdatePrompt({ text }) {
 		terminalStartupBuffer.includes("Press enter to continue")
 	) {
 		terminalUpdatePromptSkipped = true;
-		sendTerminalInput({ text: "\r" });
+		sendTerminalInput({ text: "\r", source: "auto-update-skip" });
 	}
 }
 
@@ -238,20 +403,71 @@ function resetTerminalOutput({ message }) {
 
 function sendTerminalResize() {
 	if (!terminalSocket || terminalSocket.readyState !== 1) {
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastInput: `resize blocked at ${formatTerminalDebugTime()}`,
+			},
+		});
 		return;
 	}
 	fitTerminalNow();
 	const cols = Number(terminalInstance?.cols || 100);
 	const rows = Number(terminalInstance?.rows || 30);
-	terminalSocket.send(JSON.stringify({ kind: "resize", cols, rows }));
+	try {
+		terminalSocket.send(JSON.stringify({ kind: "resize", cols, rows }));
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastInput: `resize ${cols}x${rows} at ${formatTerminalDebugTime()}`,
+				lastError: "",
+			},
+		});
+	} catch (error) {
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastInput: `resize failed at ${formatTerminalDebugTime()}`,
+				lastError: error instanceof Error ? error.message : String(error),
+			},
+		});
+	}
 }
 
-function sendTerminalInput({ text }) {
+function sendTerminalInput({ text, source = "unknown" }) {
+	const bytes = getByteLength({ text });
+	terminalInputSequence += 1;
+	const inputId = terminalInputSequence;
 	if (!terminalSocket || terminalSocket.readyState !== 1) {
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastInput: `#${inputId} blocked ${bytes} bytes from ${source} at ${formatTerminalDebugTime()}`,
+			},
+		});
 		return false;
 	}
-	terminalSocket.send(text);
-	return true;
+	try {
+		terminalSocket.send(text);
+		scheduleTerminalInputAckWatch({ inputId });
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastInput: `#${inputId} sent ${bytes} bytes from ${source} at ${formatTerminalDebugTime()}`,
+				lastError: "",
+			},
+		});
+		return true;
+	} catch (error) {
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastInput: `#${inputId} failed ${bytes} bytes from ${source} at ${formatTerminalDebugTime()}`,
+				lastError: error instanceof Error ? error.message : String(error),
+			},
+		});
+		return false;
+	}
 }
 
 function waitForTerminalSocketOpen({ socket }) {
@@ -296,8 +512,49 @@ function waitForTerminalSocketOpen({ socket }) {
 	});
 }
 
+function shouldCreateFreshTerminalSession({ error }) {
+	const message = error instanceof Error ? error.message : String(error || "");
+	const normalized = message.toLowerCase();
+	return (
+		normalized.includes("session_not_active") ||
+		normalized.includes("session not active")
+	);
+}
+
+async function createTerminalConnectionPayload() {
+	const storedSessionId = activeTerminalSessionId || readStoredAgentSessionId();
+	if (storedSessionId.length > 0) {
+		try {
+			const payload = await createAgentPtyToken({ sessionId: storedSessionId });
+			activeTerminalSessionId = storedSessionId;
+			renderAgentSession({
+				session: { id: storedSessionId, status: "active" },
+			});
+			return payload;
+		} catch (error) {
+			if (!shouldCreateFreshTerminalSession({ error })) {
+				throw error;
+			}
+			clearStoredAgentSessionId();
+			activeTerminalSessionId = "";
+			renderAgentSession({ session: null });
+		}
+	}
+	const session = await ensureAgentSession();
+	activeTerminalSessionId = session?.id || "";
+	return createAgentPtyToken({
+		sessionId: activeTerminalSessionId,
+	});
+}
+
 async function connectAgentTerminal() {
 	if (terminalSocket?.readyState === 1) {
+		updateTerminalDebug({
+			patch: {
+				socketState: getReadyStateLabel({ socket: terminalSocket }),
+				lastError: "",
+			},
+		});
 		return terminalSocket;
 	}
 	if (terminalSocket?.readyState === 0) {
@@ -316,19 +573,34 @@ async function connectAgentTerminal() {
 	if (token.trim().length > 0) {
 		saveAuthToken({ token });
 	}
-	const session = await ensureAgentSession();
-	activeTerminalSessionId = session?.id || "";
-	const payload = await createAgentPtyToken({
-		sessionId: activeTerminalSessionId,
-	});
+	const payload = await createTerminalConnectionPayload();
 	ensureTerminalRenderer();
 	resetTerminalOutput({ message: "Connecting to Daytona Codex...\r\n" });
 	const socket = new WebSocketCtor(payload.ws_url);
+	terminalSocketSequence += 1;
+	const socketId = terminalSocketSequence;
 	terminalSocket = socket;
+	updateTerminalDebug({
+		patch: {
+			socketId,
+			socketState: "connecting",
+			lastInput: "none",
+			lastAck: "none",
+			lastOutput: "none",
+			lastError: "",
+		},
+	});
 	socket.binaryType = "arraybuffer";
 	socket.addEventListener("open", () => {
 		setTerminalStatus({ text: "connected" });
 		setText({ id: "agent-job-status", text: "terminal" });
+		updateTerminalDebug({
+			patch: {
+				socketId,
+				socketState: "open",
+				lastError: "",
+			},
+		});
 		sendTerminalResize();
 		startTerminalArtifactPoll();
 	});
@@ -348,7 +620,15 @@ async function connectAgentTerminal() {
 			return;
 		}
 		terminalSocket = null;
+		clearTerminalInputAckWatch();
 		setTerminalStatus({ text: "disconnected" });
+		updateTerminalDebug({
+			patch: {
+				socketId,
+				socketState: "closed",
+				lastInput: `closed at ${formatTerminalDebugTime()}`,
+			},
+		});
 		clearTerminalArtifactPoll();
 	});
 	socket.addEventListener("error", () => {
@@ -356,19 +636,89 @@ async function connectAgentTerminal() {
 			return;
 		}
 		setTerminalStatus({ text: "error" });
+		updateTerminalDebug({
+			patch: {
+				socketId,
+				socketState: getReadyStateLabel({ socket }),
+				lastError: `socket error at ${formatTerminalDebugTime()}`,
+			},
+		});
 	});
 	return waitForTerminalSocketOpen({ socket });
 }
 
-function disconnectAgentTerminal() {
-	if (terminalSocket && terminalSocket.readyState <= 1) {
-		terminalSocket.close(1000, "user_disconnect");
-	}
+function waitForRuntimeDelay({ ms }) {
+	const win = getRuntimeWindow();
+	return new Promise((resolve) => {
+		if (!win || typeof win.setTimeout !== "function") {
+			resolve();
+			return;
+		}
+		win.setTimeout(resolve, ms);
+	});
+}
+
+function closeTerminalSocket({ reason }) {
+	const socket = terminalSocket;
 	terminalSocket = null;
+	clearTerminalInputAckWatch();
 	clearTerminalArtifactPoll();
+	if (!socket || socket.readyState === 3) {
+		return Promise.resolve();
+	}
+	const win = getRuntimeWindow();
+	return new Promise((resolve) => {
+		let timeoutId = null;
+		const cleanup = () => {
+			socket.removeEventListener("close", handleClose);
+			if (win && timeoutId !== null) {
+				win.clearTimeout(timeoutId);
+			}
+			resolve();
+		};
+		const handleClose = () => cleanup();
+		socket.addEventListener("close", handleClose);
+		if (socket.readyState <= 1) {
+			try {
+				socket.close(1000, reason);
+			} catch {
+				cleanup();
+				return;
+			}
+		}
+		if (win && typeof win.setTimeout === "function") {
+			timeoutId = win.setTimeout(cleanup, 2500);
+		}
+	});
+}
+
+function disconnectAgentTerminal() {
+	void closeTerminalSocket({ reason: "user_disconnect" });
 	setTerminalStatus({ text: "disconnected" });
 	setText({ id: "agent-job-status", text: "idle" });
+	updateTerminalDebug({
+		patch: {
+			socketState: "closed",
+			lastInput: `user disconnect at ${formatTerminalDebugTime()}`,
+		},
+	});
 	resetTerminalOutput({ message: "Connect to open a real terminal." });
+}
+
+async function reconnectAgentTerminal() {
+	showError({ message: "" });
+	setTerminalStatus({ text: "connecting" });
+	setText({ id: "agent-job-status", text: "terminal" });
+	updateTerminalDebug({
+		patch: {
+			socketState: "reconnecting",
+			lastInput: `reconnect requested at ${formatTerminalDebugTime()}`,
+			lastError: "",
+		},
+	});
+	await closeTerminalSocket({ reason: "user_reconnect" });
+	await waitForRuntimeDelay({ ms: 250 });
+	return connectAgentTerminal();
 }
 
 async function refreshSessionArtifacts() {

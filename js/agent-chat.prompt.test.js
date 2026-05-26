@@ -16,11 +16,15 @@ test("chat-agent page waits for the split script loader before module setup", ()
 	assert.ok(loaderIndex > -1);
 	assert.ok(loaderIndex < uppyIndex);
 	assert.match(html, /await window\.AgentChatReady/);
+	assert.match(html, /id="agent-terminal-debug"/);
+	assert.match(html, /id="agent-terminal-reconnect"/);
 });
 
 test("generate page reuses the split agent-chat loader", () => {
 	const html = readFileSync(require.resolve("../generate/index.html"), "utf8");
-	const loaderIndex = html.indexOf('<script src="../js/agent-chat.js"></script>');
+	const loaderIndex = html.indexOf(
+		'<script src="../js/agent-chat.js"></script>'
+	);
 	const uppyIndex = html.indexOf('<script type="module">');
 
 	assert.ok(loaderIndex > -1);
@@ -96,6 +100,7 @@ test("agent chat initializes when terminal input is the only prompt surface", ()
 			"agent-fs-current-path",
 			"agent-new-session",
 			"agent-terminal-connect",
+			"agent-terminal-reconnect",
 			"agent-terminal-disconnect",
 			"agent-refresh-artifacts",
 			"agent-upload-submit",
@@ -131,11 +136,194 @@ test("agent chat initializes when terminal input is the only prompt surface", ()
 			"function"
 		);
 		assert.equal(
+			typeof listenersById.get("agent-terminal-reconnect:click"),
+			"function"
+		);
+		assert.equal(
 			typeof listenersById.get("agent-refresh-artifacts:click"),
 			"function"
 		);
 		assert.equal(listenersById.has("agent-prompt:input"), false);
 		assert.equal(listenersById.has("agent-submit:click"), false);
+	} finally {
+		delete global.document;
+	}
+});
+
+test("terminal reconnect reuses the saved session and handles relay control acks", async () => {
+	const listenersById = new Map();
+	const textById = new Map();
+	const valueById = new Map();
+	const fetchPaths = [];
+	const sockets = [];
+	const createElement = ({ id }) => ({
+		id,
+		dataset: {},
+		innerHTML: "",
+		classList: {
+			toggle() {},
+		},
+		setAttribute() {},
+		addEventListener(eventName, listener) {
+			listenersById.set(`${id}:${eventName}`, listener);
+		},
+		get textContent() {
+			return textById.get(id) || "";
+		},
+		set textContent(value) {
+			textById.set(id, value);
+		},
+		get value() {
+			return valueById.get(id) || "";
+		},
+		set value(value) {
+			valueById.set(id, value);
+		},
+	});
+	const elements = new Map(
+		[
+			"agent-token",
+			"agent-session-status",
+			"agent-job-status",
+			"agent-terminal-status",
+			"agent-terminal",
+			"agent-terminal-fallback",
+			"agent-terminal-debug",
+			"agent-fs-current-path",
+			"agent-new-session",
+			"agent-terminal-connect",
+			"agent-terminal-reconnect",
+			"agent-terminal-disconnect",
+			"agent-refresh-artifacts",
+			"agent-upload-submit",
+			"agent-fs-root",
+			"agent-fs-up",
+		].map((id) => [id, createElement({ id })])
+	);
+	const document = {
+		readyState: "complete",
+		getElementById(id) {
+			return elements.get(id) || null;
+		},
+	};
+	class FakeWebSocket {
+		static instances = sockets;
+
+		constructor(url) {
+			this.url = url;
+			this.readyState = 0;
+			this.binaryType = "";
+			this.listeners = new Map();
+			FakeWebSocket.instances.push(this);
+			queueMicrotask(() => {
+				this.readyState = 1;
+				this.dispatch({ type: "open" });
+			});
+		}
+
+		addEventListener(eventName, listener) {
+			const listeners = this.listeners.get(eventName) || [];
+			listeners.push(listener);
+			this.listeners.set(eventName, listeners);
+		}
+
+		removeEventListener(eventName, listener) {
+			const listeners = this.listeners.get(eventName) || [];
+			this.listeners.set(
+				eventName,
+				listeners.filter((item) => item !== listener)
+			);
+		}
+
+		send() {}
+
+		close() {
+			this.readyState = 3;
+			this.dispatch({ type: "close" });
+		}
+
+		dispatch(event) {
+			for (const listener of this.listeners.get(event.type) || []) {
+				listener(event);
+			}
+		}
+	}
+	const localStorage = {
+		getItem(key) {
+			return key === "qcut_agent_session_id" ? "saved-session" : "";
+		},
+		setItem() {},
+		removeItem() {},
+	};
+	const fetchImpl = async (url, options) => {
+		const parsed = new URL(url);
+		fetchPaths.push(parsed.pathname);
+		assert.equal(options.method, "POST");
+		if (parsed.pathname === "/api/agent/sessions/saved-session/pty-token") {
+			return createResponse({
+				status: 200,
+				payload: { ws_url: "wss://relay.test/pty?token=test" },
+			});
+		}
+		throw new Error(`unexpected fetch ${parsed.pathname}`);
+	};
+	global.document = document;
+	global.window = {
+		document,
+		WebSocket: FakeWebSocket,
+		TextDecoder,
+		TextEncoder,
+		setTimeout,
+		clearTimeout,
+		setInterval() {
+			return 1;
+		},
+		clearInterval() {},
+		localStorage,
+		PaymentAPI: {
+			getApiBaseUrl() {
+				return "https://license.test";
+			},
+			getAuthToken() {
+				return "token-from-payment";
+			},
+			setAuthToken() {
+				return true;
+			},
+		},
+		addEventListener() {},
+	};
+	global.fetch = fetchImpl;
+
+	try {
+		const AgentChatAPI = loadAgentChatApi();
+		await AgentChatAPI.reconnectAgentTerminal();
+
+		assert.deepEqual(fetchPaths, [
+			"/api/agent/sessions/saved-session/pty-token",
+		]);
+		assert.equal(sockets.length, 1);
+		assert.equal(textById.get("agent-session-status"), "active saved-session");
+
+		sockets[0].dispatch({
+			type: "message",
+			data: JSON.stringify({
+				kind: "pty_input_ack",
+				messageIndex: 1,
+				bytes: 1,
+				elapsedMs: 3,
+			}),
+		});
+
+		assert.match(textById.get("agent-terminal-debug"), /ack #1 1 bytes/);
+		assert.doesNotMatch(
+			textById.get("agent-terminal-fallback"),
+			/pty_input_ack/
+		);
+		assert.equal(
+			typeof listenersById.get("agent-terminal-reconnect:click"),
+			"function"
+		);
 	} finally {
 		delete global.document;
 	}
