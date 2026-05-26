@@ -580,6 +580,8 @@ async function connectAgentTerminal() {
 	const socket = new WebSocketCtor(payload.ws_url);
 	terminalSocketSequence += 1;
 	const socketId = terminalSocketSequence;
+	terminalInputSequence = 0;
+	terminalLastAckedInputId = 0;
 	terminalSocket = socket;
 	updateTerminalDebug({
 		patch: {
