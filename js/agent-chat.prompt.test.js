@@ -26,6 +26,22 @@ test("generate page reuses the split agent-chat loader", () => {
 	assert.ok(loaderIndex > -1);
 	assert.ok(loaderIndex < uppyIndex);
 	assert.match(html, /id="generate-command"/);
+	assert.match(html, /href="\.\/qcut-ui\.html"/);
+	assert.match(html, /await window\.AgentChatReady/);
+});
+
+test("qcut ui tab reuses the existing sandbox terminal loader", () => {
+	const html = readFileSync(require.resolve("../generate/qcut-ui.html"), "utf8");
+	const loaderIndex = html.indexOf('<script src="../js/agent-chat.js"></script>');
+	const studioIndex = html.indexOf('<script src="./qcut-ui.js"></script>');
+	const uppyIndex = html.indexOf('<script type="module">');
+
+	assert.ok(loaderIndex > -1);
+	assert.ok(studioIndex > loaderIndex);
+	assert.ok(studioIndex < uppyIndex);
+	assert.match(html, /data-workspace-tab="create"/);
+	assert.match(html, /id="agent-terminal"/);
+	assert.match(html, /id="agent-artifacts"/);
 	assert.match(html, /await window\.AgentChatReady/);
 });
 

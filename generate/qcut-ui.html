@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCut App UI Studio</title>
+    <meta name="description" content="A QCut-style generation workspace for Daytona-backed image, storyboard, and video CLI workflows.">
+    <link rel="icon" type="image/png" href="../assets/qcut-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.css">
+    <link rel="stylesheet" href="https://releases.transloadit.com/uppy/v5.2.1/uppy.min.css">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="./qcut-ui.css">
+</head>
+<body class="antialiased">
+    <nav class="fixed top-0 w-full z-50 bg-primary nav-border">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="../index.html" class="flex items-center space-x-2">
+                        <img src="../assets/qcut-logo.png" alt="QCut" class="h-7 w-7">
+                        <span class="text-lg font-semibold">QCut</span>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="../index.html#features" class="nav-link text-sm text-muted hover:text-primary transition-colors">Features</a>
+                        <a href="../releases.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Releases</a>
+                        <a href="../cli.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">CLI</a>
+                        <a href="./" class="nav-link text-sm text-muted hover:text-primary transition-colors">Generate</a>
+                        <a href="./qcut-ui.html" class="nav-link text-sm font-medium" style="color: var(--text-primary);">QCut UI</a>
+                        <a href="../chat-agent.html" class="nav-link text-sm text-muted hover:text-primary transition-colors">Chat Agent</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="qcut-ui-theme-toggle" type="button" class="theme-toggle" aria-label="Toggle theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Light theme</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Dark theme</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="https://github.com/donghaozhang/qcut/releases" class="hidden sm:inline-flex btn-dark px-4 py-2 rounded-full text-sm font-medium">Download</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-14">
+        <div class="app-shell">
+            <aside class="app-rail" aria-label="QCut workspace sections">
+                <button class="rail-button" type="button" data-workspace-tab="create" aria-selected="true">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    Create
+                </button>
+                <button class="rail-button" type="button" data-workspace-tab="library" aria-selected="false">
+                    <i data-lucide="folder-open" class="w-5 h-5"></i>
+                    Library
+                </button>
+                <button class="rail-button" type="button" data-workspace-tab="agents" aria-selected="false">
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                    Agents
+                </button>
+            </aside>
+
+            <section class="workspace">
+                <div class="workspace-header">
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <img src="../assets/qcut-logo.png" alt="QCut" class="h-6 w-6">
+                            <h1 class="text-lg font-semibold">QCut Generate Workspace</h1>
+                            <span class="status-pill">
+                                <i data-lucide="cloud" class="w-3.5 h-3.5"></i>
+                                Daytona sandbox
+                            </span>
+                        </div>
+                        <p class="mt-1 text-sm text-muted">App-style create, asset, and agent panels backed by the existing website sandbox code.</p>
+                    </div>
+                    <nav class="page-tabs" aria-label="Generate page tabs">
+                        <a href="./" class="page-tab">
+                            <i data-lucide="list-plus" class="w-4 h-4"></i>
+                            Command
+                        </a>
+                        <a href="./qcut-ui.html" class="page-tab" aria-current="page">
+                            <i data-lucide="layout-panel-left" class="w-4 h-4"></i>
+                            QCut UI
+                        </a>
+                        <a href="../chat-agent.html" class="page-tab">
+                            <i data-lucide="bot" class="w-4 h-4"></i>
+                            Agent
+                        </a>
+                    </nav>
+                </div>
+
+                <section class="workspace-panel is-active" data-workspace-panel="create">
+                    <div class="studio-grid">
+                        <section class="qcut-panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h2 class="text-sm font-semibold">AI Create</h2>
+                                    <p class="text-xs text-muted">QCut CLI presets</p>
+                                </div>
+                                <span class="status-pill" id="agent-job-status">idle</span>
+                            </div>
+                            <div class="panel-body space-y-4">
+                                <div class="mini-tabs" role="tablist" aria-label="Generation mode">
+                                    <button class="mini-tab" type="button" data-mode="image" aria-selected="true">Image</button>
+                                    <button class="mini-tab" type="button" data-mode="portraits" aria-selected="false">Portraits</button>
+                                    <button class="mini-tab" type="button" data-mode="storyboard" aria-selected="false">Storyboard</button>
+                                    <button class="mini-tab" type="button" data-mode="novel2movie" aria-selected="false">Novel</button>
+                                </div>
+
+                                <div>
+                                    <label for="generate-prompt" class="field-label">Prompt or input path</label>
+                                    <textarea id="generate-prompt" class="qcut-input px-3 py-3" rows="6">cinematic portrait of an Asian K-pop supermodel, soft studio light, editorial fashion</textarea>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label for="generate-model" class="field-label">Image model</label>
+                                        <input id="generate-model" class="qcut-input mono px-3 py-2" value="gpt_image_2_ima">
+                                    </div>
+                                    <div>
+                                        <label for="generate-limit" class="field-label">Limit</label>
+                                        <input id="generate-limit" class="qcut-input mono px-3 py-2" value="5">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="generate-output" class="field-label">Output folder</label>
+                                    <input id="generate-output" class="qcut-input mono px-3 py-2" value="/tmp/qcut-output">
+                                </div>
+
+                                <div>
+                                    <div class="field-label">Reference upload</div>
+                                    <div id="agent-uppy-dashboard" class="agent-uppy-dashboard"></div>
+                                    <div id="agent-upload-fallback" class="mt-2">
+                                        <input id="agent-upload-files" type="file" multiple class="agent-input agent-file-input text-sm">
+                                    </div>
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <button id="agent-upload-submit" type="button" class="btn-outline px-3 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                            Upload
+                                        </button>
+                                        <p id="agent-upload-status" class="text-xs text-muted">Files upload into the active sandbox folder.</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="field-label">Terminal command</div>
+                                    <pre id="generate-command" class="command-preview mono p-3"></pre>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button id="generate-copy-command" type="button" class="btn-dark px-4 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                                        <i data-lucide="copy" class="w-4 h-4"></i>
+                                        Copy
+                                    </button>
+                                    <button id="agent-terminal-connect" type="button" class="btn-outline px-4 py-3 rounded-full text-sm font-medium inline-flex items-center justify-center gap-2">
+                                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                                        Connect
+                                    </button>
+                                </div>
+                                <p id="generate-copy-status" class="text-xs text-muted">Connect, copy the command, then paste or type directly in the terminal.</p>
+                            </div>
+                        </section>
+
+                        <section class="qcut-panel preview-stage">
+                            <div class="panel-head" style="border-color: rgb(255 255 255 / 0.1); color: #f4f4f5;">
+                                <div>
+                                    <h2 class="text-sm font-semibold">Preview Board</h2>
+                                    <p class="text-xs" style="color: rgb(255 255 255 / 0.6);">Storyboard-style working area</p>
+                                </div>
+                                <span class="status-pill" style="border-color: rgb(255 255 255 / 0.16); background: rgb(255 255 255 / 0.08); color: rgb(255 255 255 / 0.72);">4 frames</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="storyboard-grid">
+                                    <article class="story-card">
+                                        <div class="story-frame"><i data-lucide="image" class="w-8 h-8"></i></div>
+                                        <footer>01 · character look</footer>
+                                    </article>
+                                    <article class="story-card">
+                                        <div class="story-frame"><i data-lucide="clapperboard" class="w-8 h-8"></i></div>
+                                        <footer>02 · scene setup</footer>
+                                    </article>
+                                    <article class="story-card">
+                                        <div class="story-frame"><i data-lucide="video" class="w-8 h-8"></i></div>
+                                        <footer>03 · motion prompt</footer>
+                                    </article>
+                                    <article class="story-card">
+                                        <div class="story-frame"><i data-lucide="folder-down" class="w-8 h-8"></i></div>
+                                        <footer>04 · saved asset</footer>
+                                    </article>
+                                </div>
+                            </div>
+                        </section>
+
+                        <aside class="qcut-panel right-panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h2 class="text-sm font-semibold">Session</h2>
+                                    <p class="text-xs text-muted">Connected Daytona state</p>
+                                </div>
+                                <button id="agent-new-session" type="button" class="btn-outline px-3 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                    New
+                                </button>
+                            </div>
+                            <div class="panel-body space-y-4">
+                                <div>
+                                    <div class="text-xs uppercase tracking-wider text-muted">Session</div>
+                                    <div id="agent-session-status" class="mono text-xs mt-1 break-all">none</div>
+                                </div>
+                                <div class="grid grid-cols-[78px_1fr] gap-3 text-sm">
+                                    <span class="text-muted">Run</span><span id="agent-job-id" class="mono break-all">-</span>
+                                    <span class="text-muted">Exit</span><span id="agent-job-exit" class="mono">-</span>
+                                    <span class="text-muted">Runner</span><span id="agent-job-runner" class="mono break-all">-</span>
+                                </div>
+                                <p id="agent-job-empty" class="text-sm text-muted">No command sent yet.</p>
+                                <div id="agent-job-summary" class="hidden"></div>
+                                <div id="agent-job-error" class="text-sm" style="color: var(--color-error);"></div>
+                                <div id="agent-error" class="hidden p-3 rounded-xl text-sm" style="background: var(--color-error-light); color: var(--color-error);"></div>
+                                <div class="hidden">
+                                    <label for="agent-token">QCut auth token override</label>
+                                    <input id="agent-token" type="password">
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                <section class="workspace-panel" data-workspace-panel="library">
+                    <div class="qcut-panel mt-4">
+                        <div class="panel-head">
+                            <div>
+                                <h2 class="text-sm font-semibold">Project Files</h2>
+                                <p class="text-xs text-muted">Folder-style artifact browser with preview, copy path, and download actions.</p>
+                            </div>
+                            <div class="asset-toolbar">
+                                <div>
+                                    <div class="text-xs uppercase tracking-wider text-muted">Current path</div>
+                                    <div id="agent-fs-current-path" class="mono text-xs mt-1 break-all">/tmp/qcut-output</div>
+                                </div>
+                                <button id="agent-refresh-artifacts" type="button" class="btn-outline px-3 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                    Refresh
+                                </button>
+                                <button id="agent-fs-root" type="button" class="btn-outline px-3 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                    <i data-lucide="hard-drive" class="w-3.5 h-3.5"></i>
+                                    Root
+                                </button>
+                                <button id="agent-fs-up" type="button" class="btn-outline px-3 py-2 rounded-full text-xs font-medium inline-flex items-center gap-2">
+                                    <i data-lucide="corner-left-up" class="w-3.5 h-3.5"></i>
+                                    Up
+                                </button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div id="agent-fs-breadcrumb" class="mb-4 flex flex-wrap items-center gap-1"></div>
+                            <div id="agent-artifacts" class="sandbox-file-grid mt-5">
+                                <p class="text-sm text-muted">Generated files will appear here after connecting the sandbox.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="workspace-panel" data-workspace-panel="agents">
+                    <div class="qcut-panel mt-4">
+                        <div class="panel-head">
+                            <div>
+                                <h2 class="text-sm font-semibold">Codex Terminal</h2>
+                                <p class="text-xs text-muted">The same persistent Daytona PTY used by the existing Chat Agent page.</p>
+                            </div>
+                            <span id="agent-terminal-status" class="mono text-xs" data-status="disconnected" aria-live="polite">disconnected</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="agent-terminal-shell">
+                                <div class="agent-terminal-header">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                                        <span class="mono text-xs">Daytona PTY</span>
+                                    </div>
+                                    <div class="agent-terminal-controls">
+                                        <button id="agent-terminal-disconnect" type="button" class="btn-outline agent-terminal-button px-3 py-1.5 rounded-full text-xs font-medium">Disconnect</button>
+                                    </div>
+                                </div>
+                                <div id="agent-terminal" aria-label="QCut generation terminal">
+                                    <pre id="agent-terminal-fallback" class="terminal-fallback">Connect to open a real terminal.</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </main>
+
+    <script src="../theme.js"></script>
+    <script src="../js/payment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
+    <script src="../js/agent-chat.js"></script>
+    <script src="./qcut-ui.js"></script>
+    <script type="module">
+        try {
+            const { Uppy, Dashboard } = await import("https://releases.transloadit.com/uppy/v5.2.1/uppy.min.mjs");
+            await window.AgentChatReady;
+            window.AgentChatAPI?.initUppyUploader({ Uppy, Dashboard });
+        } catch (error) {
+            console.warn("Uppy uploader failed to load; native file input remains available.", error);
+        }
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
