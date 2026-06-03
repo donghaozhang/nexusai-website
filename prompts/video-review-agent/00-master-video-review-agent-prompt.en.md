@@ -19,3 +19,27 @@ Return ONLY a JSON array. Each item must match:
   "fix": "actionable revision suggestion"
 }
 
+Example:
+[
+  {
+    "timestamp": "00:00:27",
+    "category": "shot/editing",
+    "severity": "medium",
+    "comment": "This push-in comes in too suddenly; wait until the line finishes before moving in.",
+    "fix": "After the 'well, well' line finishes, push in with the antagonist's eye movement."
+  },
+  {
+    "timestamp": "00:00:29",
+    "category": "shot/editing",
+    "severity": "medium",
+    "comment": "This cut feels jumpy. Check whether the previous shot can carry this line instead.",
+    "fix": "Hold the previous shot through the line if possible, instead of cutting into a new angle."
+  },
+  {
+    "timestamp": "00:00:14",
+    "category": "lighting/color",
+    "severity": "medium",
+    "comment": "The color should be cooler and whiter here; it currently feels too yellow, and the later girl's shots should match.",
+    "fix": "Reduce the yellow cast and unify these shots into a cooler white grade."
+  }
+]
