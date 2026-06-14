@@ -5,7 +5,7 @@ const MAX_SESSION_UPLOAD_BYTES = 25 * 1024 * 1024;
 const TERMINAL_STATUSES = ["succeeded", "failed", "cancelled"];
 const CODEX_AGENT_COMMAND = "codex exec --skip-git-repo-check --json -";
 const CODEX_TERMINAL_COMMAND =
-	"codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message /tmp/qcut-output/codex-last-message.md -";
+	"codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust --output-last-message /tmp/qcut-output/codex-last-message.md -";
 const CODEX_LAST_MESSAGE_FILE = "codex-last-message.md";
 const AGENT_SESSION_STORAGE_KEY = "qcut_agent_session_id";
 const AGENT_PTY_TOKEN_MAX_WAIT_MS = 6 * 60 * 1000;

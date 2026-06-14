@@ -422,7 +422,7 @@ test("buildTerminalPromptCommand wraps prompts for visible PTY Codex runs", () =
 	assert.match(command, /mkdir -p \/tmp\/qcut-input \/tmp\/qcut-output/);
 	assert.match(
 		command,
-		/codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --output-last-message \/tmp\/qcut-output\/codex-last-message\.md - < \/tmp\/qcut-terminal-prompt\.md/
+		/codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust --output-last-message \/tmp\/qcut-output\/codex-last-message\.md - < \/tmp\/qcut-terminal-prompt\.md/
 	);
 	assert.match(command, /find \/tmp\/qcut-input/);
 	assert.match(command, /find \/tmp\/qcut-output/);
